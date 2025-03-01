@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link2, Activity, Search, Settings, Sun } from 'lucide-react';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 type NavItemProps = {
   icon: React.ReactNode;
