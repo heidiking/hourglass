@@ -1,5 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
+
+type ArchivedGoal = {
+  text: string;
+  date: string;
+};
 
 const FocusInput = () => {
   const [goal, setGoal] = useState<string>('');
@@ -14,6 +18,33 @@ const FocusInput = () => {
     if (e.key === 'Enter' && goal.trim()) {
       // Save goal to local storage
       localStorage.setItem('dailyGoal', goal);
+      
+      // Save to archive
+      const today = new Date().toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const newArchivedGoal: ArchivedGoal = {
+        text: goal,
+        date: today
+      };
+      
+      // Get existing archived goals
+      const existingGoalsStr = localStorage.getItem('archivedGoals');
+      const existingGoals: ArchivedGoal[] = existingGoalsStr ? JSON.parse(existingGoalsStr) : [];
+      
+      // Add new goal to archive
+      const updatedGoals = [newArchivedGoal, ...existingGoals];
+      
+      // Only keep the 50 most recent goals
+      const trimmedGoals = updatedGoals.slice(0, 50);
+      
+      // Save updated archive
+      localStorage.setItem('archivedGoals', JSON.stringify(trimmedGoals));
+      
       setIsFocused(false);
     }
   };

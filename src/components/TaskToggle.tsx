@@ -2,6 +2,7 @@
 import React from 'react';
 import { CheckSquare, Settings } from 'lucide-react';
 import { toast } from "sonner";
+import GoalArchive from './GoalArchive';
 
 const TaskToggle = () => {
   const handleToggle = () => {
@@ -21,6 +22,7 @@ const TaskToggle = () => {
       >
         <Settings size={24} />
       </button>
+      <GoalArchive />
       <button
         onClick={handleToggle}
         className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
