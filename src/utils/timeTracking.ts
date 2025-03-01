@@ -9,20 +9,35 @@ export type ActivitySession = {
 
 // Mock data for app tracking since we can't actually track apps without browser extensions
 const mockApps = [
-  'Google Docs',
-  'Gmail',
-  'VS Code',
-  'Slack',
-  'Figma',
-  'Chrome',
-  'Zoom',
-  'Notion',
-  'Spotify',
-  'Calendar'
+  'Google Docs - Project Proposal',
+  'Microsoft Word - Novel Draft Chapter 3',
+  'Adobe PDF - Contract Review',
+  'Google Sheets - Budget Calculations',
+  'Microsoft Word - Client Brief',
+  'Google Docs - Meeting Notes',
+  'Microsoft Excel - Invoice Tracker',
+  'Adobe PDF - Research Paper',
+  'Google Docs - Article Draft',
+  'Microsoft PowerPoint - Client Presentation'
+];
+
+// Mock document names for more variety
+const mockDocNames = [
+  'Project Proposal.doc',
+  'Novel Draft Chapter 3.docx',
+  'Contract Review.pdf',
+  'Budget Calculations.xlsx',
+  'Client Brief.doc',
+  'Meeting Notes.gdoc',
+  'Invoice Tracker.xls',
+  'Research Paper.pdf',
+  'Article Draft.gdoc',
+  'Client Presentation.pptx'
 ];
 
 let currentActivity: ActivitySession | null = null;
 let activityHistory: ActivitySession[] = [];
+let autoTrackingInterval: number | null = null;
 
 // Initialize with stored data from localStorage if available
 export const initializeTimeTracking = (): void => {
@@ -46,8 +61,65 @@ export const initializeTimeTracking = (): void => {
         endTime: parsedCurrent.endTime ? new Date(parsedCurrent.endTime) : null
       };
     }
+
+    // Setup automatic tracking based on stored settings
+    setupAutoTracking();
   } catch (error) {
     console.error('Error initializing time tracking:', error);
+  }
+};
+
+// Setup automatic tracking based on user settings
+export const setupAutoTracking = (): void => {
+  try {
+    const settingsJson = localStorage.getItem('timeTrackerSettings');
+    if (!settingsJson) return;
+
+    const settings = JSON.parse(settingsJson);
+    if (!settings.autoTrackEnabled) {
+      if (autoTrackingInterval) {
+        clearInterval(autoTrackingInterval);
+        autoTrackingInterval = null;
+      }
+      return;
+    }
+
+    if (autoTrackingInterval) {
+      clearInterval(autoTrackingInterval);
+    }
+
+    // Check if current time is within the tracking window
+    const checkAndStartTracking = () => {
+      const now = new Date();
+      const currentHours = now.getHours();
+      const currentMinutes = now.getMinutes();
+      const currentTimeMinutes = currentHours * 60 + currentMinutes;
+
+      const [startHours, startMinutes] = settings.startTime.split(':').map(Number);
+      const [endHours, endMinutes] = settings.endTime.split(':').map(Number);
+      
+      const startTimeMinutes = startHours * 60 + startMinutes;
+      const endTimeMinutes = endHours * 60 + endMinutes;
+
+      // If within tracking window and not already tracking, start tracking
+      if (currentTimeMinutes >= startTimeMinutes && currentTimeMinutes <= endTimeMinutes) {
+        if (!currentActivity) {
+          const currentApp = detectCurrentApp();
+          startActivity(currentApp);
+        }
+      } else {
+        // Outside tracking window, end tracking if active
+        if (currentActivity) {
+          endActivity();
+        }
+      }
+    };
+
+    // Run immediately and then every minute
+    checkAndStartTracking();
+    autoTrackingInterval = window.setInterval(checkAndStartTracking, 60000);
+  } catch (error) {
+    console.error('Error setting up auto tracking:', error);
   }
 };
 
@@ -120,9 +192,11 @@ export const getTodayFocusTime = (): number => {
 // Mock function to simulate detecting active app/tab
 export const detectCurrentApp = (): string => {
   // In a real app, this would use browser extension APIs to detect the actual app/tab
-  // For now, we just pick a random app from our mock list
+  // For now, we randomly pick a document from our mock lists
   const randomIndex = Math.floor(Math.random() * mockApps.length);
-  return mockApps[randomIndex];
+  
+  // Sometimes return the app name, sometimes the document name for variety
+  return Math.random() > 0.5 ? mockApps[randomIndex] : mockDocNames[randomIndex];
 };
 
 // Save current state to localStorage

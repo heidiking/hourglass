@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link2, Activity, Search, Settings, Sun } from 'lucide-react';
 import { toast } from "sonner";
 import GoalArchive from './GoalArchive';
+import TimeTracker from './TimeTracker';
 import { 
   Dialog,
   DialogContent,
@@ -33,6 +34,7 @@ const NavItem = ({ icon, label, onClick }: NavItemProps) => {
 const NavIcons = () => {
   return (
     <div className="fixed top-0 left-0 p-4 flex gap-6 z-10">
+      <TimeTracker />
       <NavItem 
         icon={<Link2 size={20} />} 
         label="Links" 
