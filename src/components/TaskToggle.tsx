@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { CheckSquare, Settings, Clock, PlusCircle, Clock3 } from 'lucide-react';
+import { CheckSquare, Settings, Clock, Briefcase } from 'lucide-react';
 import { toast } from "sonner";
 import ProjectManager from './ProjectManager';
 import FocusBlocker from './FocusBlocker';
@@ -124,7 +125,7 @@ const TaskToggle = () => {
         className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
         aria-label="Projects"
       >
-        <PlusCircle size={24} />
+        <Briefcase size={24} />
       </button>
       
       <ProjectManager />
