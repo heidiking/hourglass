@@ -163,12 +163,32 @@ export const endActivity = (): ActivitySession | null => {
 
 // Get the current activity
 export const getCurrentActivity = (): ActivitySession | null => {
+  // Update duration if there's a current activity
+  if (currentActivity && !currentActivity.endTime) {
+    const now = new Date();
+    currentActivity.duration = now.getTime() - currentActivity.startTime.getTime();
+  }
   return currentActivity;
 };
 
 // Get all activity history
 export const getActivityHistory = (): ActivitySession[] => {
   return activityHistory;
+};
+
+// Get activities filtered by date range
+export const getActivitiesByDateRange = (startDate: Date, endDate: Date): ActivitySession[] => {
+  return activityHistory.filter(activity => {
+    const activityDate = new Date(activity.startTime);
+    return activityDate >= startDate && activityDate <= endDate;
+  });
+};
+
+// Get activities by app name (for filtering)
+export const getActivitiesByAppName = (appName: string): ActivitySession[] => {
+  return activityHistory.filter(activity => 
+    activity.appName.toLowerCase().includes(appName.toLowerCase())
+  );
 };
 
 // Get total time spent on a specific app
@@ -183,10 +203,16 @@ export const getTodayFocusTime = (): number => {
   today.setHours(0, 0, 0, 0);
   
   const todayActivities = activityHistory.filter(activity => {
-    return activity.startTime >= today;
+    return new Date(activity.startTime) >= today;
   });
 
   return todayActivities.reduce((total, activity) => total + activity.duration, 0);
+};
+
+// Get total focus time within a date range
+export const getFocusTimeByDateRange = (startDate: Date, endDate: Date): number => {
+  const filteredActivities = getActivitiesByDateRange(startDate, endDate);
+  return filteredActivities.reduce((total, activity) => total + activity.duration, 0);
 };
 
 // Mock function to simulate detecting active app/tab
@@ -227,3 +253,6 @@ export const formatFocusTime = (milliseconds: number): string => {
   
   return `${hours}h ${remainingMinutes}m`;
 };
+
+// Initialize automatically
+initializeTimeTracking();
