@@ -7,7 +7,7 @@ import FocusInput from '@/components/FocusInput';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import TaskToggle from '@/components/TaskToggle';
 import { initializeTimeTracking, detectCurrentApp, startActivity, formatFocusTime, getTodayFocusTime } from '@/utils/timeTracking';
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 
 const Index = () => {
   const [focusTime, setFocusTime] = useState<string>('0m');
@@ -60,13 +60,15 @@ const Index = () => {
       <Weather />
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full animate-slide-up">
+      <div className="flex-1 flex flex-col items-center justify-center w-full z-10 relative">
         <Clock />
         <FocusInput />
       </div>
 
       {/* Quote */}
-      <QuoteDisplay />
+      <div className="relative z-10">
+        <QuoteDisplay />
+      </div>
 
       {/* Task Toggle */}
       <TaskToggle />

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link2, Activity, Search, Settings, Sun } from 'lucide-react';
 import { toast } from "sonner";
@@ -27,7 +28,7 @@ const NavIcons = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 p-4 flex gap-6">
+    <div className="fixed top-0 left-0 p-4 flex gap-6 z-10">
       <NavItem 
         icon={<Link2 size={20} />} 
         label="Links" 
@@ -49,7 +50,7 @@ const NavIcons = () => {
 
 const Weather = () => {
   return (
-    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white">
+    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10">
       <div className="flex items-center">
         <Sun size={20} className="mr-2" />
         <span className="text-3xl font-light">75°</span>
