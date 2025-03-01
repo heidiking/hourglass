@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { CheckSquare, Settings, Clock, Briefcase } from 'lucide-react';
+import { CheckSquare, Settings, Clock, Folder } from 'lucide-react';
 import { toast } from "sonner";
 import ProjectManager from './ProjectManager';
 import FocusBlocker from './FocusBlocker';
@@ -21,7 +20,6 @@ const TaskToggle = () => {
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('17:00');
 
-  // Load settings from localStorage on component mount
   useEffect(() => {
     const storedSettings = localStorage.getItem('timeTrackerSettings');
     if (storedSettings) {
@@ -32,7 +30,6 @@ const TaskToggle = () => {
     }
   }, []);
 
-  // Save settings to localStorage whenever they change
   useEffect(() => {
     const settings = {
       autoTrackEnabled,
@@ -125,7 +122,7 @@ const TaskToggle = () => {
         className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
         aria-label="Projects"
       >
-        <Briefcase size={24} />
+        <Folder size={24} />
       </button>
       
       <ProjectManager />
