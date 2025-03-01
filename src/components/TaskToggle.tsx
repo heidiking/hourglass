@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { CheckSquare, Settings, Clock, PlusCircle, Clock3 } from 'lucide-react';
 import { toast } from "sonner";
@@ -43,30 +42,12 @@ const TaskToggle = () => {
   }, [autoTrackEnabled, startTime, endTime]);
 
   const handleToggle = () => {
-    toast("Task panel coming soon!");
+    toast("Task checklist coming soon!");
   };
 
   const handleTimeSettingSave = () => {
     toast("Time tracking settings saved!");
     setSettingsOpen(false);
-  };
-
-  const handleAddActivity = () => {
-    // Open the ProjectManager dialog with add activity mode
-    const projectButton = document.getElementById('project-manager-trigger');
-    if (projectButton) {
-      projectButton.click();
-    }
-    toast("Add a new activity to your projects");
-  };
-
-  const handleAddTime = () => {
-    // Open the ProjectManager dialog with add time mode
-    const projectButton = document.getElementById('project-manager-trigger');
-    if (projectButton) {
-      projectButton.click();
-    }
-    toast("Add time to your projects");
   };
 
   return (
@@ -132,19 +113,18 @@ const TaskToggle = () => {
       </Dialog>
       
       <button
-        onClick={handleAddActivity}
+        id="project-manager-trigger"
+        onClick={() => {
+          const projectButton = document.getElementById('project-manager-trigger');
+          if (projectButton) {
+            projectButton.click();
+          }
+          toast("Manage your projects");
+        }}
         className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
-        aria-label="Add Activity"
+        aria-label="Projects"
       >
         <PlusCircle size={24} />
-      </button>
-      
-      <button
-        onClick={handleAddTime}
-        className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
-        aria-label="Add Time"
-      >
-        <Clock3 size={24} />
       </button>
       
       <ProjectManager />
@@ -152,7 +132,7 @@ const TaskToggle = () => {
       <button
         onClick={handleToggle}
         className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
-        aria-label="Tasks"
+        aria-label="Daily Tasks"
       >
         <CheckSquare size={24} />
       </button>
