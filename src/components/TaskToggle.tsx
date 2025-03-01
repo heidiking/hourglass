@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { CheckSquare, Settings, Clock, Folder } from 'lucide-react';
+import { CheckSquare, Settings, Clock } from 'lucide-react';
 import { toast } from "sonner";
 import ProjectManager from './ProjectManager';
 import FocusBlocker from './FocusBlocker';
@@ -109,21 +110,6 @@ const TaskToggle = () => {
           </div>
         </DialogContent>
       </Dialog>
-      
-      <button
-        id="project-manager-trigger"
-        onClick={() => {
-          const projectButton = document.getElementById('project-manager-trigger');
-          if (projectButton) {
-            projectButton.click();
-          }
-          toast("Manage your projects");
-        }}
-        className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
-        aria-label="Projects"
-      >
-        <Folder size={24} />
-      </button>
       
       <ProjectManager />
       
