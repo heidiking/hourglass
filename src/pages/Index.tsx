@@ -1,82 +1,38 @@
 
-import React, { useEffect, useState } from 'react';
-import { NavIcons, Weather } from '@/components/NavIcons';
-import BackgroundManager from '@/components/BackgroundManager';
+import React, { useEffect } from 'react';
 import Clock from '@/components/Clock';
-import FocusInput from '@/components/FocusInput';
+import { NavIcons, Weather } from '@/components/NavIcons';
 import QuoteDisplay from '@/components/QuoteDisplay';
+import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
-import { initializeTimeTracking, detectCurrentApp, startActivity, formatFocusTime, getTodayFocusTime } from '@/utils/timeTracking';
-import { Toaster } from "sonner";
+import BackgroundManager from '@/components/BackgroundManager';
+import FocusBlocker from '@/components/FocusBlocker';
+import { initializeTimeTracking } from '@/utils/timeTracking';
+import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
-  const [focusTime, setFocusTime] = useState<string>('0m');
-  const [currentApp, setCurrentApp] = useState<string | null>(null);
-
   useEffect(() => {
-    // Initialize time tracking
+    // Initialize time tracking on page load
     initializeTimeTracking();
-
-    // Set up app detection (mock)
-    const detectApp = () => {
-      const newApp = detectCurrentApp();
-      if (newApp !== currentApp) {
-        setCurrentApp(newApp);
-        startActivity(newApp);
-      }
-    };
-
-    // Detect initial app
-    detectApp();
-
-    // Set up periodic app detection (in a real extension, this would use events)
-    const detectionInterval = setInterval(detectApp, 30000); // Every 30 seconds
-
-    // Set up focus time updates
-    const updateFocusTime = () => {
-      const todayMs = getTodayFocusTime();
-      setFocusTime(formatFocusTime(todayMs));
-    };
-
-    // Update initial focus time
-    updateFocusTime();
-
-    // Update focus time every minute
-    const focusInterval = setInterval(updateFocusTime, 60000);
-
-    return () => {
-      clearInterval(detectionInterval);
-      clearInterval(focusInterval);
-    };
-  }, [currentApp]);
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background */}
+    <div className="h-screen w-full relative flex flex-col items-center justify-center text-white p-4 overflow-hidden">
       <BackgroundManager />
-
-      {/* Navigation */}
       <NavIcons />
       <Weather />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full z-10 relative">
+      
+      <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">
         <Clock />
         <FocusInput />
-      </div>
-
-      {/* Quote */}
-      <div className="relative z-10">
         <QuoteDisplay />
       </div>
-
-      {/* Task Toggle */}
+      
       <TaskToggle />
-
-      {/* Toast notifications */}
-      <Toaster position="top-center" />
+      <FocusBlocker />
+      <Toaster />
     </div>
   );
-};
+}
 
 export default Index;

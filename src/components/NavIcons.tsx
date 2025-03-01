@@ -1,7 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link2, Activity, Search, Settings, Sun } from 'lucide-react';
 import { toast } from "sonner";
+import GoalArchive from './GoalArchive';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type NavItemProps = {
   icon: React.ReactNode;
@@ -23,26 +31,23 @@ const NavItem = ({ icon, label, onClick }: NavItemProps) => {
 };
 
 const NavIcons = () => {
-  const handleNavClick = (feature: string) => {
-    toast(`${feature} feature coming soon!`);
-  };
-
   return (
     <div className="fixed top-0 left-0 p-4 flex gap-6 z-10">
       <NavItem 
         icon={<Link2 size={20} />} 
         label="Links" 
-        onClick={() => handleNavClick('Links')} 
+        onClick={() => toast('Links feature coming soon!')} 
       />
       <NavItem 
         icon={<Activity size={20} />} 
         label="Focus" 
-        onClick={() => handleNavClick('Focus')} 
+        onClick={() => document.getElementById('focus-dialog-trigger')?.click()} 
       />
+      <GoalArchive />
       <NavItem 
         icon={<Search size={20} />} 
         label="Search" 
-        onClick={() => handleNavClick('Search')} 
+        onClick={() => toast('Search feature coming soon!')} 
       />
     </div>
   );
