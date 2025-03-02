@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
 import { 
@@ -489,11 +490,10 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
-          className="p-3 bg-black/30 rounded-full hover:bg-black/50 transition-colors flex flex-col items-center justify-center w-14 h-14"
+          className="p-3 bg-black/30 rounded-full hover:bg-black/50 transition-colors flex items-center justify-center w-12 h-12"
           aria-label="Projects"
         >
           <Folder size={24} className="text-white" />
-          <span className="text-xs mt-1 text-white font-medium">Projects</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-black/70 text-white border-gray-800">
