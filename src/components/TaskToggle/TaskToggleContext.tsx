@@ -43,7 +43,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const initialButtons: ToolButton[] = [
       {
         id: 'projects',
-        icon: <FolderKanban size={24} className="text-black" />,
+        icon: <FolderKanban size={24} className="text-white" />,
         label: '',
         onClick: () => setProjectManagerOpen(true),
       },

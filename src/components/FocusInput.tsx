@@ -64,13 +64,13 @@ const FocusInput = () => {
   const handleFocus = () => {
     setIsFocused(true);
     
-    // Position the cursor after the placeholder text when empty
+    // Position the cursor after the colon when empty
     if (inputRef.current && !goal) {
-      // Add a space to the input value to allow cursor positioning
-      inputRef.current.value = ' ';
-      // Set the cursor position to after the space
-      inputRef.current.selectionStart = 1;
-      inputRef.current.selectionEnd = 1;
+      const placeholderText = placeholder + ' ';
+      inputRef.current.value = placeholderText;
+      // Set the cursor position to after the colon plus one space
+      inputRef.current.selectionStart = placeholderText.length;
+      inputRef.current.selectionEnd = placeholderText.length;
     }
   };
 
