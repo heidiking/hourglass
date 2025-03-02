@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -47,7 +46,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
     
     const earnings = currentEarnings.trim()
       ? parseFloat(currentEarnings)
-      : 0;
+      : editingProject.earnings;
     
     const updatedProject = {
       ...editingProject,
@@ -61,23 +60,21 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
     toast.success("Project financials updated");
   };
 
-  // Calculate actual hourly rate: current earnings divided by hourly rate target
   const calculateActualHourlyRate = (): string => {
     const earnings = parseFloat(currentEarnings) || 0;
-    const hourlyRateTarget = editingProject.hourlyRate || 0;
+    const totalHours = getProjectTotalTime(editingProject, activities) / (1000 * 60 * 60);
     
-    if (hourlyRateTarget <= 0) {
+    if (totalHours <= 0) {
       return "N/A";
     }
     
-    const actualRate = earnings / hourlyRateTarget;
+    const actualRate = earnings / totalHours;
     return formatCurrency(actualRate) + "/hr";
   };
 
-  // Calculate per-word rate: current earnings divided by word count
   const calculateWordRate = (): string => {
     const earnings = parseFloat(currentEarnings) || 0;
-    const wordCount = editingProject.wordCount || 0;
+    const wordCount = parseInt(projectWordCount) || 0;
     
     if (wordCount <= 0 || earnings <= 0) {
       return "N/A";
@@ -101,7 +98,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
               min="0"
               value={currentEarnings}
               onChange={(e) => setCurrentEarnings(e.target.value)}
-              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
               placeholder="0.00"
             />
           </div>
@@ -116,7 +113,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
               min="0"
               value={projectTotalEarnings}
               onChange={(e) => setProjectTotalEarnings(e.target.value)}
-              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
               placeholder="0.00"
             />
           </div>
@@ -134,7 +131,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
                 min="0"
                 value={projectHourlyRate}
                 onChange={(e) => setProjectHourlyRate(e.target.value)}
-                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
                 placeholder="0.00"
               />
             </div>
@@ -150,7 +147,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
                 min="0"
                 value={projectWordCount}
                 onChange={(e) => setProjectWordCount(e.target.value)}
-                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
                 placeholder="0"
               />
             </div>

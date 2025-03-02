@@ -87,12 +87,13 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       
       // Recalculate total earnings
       const totalEarnings = updatedActivities.reduce((total, activity) => 
-        total + (activity.earnings || 0), 0);
+        total + (activity.earnings || 0), 0
+      );
       
       const updatedProject = {
         ...editingProject,
         manualActivities: updatedActivities,
-        earnings: totalEarnings,
+        earnings: totalEarnings > 0 ? totalEarnings : editingProject.earnings,
       };
       
       onUpdateProject(updatedProject);
@@ -112,12 +113,13 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       // Update project total earnings if this activity has earnings
       const updatedManualActivities = [...(editingProject.manualActivities || []), newActivity];
       const updatedEarnings = updatedManualActivities.reduce((total, activity) => 
-        total + (activity.earnings || 0), 0);
+        total + (activity.earnings || 0), 0
+      );
       
       const updatedProject = {
         ...editingProject,
         manualActivities: updatedManualActivities,
-        earnings: updatedEarnings,
+        earnings: updatedEarnings > 0 ? updatedEarnings : editingProject.earnings,
       };
       
       onUpdateProject(updatedProject);
@@ -145,7 +147,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       </h3>
       <div className="space-y-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <div className="space-y-2">
-          <Label htmlFor="activity-name" className="text-black">Activity Name</Label>
+          <Label htmlFor="activity-name" className="text-sm text-gray-700 dark:text-gray-300">Activity Name</Label>
           <Input
             id="activity-name"
             value={newActivityName}
@@ -157,7 +159,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="space-y-2">
-            <Label htmlFor="activity-date" className="text-black">Date</Label>
+            <Label htmlFor="activity-date" className="text-sm text-gray-700 dark:text-gray-300">Date</Label>
             <Input
               id="activity-date"
               type="date"
@@ -168,7 +170,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="activity-duration" className="text-black">Duration</Label>
+            <Label htmlFor="activity-duration" className="text-sm text-gray-700 dark:text-gray-300">Duration</Label>
             <div className="flex items-center gap-1">
               <Input
                 id="activity-duration"
@@ -193,7 +195,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="activity-earnings" className="text-black">Earnings</Label>
+            <Label htmlFor="activity-earnings" className="text-sm text-gray-700 dark:text-gray-300">Earnings</Label>
             <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2">
               <DollarSign size={16} className="text-green-500" />
               <Input

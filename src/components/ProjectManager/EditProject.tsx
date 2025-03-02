@@ -35,12 +35,9 @@ const EditProject: React.FC<EditProjectProps> = ({
   }, [editingProject]);
 
   const updateProject = (updatedProject: Project) => {
-    // Ensure hourly rate calculations are updated whenever a project is updated
-    const totalEarnings = calculateTotalEarnings(updatedProject);
-    
+    // Update project while preserving current earnings unless explicitly changed
     const finalUpdatedProject = {
       ...updatedProject,
-      earnings: totalEarnings,
     };
     
     setEditingProject(finalUpdatedProject);
@@ -50,13 +47,6 @@ const EditProject: React.FC<EditProjectProps> = ({
     );
     
     setProjects(updatedProjects);
-  };
-
-  // Calculate total earnings from all manual entries
-  const calculateTotalEarnings = (project: Project): number => {
-    return (project.manualActivities || []).reduce((total, activity) => 
-      total + (activity.earnings || 0), 0
-    );
   };
 
   const updateProjectName = () => {
@@ -102,7 +92,7 @@ const EditProject: React.FC<EditProjectProps> = ({
               <Input
                 value={editingProject.name}
                 onChange={(e) => setEditingProject({...editingProject, name: e.target.value})}
-                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-black"
               />
               <Button 
                 onClick={updateProjectName} 
