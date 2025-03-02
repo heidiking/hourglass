@@ -96,8 +96,21 @@
     font-family: inherit;
   }
 
-  button.bg-white, button.bg-white * {
+  /* Make all white buttons have black text and icons */
+  button.bg-white, 
+  button.border-gray-700 {
     color: black !important;
+  }
+  
+  /* Ensure all SVG icons inside white buttons are black */
+  button.bg-white svg, 
+  button.border-gray-700 svg,
+  button.bg-white svg path,
+  button.border-gray-700 svg path,
+  button.white-button-with-black-content svg,
+  button.white-button-with-black-content svg path {
+    color: black !important;
+    stroke: black !important;
   }
 
   /* Performance optimizations */
@@ -154,8 +167,16 @@
   color: inherit !important;
 }
 
-/* Ensure all buttons in white have black text */
+/* Ensure all buttons in white have black text and icons */
 button.bg-white,
-button.hover\:bg-white:hover {
+button.hover\:bg-white:hover,
+button.border-gray-700 {
   color: black !important;
+}
+
+button.bg-white svg,
+button.hover\:bg-white:hover svg,
+button.border-gray-700 svg {
+  color: black !important;
+  stroke: black !important;
 }
