@@ -113,6 +113,23 @@
     stroke: black !important;
   }
 
+  /* Dialog content text color - ensure black text */
+  [role="dialog"] input,
+  [role="dialog"] textarea,
+  [role="dialog"] .dialog-content input,
+  [role="dialog"] .dialog-content textarea,
+  [role="dialog"] .dialog-content p:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+  [role="dialog"] .dialog-content span:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+  [role="dialog"] .dialog-content div:not(.text-gray-500):not(.text-white):not(.text-white\/60) {
+    color: black !important;
+  }
+
+  /* Specifically target task items and project entries */
+  [role="dialog"] .dialog-content label,
+  [role="dialog"] label {
+    color: black !important;
+  }
+
   /* Performance optimizations */
   img, svg {
     content-visibility: auto;
@@ -179,4 +196,22 @@ button.hover\:bg-white:hover svg,
 button.border-gray-700 svg {
   color: black !important;
   stroke: black !important;
+}
+
+/* Improved dialog text readability */
+.dialog-content,
+[role="dialog"] .dialog-content {
+  color: black !important;
+}
+
+[role="dialog"] input,
+[role="dialog"] textarea {
+  color: black !important;
+}
+
+/* Project entries and task items text color */
+[role="dialog"] p:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+[role="dialog"] .flex-1,
+[role="dialog"] .text-sm:not(.text-gray-500):not(.text-white):not(.text-white\/60) {
+  color: black !important;
 }

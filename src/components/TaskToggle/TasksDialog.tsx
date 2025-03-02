@@ -58,7 +58,7 @@ const TasksDialog = () => {
     <Dialog open={tasksOpen} onOpenChange={setTasksOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Daily Tasks</DialogTitle>
+          <DialogTitle className="text-black">Daily Tasks</DialogTitle>
         </DialogHeader>
         <div className="grid gap-2 py-3">
           <div className="flex items-center space-x-2">
@@ -67,6 +67,7 @@ const TasksDialog = () => {
               value={newTaskText}
               onChange={(e) => setNewTaskText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
+              className="text-black"
             />
             <Button onClick={handleAddTask} size="sm" className="flex items-center bg-white text-black hover:bg-white/90">
               <Plus size={16} className="mr-1 text-black" />
@@ -87,7 +88,7 @@ const TasksDialog = () => {
                   />
                   <Label 
                     htmlFor={`task-${task.id}`}
-                    className={`flex-1 ${task.completed ? 'line-through opacity-50' : ''}`}
+                    className={`flex-1 text-black ${task.completed ? 'line-through opacity-50' : ''}`}
                   >
                     {task.text}
                   </Label>

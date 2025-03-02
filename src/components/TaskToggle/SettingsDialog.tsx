@@ -51,38 +51,40 @@ const SettingsDialog = () => {
     <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle className="text-black">Settings</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <h3 className="font-medium">Time Tracking</h3>
+            <h3 className="font-medium text-black">Time Tracking</h3>
             <div className="flex items-center space-x-2">
               <Switch 
                 id="auto-track" 
                 checked={autoTrackEnabled}
                 onCheckedChange={setAutoTrackEnabled}
               />
-              <Label htmlFor="auto-track">Auto-track documents daily</Label>
+              <Label htmlFor="auto-track" className="text-black">Auto-track documents daily</Label>
             </div>
             
             {autoTrackEnabled && (
               <div className="grid grid-cols-2 gap-4 mt-2">
                 <div className="space-y-2">
-                  <Label htmlFor="start-time">Start Time</Label>
+                  <Label htmlFor="start-time" className="text-black">Start Time</Label>
                   <Input 
                     id="start-time" 
                     type="time" 
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
+                    className="text-black"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="end-time">End Time</Label>
+                  <Label htmlFor="end-time" className="text-black">End Time</Label>
                   <Input 
                     id="end-time" 
                     type="time" 
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
+                    className="text-black"
                   />
                 </div>
               </div>
@@ -90,14 +92,15 @@ const SettingsDialog = () => {
           </div>
           
           <div className="space-y-2">
-            <h3 className="font-medium">Custom Quote</h3>
+            <h3 className="font-medium text-black">Custom Quote</h3>
             <div className="space-y-2">
-              <Label htmlFor="custom-quote">Your Inspirational Quote</Label>
+              <Label htmlFor="custom-quote" className="text-black">Your Inspirational Quote</Label>
               <Input
                 id="custom-quote"
                 placeholder="Enter your own inspirational quote"
                 value={customQuote}
                 onChange={(e) => setCustomQuote(e.target.value)}
+                className="text-black"
               />
               <p className="text-xs text-gray-500">This quote will be included in the daily rotation</p>
             </div>
@@ -105,10 +108,10 @@ const SettingsDialog = () => {
           
           <button 
             onClick={handleTimeSettingSave} 
-            className="bg-black/20 hover:bg-black/30 text-white rounded-md py-2 mt-2 flex items-center justify-center"
+            className="bg-white hover:bg-white/90 text-black rounded-md py-2 mt-2 flex items-center justify-center"
           >
-            <Check size={18} className="mr-2" />
-            Save Settings
+            <Check size={18} className="mr-2 text-black" />
+            <span className="text-black">Save Settings</span>
           </button>
         </div>
       </DialogContent>

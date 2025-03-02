@@ -50,14 +50,14 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
                 className="p-1.5 bg-white/10 rounded-lg flex justify-between items-center"
               >
                 <div>
-                  <p className="text-xs text-white/60">{goal.date}</p>
-                  <p className="text-sm leading-tight">{goal.text}</p>
+                  <p className="text-xs text-black">{goal.date}</p>
+                  <p className="text-sm leading-tight text-black">{goal.text}</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-white/60 py-4">No archived goals yet</p>
+          <p className="text-center text-black py-4">No archived goals yet</p>
         )}
         
         {archivedGoals.length > 0 && (
@@ -66,8 +66,8 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
               onClick={clearArchive}
               className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
             >
-              <X size={16} />
-              <span>Clear History</span>
+              <X size={16} className="text-black" />
+              <span className="text-black">Clear History</span>
             </button>
           </div>
         )}
@@ -94,10 +94,10 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
           )}
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
+      <DialogContent className="sm:max-w-md bg-white text-black border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-4 flex items-center">
-            <Scroll size={18} className="mr-2" />
+          <DialogTitle className="text-xl font-light mb-4 flex items-center text-black">
+            <Scroll size={18} className="mr-2 text-black" />
             Goal History
           </DialogTitle>
         </DialogHeader>
@@ -107,27 +107,27 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
               {archivedGoals.map((goal, index) => (
                 <div 
                   key={index} 
-                  className="p-1.5 bg-white/10 rounded-lg flex justify-between items-center"
+                  className="p-1.5 bg-gray-100 rounded-lg flex justify-between items-center"
                 >
                   <div>
-                    <p className="text-xs text-white/60">{goal.date}</p>
-                    <p className="text-sm leading-tight">{goal.text}</p>
+                    <p className="text-xs text-gray-500">{goal.date}</p>
+                    <p className="text-sm leading-tight text-black">{goal.text}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-white/60 py-4">No archived goals yet</p>
+            <p className="text-center text-gray-500 py-4">No archived goals yet</p>
           )}
         </div>
         {archivedGoals.length > 0 && (
           <div className="mt-3 flex justify-end">
             <button
               onClick={clearArchive}
-              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
+              className="flex items-center gap-1 bg-white hover:bg-white/90 text-red-500 transition-colors"
             >
-              <X size={16} />
-              <span>Clear History</span>
+              <X size={16} className="text-red-500" />
+              <span className="text-red-500">Clear History</span>
             </button>
           </div>
         )}
