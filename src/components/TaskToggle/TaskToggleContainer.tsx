@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import FocusDialog from '../FocusMode/FocusDialog';
 import { BlockedSite, TimeTrackerSettings, defaultSettings } from '../FocusMode/types';
 import { startActivity, endActivity } from "@/utils/timeTracking";
-import { Briefcase } from 'lucide-react';
 
 const TaskToggleContainer = () => {
   const { 
@@ -168,10 +167,10 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full hover:bg-white transition-colors flex items-center justify-center w-12 h-12`}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full ${button.id === 'focus' ? 'hover:bg-white' : 'hover:bg-black/50'} transition-colors flex items-center justify-center w-12 h-12`}
                   aria-label={button.label}
                 >
-                  <div className="text-black">
+                  <div className={`${button.id === 'focus' ? 'text-black' : 'text-white'} ${isButtonActive(button.id) && 'text-black'}`}>
                     {button.icon}
                   </div>
                 </button>
@@ -197,21 +196,7 @@ const TaskToggleContainer = () => {
         ))}
       </div>
       
-      <Dialog>
-        <DialogTrigger asChild>
-          <button
-            id="project-manager-trigger"
-            className="p-3 bg-black/30 rounded-full hover:bg-white transition-colors flex items-center justify-center w-12 h-12"
-            aria-label="Projects"
-            onClick={() => {}}
-          >
-            <div className="text-black">
-              <Briefcase size={24} />
-            </div>
-          </button>
-        </DialogTrigger>
-        <ProjectManager />
-      </Dialog>
+      <ProjectManager />
     </div>
   );
 };
