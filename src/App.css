@@ -44,7 +44,15 @@
 
 /* Ensure all pencil icons in buttons are black */
 button svg[data-lucide="pencil"],
-button svg[data-lucide="pencil-line"] {
+button svg[data-lucide="pencil-line"],
+button svg[data-lucide="edit2"] {
   color: black !important;
+  stroke: black !important;
+  fill: none !important;
 }
 
+/* Ensure all white buttons have black text and icons */
+button.bg-white *,
+button.hover\:bg-white:hover * {
+  color: black !important;
+}
