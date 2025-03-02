@@ -37,6 +37,45 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
     }
   };
 
+  // If this component is being used inside GoalArchiveDialog (showLabel=false),
+  // we should only render the content, not the dialog itself
+  if (!showLabel) {
+    return (
+      <div className={className || ''}>
+        {archivedGoals.length > 0 ? (
+          <div className="space-y-3">
+            {archivedGoals.map((goal, index) => (
+              <div 
+                key={index} 
+                className="p-3 bg-white/10 rounded-lg flex justify-between items-center"
+              >
+                <div>
+                  <p className="text-sm text-white/60">{goal.date}</p>
+                  <p className="text-lg">{goal.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-white/60 py-6">No archived goals yet</p>
+        )}
+        
+        {archivedGoals.length > 0 && (
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={clearArchive}
+              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors"
+            >
+              <X size={16} />
+              <span>Clear History</span>
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Original dialog implementation for standalone usage
   return (
     <Dialog>
       <DialogTrigger asChild>

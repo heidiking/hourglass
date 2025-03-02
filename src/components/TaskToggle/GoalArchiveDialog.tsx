@@ -19,7 +19,7 @@ const GoalArchiveDialog = () => {
           <DialogTitle className="text-xl font-light mb-4">Goal History</DialogTitle>
         </DialogHeader>
         <div className="max-h-[50vh] overflow-y-auto">
-          <GoalArchive showLabel={true} className="hidden" />
+          <GoalArchive showLabel={false} className="" />
         </div>
       </DialogContent>
     </Dialog>
