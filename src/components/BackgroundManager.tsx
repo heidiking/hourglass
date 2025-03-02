@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { getBackgroundForToday } from '../utils/backgrounds';
+import { getBackgroundForToday, type Background } from '../utils/backgrounds';
 
 const BackgroundManager = () => {
   const [bgImage, setBgImage] = useState<string | null>(null);
+  const [backgroundData, setBackgroundData] = useState<Background | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -12,6 +13,7 @@ const BackgroundManager = () => {
       try {
         const todayBackground = await getBackgroundForToday();
         setBgImage(todayBackground.url);
+        setBackgroundData(todayBackground);
       } catch (error) {
         console.error('Failed to load background:', error);
         // Fallback to a default image
@@ -36,6 +38,13 @@ const BackgroundManager = () => {
 
     return () => clearTimeout(midnightTimer);
   }, []);
+
+  // Store the background data in localStorage so other components can access it
+  useEffect(() => {
+    if (backgroundData) {
+      localStorage.setItem('currentBackgroundData', JSON.stringify(backgroundData));
+    }
+  }, [backgroundData]);
 
   return (
     <>

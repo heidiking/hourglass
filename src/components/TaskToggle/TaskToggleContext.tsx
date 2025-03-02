@@ -1,7 +1,6 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Clock, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -64,12 +63,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         onClick: () => setTimeTrackerOpen(true),
       },
       {
-        id: 'earnings',
-        icon: <DollarSign size={24} className="text-white" />,
-        label: 'Earnings',
-        onClick: () => setEarningsTrackerOpen(true),
-      },
-      {
         id: 'focus',
         icon: <Shield size={24} className="text-white" />,
         label: 'Focus',
@@ -81,7 +74,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (storedOrder) {
       try {
         const orderIds = JSON.parse(storedOrder);
-        const orderedButtons = orderIds
+        const filteredOrderIds = orderIds.filter(id => id !== 'earnings');
+        const orderedButtons = filteredOrderIds
           .map(id => initialButtons.find(button => button.id === id))
           .filter(Boolean);
         
