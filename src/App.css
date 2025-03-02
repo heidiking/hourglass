@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -40,3 +41,10 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Ensure all pencil icons in buttons are black */
+button svg[data-lucide="pencil"],
+button svg[data-lucide="pencil-line"] {
+  color: black !important;
+}
+

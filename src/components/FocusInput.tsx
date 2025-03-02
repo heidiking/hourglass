@@ -117,12 +117,15 @@ const FocusInput = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
-      <div className="flex items-center">
-        <label className="text-white text-xl md:text-2xl font-light whitespace-nowrap">
-          My main goal for today is:
-        </label>
+      <div className="flex flex-col w-full">
+        <div className="flex items-center w-full">
+          <label className="text-white text-xl md:text-2xl font-light whitespace-nowrap">
+            My main goal for today is:
+          </label>
+          <div className="flex-grow"></div>
+        </div>
         <div 
-          className={`relative flex-1 border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 ml-2`}
+          className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 mt-1`}
         >
           <input
             type="text"
