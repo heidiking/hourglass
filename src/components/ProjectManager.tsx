@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
+import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator, Type } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -34,6 +34,7 @@ type Project = {
   earnings: number; // Total earnings for the project
   totalEarnings?: number; // Total project value (new field)
   hourlyRate?: number; // Optional hourly rate for the project
+  wordCount?: number; // New field for tracking word count
 };
 
 type ManualActivity = {
@@ -94,6 +95,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [newActivityEarnings, setNewActivityEarnings] = useState("");
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
   const [projectTotalEarnings, setProjectTotalEarnings] = useState("");
+  const [projectWordCount, setProjectWordCount] = useState("");
 
   const [timelineActivities, setTimelineActivities] = useState<{[key: string]: ActivitySession[]}>({});
 
@@ -145,6 +147,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       activities: [],
       manualActivities: [],
       earnings: 0,
+      wordCount: 0,
     };
     
     setProjects([...projects, newProject]);
@@ -256,6 +259,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     setSelectedActivities(project.activities);
     setProjectHourlyRate(project.hourlyRate?.toString() || "");
     setProjectTotalEarnings(project.totalEarnings?.toString() || "");
+    setProjectWordCount(project.wordCount?.toString() || "0");
     setCurrentTab("edit");
   };
 
@@ -400,11 +404,16 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     const totalEarnings = projectTotalEarnings.trim()
       ? parseFloat(projectTotalEarnings)
       : undefined;
+
+    const wordCount = projectWordCount.trim()
+      ? parseInt(projectWordCount)
+      : 0;
     
     const updatedProject = {
       ...editingProject,
       hourlyRate,
-      totalEarnings
+      totalEarnings,
+      wordCount
     };
     
     // Auto-calculate hourly rate if we have total earnings and time
@@ -422,13 +431,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     setProjects(updatedProjects);
     setEditingProject(updatedProject);
     
-    if (hourlyRate !== undefined && totalEarnings !== undefined) {
-      toast.success("Project financials updated");
-    } else if (totalEarnings !== undefined) {
-      toast.success("Total project value updated");
-    } else if (hourlyRate !== undefined) {
-      toast.success("Hourly rate updated");
-    }
+    toast.success("Project financials updated");
   };
 
   const getProjectTotalTime = (project: Project): number => {
@@ -459,6 +462,15 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     
     const hourlyEarnings = project.earnings / totalTimeHours;
     return `$${hourlyEarnings.toFixed(2)}/hr`;
+  };
+
+  const getProjectWordRate = (project: Project): string => {
+    if (!project.totalEarnings || !project.wordCount || project.wordCount <= 0) {
+      return "N/A";
+    }
+    
+    const perWordRate = project.totalEarnings / project.wordCount;
+    return `$${perWordRate.toFixed(4)}/word`;
   };
 
   const formatCurrency = (amount: number): string => {
@@ -571,16 +583,28 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                                 {getProjectHourlyEarnings(project)}
                               </div>
                             )}
+                            {project.wordCount > 0 && (
+                              <div title="Word count">
+                                <Type size={14} className="inline mr-1" />
+                                {project.wordCount.toLocaleString()} words
+                              </div>
+                            )}
+                            {project.totalEarnings && project.wordCount > 0 && (
+                              <div title="Per-word rate">
+                                <DollarSign size={14} className="inline mr-1" />
+                                {getProjectWordRate(project)}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="flex gap-2">
                           <Button 
                             variant="outline" 
                             size="icon" 
-                            className="h-8 w-8 border-gray-700"
+                            className="h-8 w-8 border-gray-700 bg-white"
                             onClick={() => openProjectForEditing(project)}
                           >
-                            <Edit2 size={14} />
+                            <Edit2 size={14} className="text-black" />
                           </Button>
                           <Button 
                             variant="outline" 
@@ -759,7 +783,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                           onChange={(e) => setEditingProject({...editingProject, name: e.target.value})}
                           className="bg-black/30 border-gray-700 text-white"
                         />
-                        <Button onClick={updateProjectName} variant="outline" className="border-gray-700 whitespace-nowrap">
+                        <Button onClick={updateProjectName} variant="outline" className="border-gray-700 whitespace-nowrap bg-white">
                           Save Name
                         </Button>
                       </div>
@@ -809,15 +833,31 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-end">
-                          <Button 
-                            onClick={updateProjectFinancials}
-                            variant="outline" 
-                            className="border-gray-700 w-full"
-                          >
-                            Update Financials
-                          </Button>
+                        <div>
+                          <label className="text-xs text-white/60">Word Count</label>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
+                              <Type size={16} className="text-blue-300 mr-2" />
+                              <Input
+                                type="number"
+                                min="0"
+                                value={projectWordCount}
+                                onChange={(e) => setProjectWordCount(e.target.value)}
+                                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                placeholder="0"
+                              />
+                            </div>
+                          </div>
                         </div>
+                      </div>
+                      <div className="mt-2">
+                        <Button 
+                          onClick={updateProjectFinancials}
+                          variant="outline" 
+                          className="border-gray-700 bg-white w-full"
+                        >
+                          Update Financials
+                        </Button>
                       </div>
                       <div className="bg-black/20 rounded p-2 mt-1">
                         <div className="grid grid-cols-2 gap-2 text-sm">
@@ -829,6 +869,18 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                             <label className="text-xs text-white/70">Actual Hourly Rate</label>
                             <div className="font-medium">{getProjectHourlyEarnings(editingProject)}</div>
                           </div>
+                          {editingProject.wordCount > 0 && (
+                            <>
+                              <div>
+                                <label className="text-xs text-white/70">Word Count</label>
+                                <div className="font-medium">{editingProject.wordCount?.toLocaleString() || 0}</div>
+                              </div>
+                              <div>
+                                <label className="text-xs text-white/70">Per-Word Rate</label>
+                                <div className="font-medium">{getProjectWordRate(editingProject)}</div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -848,9 +900,9 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                             className={`h-10 w-10 ${selectedColor} border-gray-700`}
                             onClick={() => setColorPickerVisible(!colorPickerVisible)}
                           />
-                          <Button onClick={addTag} variant="outline" className="border-gray-700 whitespace-nowrap">
-                            <Tag size={14} className="mr-1" />
-                            Add Tag
+                          <Button onClick={addTag} variant="outline" className="border-gray-700 whitespace-nowrap bg-white">
+                            <Tag size={14} className="mr-1 text-black" />
+                            <span className="text-black">Add Tag</span>
                           </Button>
                         </div>
                         
@@ -901,10 +953,9 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                                 />
                                 <Button 
                                   variant="outline" 
-                                  className="border-gray-700 text-sm"
-                                  onClick={() => handleCustomColorChange(customColorInput)}
+                                  className="border-gray-700 text-sm bg-white"
                                 >
-                                  Apply
+                                  <span className="text-black">Apply</span>
                                 </Button>
                               </div>
                             </div>
@@ -988,10 +1039,10 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                         <Button 
                           onClick={addManualActivity} 
                           variant="outline" 
-                          className="border-gray-700 text-white w-full"
+                          className="border-gray-700 text-white w-full bg-white"
                         >
-                          <Plus size={14} className="mr-1" />
-                          Add Time Entry
+                          <Plus size={14} className="mr-1 text-black" />
+                          <span className="text-black">Add Time Entry</span>
                         </Button>
                       </div>
                     </div>
@@ -1005,9 +1056,9 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                           onClick={saveActivityAssociations} 
                           size="sm" 
                           variant="outline" 
-                          className="border-gray-700"
+                          className="border-gray-700 bg-white"
                         >
-                          Save Associations
+                          <span className="text-black">Save Associations</span>
                         </Button>
                       </div>
                       
