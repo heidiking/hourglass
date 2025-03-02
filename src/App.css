@@ -53,7 +53,9 @@ button svg[data-lucide="edit2"] {
 
 /* Ensure all white buttons have black text and icons */
 button.bg-white *,
-button.hover\:bg-white:hover * {
+button.hover\:bg-white:hover *,
+button.bg-white svg,
+button.hover\:bg-white:hover svg {
   color: black !important;
+  stroke: black !important;
 }
-

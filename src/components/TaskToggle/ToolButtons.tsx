@@ -51,7 +51,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                 className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full ${button.id === 'focus' ? 'hover:bg-white' : 'hover:bg-black/50'} transition-colors flex items-center justify-center w-12 h-12`}
                 aria-label={button.label}
               >
-                <div className={isButtonActive(button.id) ? 'text-black' : 'text-white'}>
+                <div className={`${isButtonActive(button.id) ? 'text-black' : 'text-white'}`} style={{ color: isButtonActive(button.id) ? 'black' : 'white' }}>
                   {button.icon}
                 </div>
               </button>
