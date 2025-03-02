@@ -45,10 +45,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     
     // Add specific class for white buttons to ensure black text
-    const isWhiteButton = className?.includes('bg-white');
+    const isWhiteButton = className?.includes('bg-white') || className?.includes('hover:bg-white');
     const buttonClass = cn(
       buttonVariants({ variant, size, className }),
-      isWhiteButton ? 'text-black' : ''
+      isWhiteButton ? 'text-black hover:text-black focus:text-black' : ''
     );
     
     return (

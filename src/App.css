@@ -62,8 +62,48 @@ button.hover\:bg-white:hover svg {
 
 /* Ensure dialog buttons have visible text */
 .dialog-content button span,
-.dialog-content button .button-text {
+.dialog-content button .button-text,
+[role="dialog"] button span,
+[role="dialog"] .button-text,
+.dialog button span,
+.dialog .button-text {
   display: inline !important;
   visibility: visible !important;
   color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Additional optimization for dialog content */
+[role="dialog"] button.bg-white span,
+[role="dialog"] button.bg-white .button-text,
+.dialog button.bg-white span, 
+.dialog button.bg-white .button-text {
+  color: black !important;
+}
+
+/* Make sure all button text is visible regardless of state */
+button span, 
+button .button-text {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Performance optimizations */
+.animate-in, 
+.animate-out {
+  will-change: transform, opacity;
+}
+
+/* Optimize dialog performance */
+[role="dialog"] {
+  contain: content;
+}
+
+/* Force black text on white buttons everywhere */
+button.bg-white,
+button.bg-white:hover,
+button.bg-white:focus,
+button.hover\:bg-white:hover {
+  color: black !important;
 }

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { useTaskToggle } from './TaskToggleContext';
 import SettingsDialog from './SettingsDialog';
 import TasksDialog from './TasksDialog';
@@ -59,14 +59,28 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
             </DialogTrigger>
             
             {/* Render appropriate dialog content based on the button */}
-            {button.id === 'settings' && settingsOpen && <SettingsDialog />}
-            {button.id === 'tasks' && tasksOpen && <TasksDialog />}
-            {button.id === 'archive' && goalArchiveOpen && <GoalArchiveDialog />}
+            {button.id === 'settings' && settingsOpen && (
+              <DialogContent className="dialog-content">
+                <SettingsDialog />
+              </DialogContent>
+            )}
+            {button.id === 'tasks' && tasksOpen && (
+              <DialogContent className="dialog-content">
+                <TasksDialog />
+              </DialogContent>
+            )}
+            {button.id === 'archive' && goalArchiveOpen && (
+              <DialogContent className="dialog-content">
+                <GoalArchiveDialog />
+              </DialogContent>
+            )}
             {button.id === 'focus' && focusModeOpen && (
-              <FocusModeManager 
-                focusModeOpen={focusModeOpen}
-                setFocusModeOpen={setFocusModeOpen}
-              />
+              <DialogContent className="dialog-content">
+                <FocusModeManager 
+                  focusModeOpen={focusModeOpen}
+                  setFocusModeOpen={setFocusModeOpen}
+                />
+              </DialogContent>
             )}
           </Dialog>
         </div>
