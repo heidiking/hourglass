@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield, FolderKanban } from 'lucide-react';
@@ -44,43 +45,43 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       {
         id: 'projects',
         icon: <FolderKanban size={24} className="text-white" />,
-        label: '',
+        label: 'Projects',
         onClick: () => setProjectManagerOpen(true),
       },
       {
         id: 'settings',
         icon: <Settings size={24} className="text-white" />,
-        label: '',
+        label: 'Settings',
         onClick: () => setSettingsOpen(true),
       },
       {
         id: 'tasks',
         icon: <CheckSquare size={24} className="text-white" />,
-        label: '',
+        label: 'Tasks',
         onClick: () => setTasksOpen(true),
       },
       {
         id: 'archive',
         icon: <Scroll size={24} className="text-white" />,
-        label: '',
+        label: 'Archive',
         onClick: () => setGoalArchiveOpen(true),
       },
       {
         id: 'tracker',
         icon: <Clock size={24} className="text-white" />,
-        label: '',
+        label: 'Tracker',
         onClick: () => setTimeTrackerOpen(true),
       },
       {
         id: 'earnings',
         icon: <DollarSign size={24} className="text-white" />,
-        label: '',
+        label: 'Earnings',
         onClick: () => setEarningsTrackerOpen(true),
       },
       {
         id: 'focus',
         icon: <Shield size={24} className="text-white" />,
-        label: '',
+        label: 'Focus',
         onClick: () => setFocusModeOpen(true),
       }
     ];

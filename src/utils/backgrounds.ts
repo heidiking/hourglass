@@ -6,7 +6,7 @@ export type Background = {
   location?: string;
 };
 
-// A collection of beautiful background images with focus on beach and ocean scenes
+// A collection of beautiful background images
 const backgrounds: Background[] = [
   {
     id: 1,
@@ -15,38 +15,28 @@ const backgrounds: Background[] = [
   },
   {
     id: 2,
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
-    location: 'Tropical Beach'
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05',
+    location: 'Mountain Summit'
   },
   {
     id: 3,
-    url: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21',
-    location: 'Ocean Waves'
-  },
-  {
-    id: 4,
-    url: 'https://images.unsplash.com/photo-1484291470158-b8f8d608850d',
-    location: 'Beach Sunset'
-  },
-  {
-    id: 5,
     url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
     location: 'Forest Lake'
   },
   {
+    id: 4,
+    url: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff',
+    location: 'Rocky Mountain'
+  },
+  {
+    id: 5,
+    url: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07',
+    location: 'Flower Field'
+  },
+  {
     id: 6,
-    url: 'https://images.unsplash.com/photo-1471922694854-ff1b63b20054',
-    location: 'Ocean View'
-  },
-  {
-    id: 7,
-    url: 'https://images.unsplash.com/photo-1519046904884-53103b34b206',
-    location: 'Beach Paradise'
-  },
-  {
-    id: 8,
-    url: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0',
-    location: 'Tropical Waters'
+    url: 'https://images.unsplash.com/photo-1482938289607-e9573fc25ebb',
+    location: 'River Valley'
   }
 ];
 

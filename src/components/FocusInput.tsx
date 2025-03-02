@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 type ArchivedGoal = {
@@ -9,8 +10,7 @@ type ArchivedGoal = {
 const FocusInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [placeholder, setPlaceholder] = useState<string>('My main goal for today is:');
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [placeholder, setPlaceholder] = useState<string>('What is your main goal for today?');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoal(e.target.value);
@@ -61,26 +61,7 @@ const FocusInput = () => {
     }
   };
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    
-    // Position the cursor after the colon when empty
-    if (inputRef.current && !goal) {
-      const startText = placeholder;
-      inputRef.current.value = startText + " ";
-      setGoal("");
-      
-      // We need to set this after the DOM updates
-      setTimeout(() => {
-        if (inputRef.current) {
-          // Set cursor position one space after the colon
-          inputRef.current.selectionStart = startText.length + 1;
-          inputRef.current.selectionEnd = startText.length + 1;
-        }
-      }, 0);
-    }
-  };
-
+  // This effect handles the case when a goal is already set and the user revisits the page
   useEffect(() => {
     const savedGoal = localStorage.getItem('dailyGoal');
     if (savedGoal) {
@@ -114,12 +95,13 @@ const FocusInput = () => {
     return () => clearTimeout(midnightTimer);
   }, []);
 
+  // Adjust placeholder text based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setPlaceholder('My main goal today is:');
+        setPlaceholder('Today\'s main goal?');
       } else {
-        setPlaceholder('My main goal for today is:');
+        setPlaceholder('What is your main goal for today?');
       }
     };
     
@@ -136,18 +118,17 @@ const FocusInput = () => {
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
       <div 
-        className={`relative border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 text-left`}
+        className={`relative border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
       >
         <input
-          ref={inputRef}
           type="text"
           value={goal}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onFocus={handleFocus}
+          onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-left placeholder-white/70 outline-none"
+          className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-center placeholder-white/70 outline-none"
           aria-label="Daily goal input"
         />
       </div>

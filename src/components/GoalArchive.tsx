@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Scroll, X } from 'lucide-react';
 import { 
@@ -50,7 +51,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
               >
                 <div>
                   <p className="text-sm text-white/60">{goal.date}</p>
-                  <p className="text-lg">My main goal for today is: {goal.text}</p>
+                  <p className="text-lg">{goal.text}</p>
                 </div>
               </div>
             ))}
@@ -110,7 +111,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
                 >
                   <div>
                     <p className="text-sm text-white/60">{goal.date}</p>
-                    <p className="text-lg">My main goal for today is: {goal.text}</p>
+                    <p className="text-lg">{goal.text}</p>
                   </div>
                 </div>
               ))}
