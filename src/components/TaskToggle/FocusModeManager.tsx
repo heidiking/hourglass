@@ -95,17 +95,32 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
     setShowSettings(true);
   }, []);
 
-  return focusModeOpen ? (
-    <FocusDialog 
-      isActive={isActive}
-      elapsedTime={elapsedTime}
-      blockedSites={blockedSites}
-      setBlockedSites={setBlockedSites}
-      startFocusMode={startFocusMode}
-      endFocusMode={endFocusMode}
-      openSettings={openSettings}
-    />
-  ) : null;
+  const closeSettings = useCallback(() => {
+    setShowSettings(false);
+  }, []);
+
+  return (
+    <>
+      {focusModeOpen && (
+        <FocusDialog 
+          isActive={isActive}
+          elapsedTime={elapsedTime}
+          blockedSites={blockedSites}
+          setBlockedSites={setBlockedSites}
+          startFocusMode={startFocusMode}
+          endFocusMode={endFocusMode}
+          openSettings={openSettings}
+        />
+      )}
+      
+      <FocusSettings 
+        open={showSettings}
+        onOpenChange={setShowSettings}
+        settings={settings}
+        setSettings={setSettings}
+      />
+    </>
+  );
 };
 
 export default FocusModeManager;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft,
@@ -12,40 +11,98 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { TimeTrackerSettings, defaultSettings } from './types';
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface FocusSettingsProps {
-  closeSettings: () => void;
+  closeSettings?: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  settings?: TimeTrackerSettings;
+  setSettings?: React.Dispatch<React.SetStateAction<TimeTrackerSettings>>;
 }
 
-const FocusSettings: React.FC<FocusSettingsProps> = ({ closeSettings }) => {
-  const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
+const FocusSettings: React.FC<FocusSettingsProps> = ({ 
+  closeSettings, 
+  open, 
+  onOpenChange,
+  settings: externalSettings,
+  setSettings: setExternalSettings
+}) => {
+  const [internalSettings, setInternalSettings] = useState<TimeTrackerSettings>(defaultSettings);
+  
+  const currentSettings = externalSettings || internalSettings;
+  const setCurrentSettings = setExternalSettings || setInternalSettings;
   
   useEffect(() => {
-    // Load settings from localStorage
-    const storedSettings = localStorage.getItem('timeTrackerSettings');
-    if (storedSettings) {
-      try {
-        setSettings(JSON.parse(storedSettings));
-      } catch (e) {
-        console.error("Error parsing settings:", e);
-        setSettings(defaultSettings);
+    if (!externalSettings) {
+      const storedSettings = localStorage.getItem('timeTrackerSettings');
+      if (storedSettings) {
+        try {
+          setInternalSettings(JSON.parse(storedSettings));
+        } catch (e) {
+          console.error("Error parsing settings:", e);
+          setInternalSettings(defaultSettings);
+        }
       }
     }
-  }, []);
+  }, [externalSettings]);
   
   const handleSettingChange = (key: keyof TimeTrackerSettings, value: any) => {
-    setSettings(prev => ({
+    setCurrentSettings(prev => ({
       ...prev,
       [key]: value
     }));
   };
   
   const saveSettings = () => {
-    localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
+    localStorage.setItem('timeTrackerSettings', JSON.stringify(currentSettings));
     toast.success("Settings saved successfully");
-    closeSettings();
+    
+    if (onOpenChange) {
+      onOpenChange(false);
+    } else if (closeSettings) {
+      closeSettings();
+    }
   };
   
+  if (open !== undefined && onOpenChange) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bg-black/95 border-gray-800 text-white">
+          <SettingsContent 
+            settings={currentSettings} 
+            handleSettingChange={handleSettingChange} 
+            saveSettings={saveSettings} 
+            closeSettings={() => onOpenChange(false)} 
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  
+  return (
+    <SettingsContent 
+      settings={currentSettings} 
+      handleSettingChange={handleSettingChange} 
+      saveSettings={saveSettings} 
+      closeSettings={closeSettings || (() => {})} 
+    />
+  );
+};
+
+interface SettingsContentProps {
+  settings: TimeTrackerSettings;
+  handleSettingChange: (key: keyof TimeTrackerSettings, value: any) => void;
+  saveSettings: () => void;
+  closeSettings: () => void;
+}
+
+const SettingsContent: React.FC<SettingsContentProps> = ({
+  settings,
+  handleSettingChange,
+  saveSettings,
+  closeSettings
+}) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
