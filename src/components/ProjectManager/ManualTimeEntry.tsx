@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Plus, DollarSign } from 'lucide-react';
+import { Plus, DollarSign, Save, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -9,17 +9,53 @@ import { Project, ManualActivity } from './types';
 interface ManualTimeEntryProps {
   editingProject: Project;
   onUpdateProject: (updatedProject: Project) => void;
+  editingActivity: ManualActivity | null;
+  setEditingActivity: (activity: ManualActivity | null) => void;
 }
 
 const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({ 
   editingProject, 
-  onUpdateProject 
+  onUpdateProject,
+  editingActivity,
+  setEditingActivity
 }) => {
   const [newActivityName, setNewActivityName] = React.useState("");
   const [newActivityTime, setNewActivityTime] = React.useState("1");
   const [newActivityTimeUnit, setNewActivityTimeUnit] = React.useState("minute");
   const [activityDate, setActivityDate] = React.useState(new Date().toISOString().split('T')[0]);
   const [newActivityEarnings, setNewActivityEarnings] = React.useState("");
+
+  // Set form values when editingActivity changes
+  React.useEffect(() => {
+    if (editingActivity) {
+      setNewActivityName(editingActivity.name);
+      
+      // Convert the duration back to the appropriate unit
+      let duration = editingActivity.duration;
+      let unit = "minute";
+      let value = Math.round(duration / (60 * 1000));
+      
+      if (duration >= 60 * 60 * 1000) {
+        value = Math.round(duration / (60 * 60 * 1000));
+        unit = "hour";
+      } else if (duration >= 24 * 60 * 60 * 1000) {
+        value = Math.round(duration / (24 * 60 * 60 * 1000));
+        unit = "day";
+      }
+      
+      setNewActivityTime(value.toString());
+      setNewActivityTimeUnit(unit);
+      setActivityDate(editingActivity.date);
+      setNewActivityEarnings(editingActivity.earnings ? editingActivity.earnings.toString() : "");
+    } else {
+      // Reset form for new entry
+      setNewActivityName("");
+      setNewActivityTime("1");
+      setNewActivityTimeUnit("minute");
+      setActivityDate(new Date().toISOString().split('T')[0]);
+      setNewActivityEarnings("");
+    }
+  }, [editingActivity]);
 
   const addManualActivity = () => {
     if (!editingProject || !newActivityName.trim()) return;
@@ -33,38 +69,80 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
     
     const earnings = newActivityEarnings.trim() ? parseFloat(newActivityEarnings) : undefined;
     
-    const newActivity: ManualActivity = {
-      id: Date.now().toString(),
-      name: newActivityName,
-      duration: durationMs,
-      date: activityDate,
-      tags: [],
-      earnings: earnings,
-    };
-    
-    // Update project total earnings if this activity has earnings
-    const updatedEarnings = editingProject.earnings + (earnings || 0);
-    
-    const updatedProject = {
-      ...editingProject,
-      manualActivities: [...(editingProject.manualActivities || []), newActivity],
-      earnings: updatedEarnings,
-    };
-    
-    // Don't automatically update the hourly rate target value, as it's meant to be 
-    // user-defined. The actual hourly rate will be calculated separately.
-    
-    onUpdateProject(updatedProject);
+    if (editingActivity) {
+      // Update existing activity
+      const updatedActivities = editingProject.manualActivities.map(activity => {
+        if (activity.id === editingActivity.id) {
+          return {
+            ...activity,
+            name: newActivityName,
+            duration: durationMs,
+            date: activityDate,
+            earnings: earnings,
+          };
+        }
+        return activity;
+      });
+      
+      // Recalculate total earnings
+      const totalEarnings = updatedActivities.reduce((total, activity) => 
+        total + (activity.earnings || 0), 0);
+      
+      const updatedProject = {
+        ...editingProject,
+        manualActivities: updatedActivities,
+        earnings: totalEarnings,
+      };
+      
+      onUpdateProject(updatedProject);
+      setEditingActivity(null);
+      toast.success("Time entry updated");
+    } else {
+      // Add new activity
+      const newActivity: ManualActivity = {
+        id: Date.now().toString(),
+        name: newActivityName,
+        duration: durationMs,
+        date: activityDate,
+        tags: [],
+        earnings: earnings,
+      };
+      
+      // Update project total earnings if this activity has earnings
+      const updatedEarnings = editingProject.earnings + (earnings || 0);
+      
+      const updatedProject = {
+        ...editingProject,
+        manualActivities: [...(editingProject.manualActivities || []), newActivity],
+        earnings: updatedEarnings,
+      };
+      
+      // Don't automatically update the hourly rate target value, as it's meant to be 
+      // user-defined. The actual hourly rate will be calculated separately.
+      
+      onUpdateProject(updatedProject);
+      setNewActivityName("");
+      setNewActivityTime("1");
+      setNewActivityEarnings("");
+      
+      toast.success("Manual activity added");
+    }
+  };
+
+  const cancelEditing = () => {
+    setEditingActivity(null);
     setNewActivityName("");
     setNewActivityTime("1");
+    setNewActivityTimeUnit("minute");
+    setActivityDate(new Date().toISOString().split('T')[0]);
     setNewActivityEarnings("");
-    
-    toast.success("Manual activity added");
   };
 
   return (
     <div className="space-y-2">
-      <label className="text-sm text-white/70">Add Manual Time Entry</label>
+      <label className="text-sm text-white/70">
+        {editingActivity ? "Edit Time Entry" : "Add Manual Time Entry"}
+      </label>
       <div className="space-y-2 bg-black/20 p-2 rounded">
         <Input
           value={newActivityName}
@@ -115,14 +193,35 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           </div>
         </div>
         
-        <Button 
-          onClick={addManualActivity} 
-          variant="outline" 
-          className="border-gray-700 w-full bg-white text-black hover:bg-white/90 hover:text-black"
-        >
-          <Plus size={14} className="mr-1 text-black" />
-          Add Time Entry
-        </Button>
+        {editingActivity ? (
+          <div className="flex gap-2">
+            <Button 
+              onClick={addManualActivity}
+              variant="outline" 
+              className="border-gray-700 flex-1 bg-white text-black hover:bg-white/90 hover:text-black"
+            >
+              <Save size={14} className="mr-1 text-black" />
+              Save Changes
+            </Button>
+            <Button 
+              onClick={cancelEditing}
+              variant="outline" 
+              className="border-gray-700 bg-white text-black hover:bg-white/90 hover:text-black"
+            >
+              <X size={14} className="mr-1 text-black" />
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <Button 
+            onClick={addManualActivity} 
+            variant="outline" 
+            className="border-gray-700 w-full bg-white text-black hover:bg-white/90 hover:text-black"
+          >
+            <Plus size={14} className="mr-1 text-black" />
+            Add Time Entry
+          </Button>
+        )}
       </div>
     </div>
   );

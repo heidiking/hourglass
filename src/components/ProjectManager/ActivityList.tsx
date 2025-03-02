@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Clock, Trash2, DollarSign } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, Trash2, DollarSign, Edit } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { formatFocusTime } from '@/utils/timeTracking';
 import { ActivitySession } from '@/utils/timeTracking';
@@ -14,6 +14,7 @@ interface ActivityListProps {
   selectedActivities: string[];
   setSelectedActivities: React.Dispatch<React.SetStateAction<string[]>>;
   saveActivityAssociations: () => void;
+  setEditingActivity: (activity: ManualActivity | null) => void;
 }
 
 const ActivityList: React.FC<ActivityListProps> = ({
@@ -22,7 +23,8 @@ const ActivityList: React.FC<ActivityListProps> = ({
   onUpdateProject,
   selectedActivities,
   setSelectedActivities,
-  saveActivityAssociations
+  saveActivityAssociations,
+  setEditingActivity
 }) => {
   const toggleActivitySelection = (activityId: string) => {
     if (!editingProject) return;
@@ -52,6 +54,10 @@ const ActivityList: React.FC<ActivityListProps> = ({
     };
     
     onUpdateProject(updatedProject);
+  };
+
+  const editManualActivity = (activity: ManualActivity) => {
+    setEditingActivity(activity);
   };
 
   return (
@@ -132,14 +138,24 @@ const ActivityList: React.FC<ActivityListProps> = ({
                       </div>
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="h-8 w-8 text-red-400 hover:text-red-300"
-                    onClick={() => removeManualActivity(activity.id)}
-                  >
-                    <Trash2 size={14} />
-                  </Button>
+                  <div className="flex">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 text-blue-400 hover:text-blue-300 mr-1"
+                      onClick={() => editManualActivity(activity)}
+                    >
+                      <Edit size={14} />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 text-red-400 hover:text-red-300"
+                      onClick={() => removeManualActivity(activity.id)}
+                    >
+                      <Trash2 size={14} />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

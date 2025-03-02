@@ -1,10 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { ActivitySession } from '@/utils/timeTracking';
-import { Project } from './types';
+import { Project, ManualActivity } from './types';
 import ProjectFinancials from './ProjectFinancials';
 import TagManager from './TagManager';
 import ManualTimeEntry from './ManualTimeEntry';
@@ -27,7 +27,8 @@ const EditProject: React.FC<EditProjectProps> = ({
   setProjects,
   onBackToProjects
 }) => {
-  const [selectedActivities, setSelectedActivities] = React.useState<string[]>(editingProject.activities);
+  const [selectedActivities, setSelectedActivities] = useState<string[]>(editingProject.activities);
+  const [editingActivity, setEditingActivity] = useState<ManualActivity | null>(null);
 
   React.useEffect(() => {
     setSelectedActivities(editingProject.activities);
@@ -114,6 +115,8 @@ const EditProject: React.FC<EditProjectProps> = ({
           <ManualTimeEntry 
             editingProject={editingProject}
             onUpdateProject={updateProject}
+            editingActivity={editingActivity}
+            setEditingActivity={setEditingActivity}
           />
           
           <ActivityList
@@ -123,6 +126,7 @@ const EditProject: React.FC<EditProjectProps> = ({
             selectedActivities={selectedActivities}
             setSelectedActivities={setSelectedActivities}
             saveActivityAssociations={saveActivityAssociations}
+            setEditingActivity={setEditingActivity}
           />
         </div>
       </div>
