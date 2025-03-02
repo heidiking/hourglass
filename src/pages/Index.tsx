@@ -6,7 +6,7 @@ import QuoteDisplay from '@/components/QuoteDisplay';
 import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
-import FocusBlocker from '@/components/FocusBlocker';
+import FocusBlocker from '@/components/FocusMode';
 import { initializeTimeTracking } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 
