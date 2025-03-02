@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
-import { Clock, FileText } from 'lucide-react';
+import { Clock, FileText, DollarSign } from 'lucide-react';
 import { toast } from "sonner";
 import { 
   Dialog,
@@ -9,11 +10,14 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { detectCurrentApp, getCurrentActivity, formatFocusTime, getActivityHistory } from '@/utils/timeTracking';
+import { Button } from "@/components/ui/button";
+import { getCurrentActivity, formatFocusTime, getActivityHistory } from '@/utils/timeTracking';
 
 interface TimeTrackerProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  className?: string;
+  position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
 }
 
 const isDocumentActivity = (appName: string): boolean => {
@@ -44,11 +48,17 @@ const getAppIcon = (appName: string) => {
   return <FileText size={16} className="mr-2 flex-shrink-0" />;
 };
 
-const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
+const TimeTracker = ({ 
+  open, 
+  onOpenChange, 
+  className = "",
+  position = "floating" 
+}: TimeTrackerProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentActivity, setCurrentActivity] = useState<any>(null);
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [isTracking, setIsTracking] = useState(false);
+  const [totalEarnings, setTotalEarnings] = useState(0);
   
   useEffect(() => {
     if (open !== undefined) {
@@ -71,6 +81,18 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
       setCurrentActivity(current);
       setActivityHistory(history);
       setIsTracking(Boolean(current));
+
+      // Calculate total earnings from localStorage
+      try {
+        const projectsData = localStorage.getItem('projects');
+        if (projectsData) {
+          const projects = JSON.parse(projectsData);
+          const total = projects.reduce((sum: number, project: any) => sum + (project.earnings || 0), 0);
+          setTotalEarnings(total);
+        }
+      } catch (err) {
+        console.error("Error calculating total earnings:", err);
+      }
     };
     
     updateActivityData();
@@ -83,11 +105,20 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
     isDocumentActivity(activity.appName)
   );
 
+  // Determine the position styling
+  const positionStyles = {
+    topLeft: "fixed top-4 left-4",
+    topRight: "fixed top-4 right-4",
+    bottomLeft: "fixed bottom-4 left-4",
+    bottomRight: "fixed bottom-4 right-4",
+    floating: ""
+  };
+
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className="hidden"
+          className={`p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors ${positionStyles[position]} ${className}`}
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
@@ -123,6 +154,35 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
                 No active document tracking
               </div>
             )}
+          </div>
+          
+          <div className="mb-4">
+            <h3 className="text-lg font-medium flex items-center">
+              <DollarSign size={16} className="mr-2" />
+              Earnings Summary
+            </h3>
+            <div className="p-2 bg-black/10 rounded mt-2">
+              <div className="flex items-center justify-between">
+                <span>Total Earnings:</span>
+                <span className="font-medium">${totalEarnings.toFixed(2)}</span>
+              </div>
+              <Button 
+                variant="outline"
+                size="sm"
+                className="w-full mt-2"
+                onClick={() => {
+                  handleOpenChange(false);
+                  // Find the earnings button and click it
+                  const projectManagerTrigger = document.getElementById('project-manager-trigger');
+                  if (projectManagerTrigger) {
+                    projectManagerTrigger.click();
+                  }
+                }}
+              >
+                <DollarSign size={14} className="mr-1" />
+                Manage Project Earnings
+              </Button>
+            </div>
           </div>
           
           <div>

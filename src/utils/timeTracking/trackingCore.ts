@@ -163,3 +163,6 @@ export const getCurrentActivity = (): ActivitySession | null => {
 export const getActivityHistory = (): ActivitySession[] => {
   return [...activityHistory];
 };
+
+// Export detectCurrentApp from this file as well
+export { detectCurrentApp };

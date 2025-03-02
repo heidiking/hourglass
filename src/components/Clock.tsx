@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { formatFocusTime } from '@/utils/timeTracking';
+import { formatFocusTime, getCurrentActivity } from '@/utils/timeTracking';
 
 const Clock = () => {
   const [time, setTime] = useState<string>('');
@@ -32,15 +32,19 @@ const Clock = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // This effect would be replaced with actual focus time tracking
+  // Update with actual focus time tracking
   useEffect(() => {
-    // Mock implementation for now - in real app this would use actual tracking data
-    const mockTrackingUpdate = () => {
-      setFocusedTime('0m');
+    const updateFocusTime = () => {
+      const currentActivity = getCurrentActivity();
+      if (currentActivity) {
+        setFocusedTime(formatFocusTime(currentActivity.duration));
+      } else {
+        setFocusedTime('0m');
+      }
     };
 
-    mockTrackingUpdate();
-    const trackingInterval = setInterval(mockTrackingUpdate, 60000);
+    updateFocusTime();
+    const trackingInterval = setInterval(updateFocusTime, 1000);
     
     return () => clearInterval(trackingInterval);
   }, []);

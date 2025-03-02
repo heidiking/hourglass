@@ -24,7 +24,7 @@ const TaskToggleContainer = () => {
     handleDragEnd
   } = useTaskToggle();
 
-  // For earnings tracker, we'll use ProjectManager instead of a separate component
+  // For earnings tracker, we'll open ProjectManager to the earnings tab directly
   useEffect(() => {
     if (earningsTrackerOpen) {
       // Find the project manager trigger button and click it
@@ -32,13 +32,21 @@ const TaskToggleContainer = () => {
       if (projectManagerTrigger) {
         projectManagerTrigger.click();
         
-        // Show a toast suggesting to use the Projects tab for earnings
-        toast.info(
-          "Use the Projects tab to track earnings per project and see hourly rates!",
-          {
-            duration: 4000,
+        // Set a short timeout to allow the dialog to open before we click the projects tab
+        setTimeout(() => {
+          // Find and click the Projects tab to ensure we're on the right tab
+          const projectsTab = document.querySelector('[data-value="projects"]');
+          if (projectsTab) {
+            (projectsTab as HTMLElement).click();
+            
+            toast.info(
+              "Add earnings for each project and view your hourly rates!",
+              {
+                duration: 4000,
+              }
+            );
           }
-        );
+        }, 100);
       }
       // Reset the state
       setEarningsTrackerOpen(false);

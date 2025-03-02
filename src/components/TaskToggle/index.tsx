@@ -30,7 +30,6 @@ const TaskToggleWrapper = () => {
       {earningsTrackerOpen && (
         <div className="hidden">
           {/* The actual earnings tracking functionality is integrated directly into the ProjectManager component */}
-          {/* This is just to close the dialog when clicking outside */}
           <button onClick={() => setEarningsTrackerOpen(false)}>Close</button>
         </div>
       )}

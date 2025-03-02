@@ -7,6 +7,7 @@ import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import FocusBlocker from '@/components/FocusMode';
+import TimeTracker from '@/components/TimeTracker';
 import { initializeTimeTracking } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -21,6 +22,9 @@ const Index = () => {
       <BackgroundManager />
       <NavIcons />
       <Weather />
+      
+      {/* Add the TimeTracker component to the top left */}
+      <TimeTracker position="topLeft" className="z-20" />
       
       <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">
         <Clock />
