@@ -1,25 +1,49 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ProjectManager from '../ProjectManager';
 import SettingsDialog from './SettingsDialog';
 import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import { useTaskToggle } from './TaskToggleContext';
+import { toast } from 'sonner';
 
 const TaskToggleContainer = () => {
   const { 
     toolButtons, 
     settingsOpen, 
     tasksOpen, 
-    goalArchiveOpen, 
+    goalArchiveOpen,
+    earningsTrackerOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
+    setEarningsTrackerOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
   } = useTaskToggle();
+
+  // For earnings tracker, we'll use ProjectManager instead of a separate component
+  useEffect(() => {
+    if (earningsTrackerOpen) {
+      // Find the project manager trigger button and click it
+      const projectManagerTrigger = document.getElementById('project-manager-trigger');
+      if (projectManagerTrigger) {
+        projectManagerTrigger.click();
+        
+        // Show a toast suggesting to use the Projects tab for earnings
+        toast.info(
+          "Use the Projects tab to track earnings per project and see hourly rates!",
+          {
+            duration: 4000,
+          }
+        );
+      }
+      // Reset the state
+      setEarningsTrackerOpen(false);
+    }
+  }, [earningsTrackerOpen, setEarningsTrackerOpen]);
 
   return (
     <div className="fixed bottom-10 right-10 flex flex-col gap-4 z-10">

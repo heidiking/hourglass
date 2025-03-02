@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Clock } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Clock, DollarSign } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -14,6 +14,8 @@ interface TaskToggleContextType {
   setGoalArchiveOpen: React.Dispatch<React.SetStateAction<boolean>>;
   timeTrackerOpen: boolean;
   setTimeTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  earningsTrackerOpen: boolean;
+  setEarningsTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   draggedItem: string | null;
   setDraggedItem: React.Dispatch<React.SetStateAction<string | null>>;
   handleDragStart: (id: string) => void;
@@ -28,6 +30,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [tasksOpen, setTasksOpen] = useState(false);
   const [goalArchiveOpen, setGoalArchiveOpen] = useState(false);
   const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
+  const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
@@ -57,6 +60,12 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         icon: <Clock size={24} />,
         label: 'Tracker',
         onClick: () => setTimeTrackerOpen(true),
+      },
+      {
+        id: 'earnings',
+        icon: <DollarSign size={24} />,
+        label: 'Earnings',
+        onClick: () => setEarningsTrackerOpen(true),
       }
     ];
     
@@ -130,6 +139,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setGoalArchiveOpen,
         timeTrackerOpen,
         setTimeTrackerOpen,
+        earningsTrackerOpen,
+        setEarningsTrackerOpen,
         draggedItem,
         setDraggedItem,
         handleDragStart,

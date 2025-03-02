@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2 } from 'lucide-react';
+import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -30,6 +31,8 @@ type Project = {
   tags: ProjectTag[];
   activities: string[]; // IDs of associated activities
   manualActivities: ManualActivity[]; // Manually added activities
+  earnings: number; // Total earnings for the project
+  hourlyRate?: number; // Optional hourly rate for the project
 };
 
 type ManualActivity = {
@@ -38,6 +41,7 @@ type ManualActivity = {
   duration: number; // in milliseconds
   date: string; // ISO string
   tags: string[]; // tag IDs
+  earnings?: number; // Optional earnings for this specific activity
 };
 
 const COLOR_PALETTE = [
@@ -86,6 +90,8 @@ const ProjectManager = () => {
   const [newActivityTime, setNewActivityTime] = useState("1");
   const [newActivityTimeUnit, setNewActivityTimeUnit] = useState("hour");
   const [activityDate, setActivityDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newActivityEarnings, setNewActivityEarnings] = useState("");
+  const [projectHourlyRate, setProjectHourlyRate] = useState("");
 
   const [timelineActivities, setTimelineActivities] = useState<{[key: string]: ActivitySession[]}>({});
 
@@ -123,6 +129,7 @@ const ProjectManager = () => {
       tags: [],
       activities: [],
       manualActivities: [],
+      earnings: 0,
     };
     
     setProjects([...projects, newProject]);
@@ -232,6 +239,7 @@ const ProjectManager = () => {
   const openProjectForEditing = (project: Project) => {
     setEditingProject(project);
     setSelectedActivities(project.activities);
+    setProjectHourlyRate(project.hourlyRate?.toString() || "");
     setCurrentTab("edit");
   };
 
@@ -291,17 +299,24 @@ const ProjectManager = () => {
       durationMs = durationMs * 60 * 24;
     }
     
+    const earnings = newActivityEarnings.trim() ? parseFloat(newActivityEarnings) : undefined;
+    
     const newActivity: ManualActivity = {
       id: Date.now().toString(),
       name: newActivityName,
       duration: durationMs,
       date: activityDate,
       tags: [],
+      earnings: earnings,
     };
+    
+    // Update project total earnings if this activity has earnings
+    const updatedEarnings = editingProject.earnings + (earnings || 0);
     
     const updatedProject = {
       ...editingProject,
       manualActivities: [...(editingProject.manualActivities || []), newActivity],
+      earnings: updatedEarnings,
     };
     
     const updatedProjects = projects.map(project => 
@@ -312,6 +327,7 @@ const ProjectManager = () => {
     setEditingProject(updatedProject);
     setNewActivityName("");
     setNewActivityTime("1");
+    setNewActivityEarnings("");
     
     toast.success("Manual activity added");
   };
@@ -321,9 +337,13 @@ const ProjectManager = () => {
     
     if (!projectToUpdate || !projectToUpdate.manualActivities) return;
     
+    const activityToRemove = projectToUpdate.manualActivities.find(a => a.id === activityId);
+    const updatedEarnings = projectToUpdate.earnings - (activityToRemove?.earnings || 0);
+    
     const updatedProject = {
       ...projectToUpdate,
       manualActivities: projectToUpdate.manualActivities.filter(a => a.id !== activityId),
+      earnings: updatedEarnings >= 0 ? updatedEarnings : 0,
     };
     
     if (editingProject?.id === projectId) {
@@ -336,6 +356,27 @@ const ProjectManager = () => {
     
     setProjects(updatedProjects);
     toast.success("Activity removed");
+  };
+
+  const updateProjectHourlyRate = () => {
+    if (!editingProject) return;
+    
+    const hourlyRate = projectHourlyRate.trim() 
+      ? parseFloat(projectHourlyRate) 
+      : undefined;
+    
+    const updatedProject = {
+      ...editingProject,
+      hourlyRate,
+    };
+    
+    const updatedProjects = projects.map(project => 
+      project.id === editingProject.id ? updatedProject : project
+    );
+    
+    setProjects(updatedProjects);
+    setEditingProject(updatedProject);
+    toast.success("Hourly rate updated");
   };
 
   const getProjectTotalTime = (project: Project): number => {
@@ -355,6 +396,21 @@ const ProjectManager = () => {
     }
     
     return total;
+  };
+
+  const getProjectHourlyEarnings = (project: Project): string => {
+    const totalTimeHours = getProjectTotalTime(project) / (1000 * 60 * 60);
+    
+    if (totalTimeHours <= 0 || project.earnings <= 0) {
+      return "N/A";
+    }
+    
+    const hourlyEarnings = project.earnings / totalTimeHours;
+    return `$${hourlyEarnings.toFixed(2)}/hr`;
+  };
+
+  const formatCurrency = (amount: number): string => {
+    return `$${amount.toFixed(2)}`;
   };
 
   const getAppIcon = (appName: string) => {
@@ -433,8 +489,30 @@ const ProjectManager = () => {
                             <Folder size={18} className="mr-2" />
                             <h3 className="text-lg">{project.name}</h3>
                           </div>
-                          <div className="text-xs text-white/60 mt-1">
-                            Total time: {formatFocusTime(getProjectTotalTime(project))}
+                          <div className="grid grid-cols-3 gap-2 text-xs text-white/60 mt-1">
+                            <div>
+                              <Clock size={14} className="inline mr-1" />
+                              {formatFocusTime(getProjectTotalTime(project))}
+                            </div>
+                            {project.earnings > 0 && (
+                              <div>
+                                <DollarSign size={14} className="inline mr-1" />
+                                {formatCurrency(project.earnings)}
+                              </div>
+                            )}
+                            {project.hourlyRate && (
+                              <div title="Target hourly rate">
+                                <Clock size={14} className="inline mr-1" />
+                                <DollarSign size={14} className="inline -ml-3" />
+                                {formatCurrency(project.hourlyRate)}/hr
+                              </div>
+                            )}
+                            {project.earnings > 0 && (
+                              <div title="Actual earnings per hour">
+                                <Calculator size={14} className="inline mr-1" />
+                                {getProjectHourlyEarnings(project)}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -491,9 +569,15 @@ const ProjectManager = () => {
                             <div key={activity.id} className="text-sm flex items-center bg-black/20 rounded px-2 py-1">
                               <Clock size={16} className="mr-2 text-purple-400" />
                               <span className="truncate flex-1">{activity.name}</span>
-                              <span className="text-xs text-white/60 ml-2">
-                                {formatFocusTime(activity.duration)}
-                              </span>
+                              <div className="flex items-center ml-2 text-xs text-white/60">
+                                <span>{formatFocusTime(activity.duration)}</span>
+                                {activity.earnings && (
+                                  <span className="ml-2 text-green-300">
+                                    <DollarSign size={12} className="inline" />
+                                    {formatCurrency(activity.earnings)}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           ))}
                           
@@ -609,6 +693,56 @@ const ProjectManager = () => {
                       </div>
                     </div>
                     
+                    <div className="space-y-1">
+                      <label className="text-sm text-white/70">Project Financials</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-xs text-white/60">Total Earnings</label>
+                          <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3">
+                            <DollarSign size={16} className="mr-1 text-green-300" />
+                            <span>{formatCurrency(editingProject.earnings)}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-xs text-white/60">Hourly Rate Target</label>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
+                              <DollarSign size={16} className="text-green-300" />
+                              <Input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={projectHourlyRate}
+                                onChange={(e) => setProjectHourlyRate(e.target.value)}
+                                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                placeholder="0.00"
+                              />
+                            </div>
+                            <Button 
+                              onClick={updateProjectHourlyRate}
+                              variant="outline" 
+                              className="border-gray-700"
+                              size="sm"
+                            >
+                              Set
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-black/20 rounded p-2 mt-1">
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <label className="text-xs text-white/60">Total Time</label>
+                            <div className="font-medium">{formatFocusTime(getProjectTotalTime(editingProject))}</div>
+                          </div>
+                          <div>
+                            <label className="text-xs text-white/60">Actual Hourly Rate</label>
+                            <div className="font-medium">{getProjectHourlyEarnings(editingProject)}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div className="space-y-2">
                       <label className="text-sm text-white/70">Tags</label>
                       <div className="flex flex-col space-y-2">
@@ -719,7 +853,7 @@ const ProjectManager = () => {
                           className="bg-black/30 border-gray-700 text-white mb-2"
                         />
                         
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-2 mb-2">
                           <Input
                             type="date"
                             value={activityDate}
@@ -747,15 +881,28 @@ const ProjectManager = () => {
                             </select>
                           </div>
                           
-                          <Button 
-                            onClick={addManualActivity} 
-                            variant="outline" 
-                            className="border-gray-700 text-white"
-                          >
-                            <Plus size={14} className="mr-1" />
-                            Add Time
-                          </Button>
+                          <div className="flex items-center bg-black/30 border border-gray-700 rounded px-2">
+                            <DollarSign size={16} className="text-green-300" />
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={newActivityEarnings}
+                              onChange={(e) => setNewActivityEarnings(e.target.value)}
+                              className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="Earnings (optional)"
+                            />
+                          </div>
                         </div>
+                        
+                        <Button 
+                          onClick={addManualActivity} 
+                          variant="outline" 
+                          className="border-gray-700 text-white w-full"
+                        >
+                          <Plus size={14} className="mr-1" />
+                          Add Time Entry
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -825,9 +972,15 @@ const ProjectManager = () => {
                                   <Clock size={16} className="mr-2 text-purple-400" />
                                   <div>
                                     <div className="font-medium">{activity.name}</div>
-                                    <div className="text-xs text-white/60">
-                                      {new Date(activity.date).toLocaleDateString()} • 
-                                      {formatFocusTime(activity.duration)}
+                                    <div className="text-xs text-white/60 flex items-center">
+                                      <span>{new Date(activity.date).toLocaleDateString()} • </span>
+                                      <span>{formatFocusTime(activity.duration)}</span>
+                                      {activity.earnings && (
+                                        <span className="ml-2 text-green-300">
+                                          <DollarSign size={12} className="inline" />
+                                          {formatCurrency(activity.earnings)}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                 </div>

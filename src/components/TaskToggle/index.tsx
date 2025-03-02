@@ -16,12 +16,24 @@ const TaskToggle = () => {
 
 // Inner component that can use the context
 const TaskToggleWrapper = () => {
-  const { timeTrackerOpen, setTimeTrackerOpen } = useTaskToggle();
+  const { 
+    timeTrackerOpen, 
+    setTimeTrackerOpen, 
+    earningsTrackerOpen, 
+    setEarningsTrackerOpen 
+  } = useTaskToggle();
   
   return (
     <>
       <TaskToggleContainer />
       {timeTrackerOpen && <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />}
+      {earningsTrackerOpen && (
+        <div className="hidden">
+          {/* The actual earnings tracking functionality is integrated directly into the ProjectManager component */}
+          {/* This is just to close the dialog when clicking outside */}
+          <button onClick={() => setEarningsTrackerOpen(false)}>Close</button>
+        </div>
+      )}
     </>
   );
 };
