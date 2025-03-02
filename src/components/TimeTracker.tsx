@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Clock, FileText, DollarSign, Link, Plus } from 'lucide-react';
+import { Clock, FileText, Link, Plus } from 'lucide-react';
 import { toast } from "sonner";
 import { 
   Dialog,
@@ -48,15 +48,15 @@ const isDocumentActivity = (appName: string): boolean => {
 
 const getAppIcon = (appName: string) => {
   if (appName.toLowerCase().includes("word") || appName.toLowerCase().includes("doc") || appName.toLowerCase().includes(".doc")) {
-    return <FileText size={16} className="mr-2 text-blue-500 flex-shrink-0" />;
+    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
   } else if (appName.toLowerCase().includes("excel") || appName.toLowerCase().includes("sheet") || appName.toLowerCase().includes(".xls")) {
-    return <FileText size={16} className="mr-2 text-green-500 flex-shrink-0" />;
+    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
   } else if (appName.toLowerCase().includes("powerpoint") || appName.toLowerCase().includes("presentation") || appName.toLowerCase().includes(".ppt")) {
-    return <FileText size={16} className="mr-2 text-orange-500 flex-shrink-0" />;
+    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
   } else if (appName.toLowerCase().includes("pdf") || appName.toLowerCase().includes(".pdf")) {
-    return <FileText size={16} className="mr-2 text-red-500 flex-shrink-0" />;
+    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
   }
-  return <FileText size={16} className="mr-2 flex-shrink-0" />;
+  return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
 };
 
 const TimeTracker = ({ 
@@ -69,7 +69,6 @@ const TimeTracker = ({
   const [currentActivity, setCurrentActivity] = useState<ActivitySession | null>(null);
   const [activityHistory, setActivityHistory] = useState<ActivitySession[]>([]);
   const [isTracking, setIsTracking] = useState(false);
-  const [totalEarnings, setTotalEarnings] = useState(0);
   const [projects, setProjects] = useState<Project[]>([]);
   
   useEffect(() => {
@@ -100,17 +99,6 @@ const TimeTracker = ({
       setCurrentActivity(current);
       setActivityHistory(history);
       setIsTracking(Boolean(current));
-
-      try {
-        const projectsData = localStorage.getItem('projects');
-        if (projectsData) {
-          const projects = JSON.parse(projectsData);
-          const total = projects.reduce((sum: number, project: any) => sum + (project.earnings || 0), 0);
-          setTotalEarnings(total);
-        }
-      } catch (err) {
-        console.error("Error calculating total earnings:", err);
-      }
     };
     
     updateActivityData();
@@ -163,17 +151,17 @@ const TimeTracker = ({
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className={`p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors ${positionStyles[position]} ${className}`}
+          className={`p-3 bg-black/30 rounded-full text-black hover:bg-black/50 hover:text-black transition-colors ${positionStyles[position]} ${className}`}
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
-          <Clock size={20} />
+          <Clock size={20} className="text-black" />
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center text-lg font-medium">
-            <Clock size={18} className="mr-2" />
+            <Clock size={18} className="mr-2 text-black" />
             Document Time Tracker
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
@@ -183,7 +171,7 @@ const TimeTracker = ({
         <div className="max-h-[60vh] overflow-y-auto">
           <div className="mb-4">
             <h3 className="text-lg font-medium flex items-center">
-              <Clock size={16} className="mr-2" />
+              <Clock size={16} className="mr-2 text-black" />
               Current Activity
             </h3>
             {currentActivity ? (
@@ -201,37 +189,9 @@ const TimeTracker = ({
             )}
           </div>
           
-          <div className="mb-4">
-            <h3 className="text-lg font-medium flex items-center">
-              <DollarSign size={16} className="mr-2" />
-              Earnings Summary
-            </h3>
-            <div className="p-2 bg-black/10 rounded mt-2">
-              <div className="flex items-center justify-between">
-                <span>Total Earnings:</span>
-                <span className="font-medium">${totalEarnings.toFixed(2)}</span>
-              </div>
-              <Button 
-                variant="outline"
-                size="sm"
-                className="w-full mt-2"
-                onClick={() => {
-                  handleOpenChange(false);
-                  const projectManagerTrigger = document.getElementById('project-manager-trigger');
-                  if (projectManagerTrigger) {
-                    projectManagerTrigger.click();
-                  }
-                }}
-              >
-                <DollarSign size={14} className="mr-1" />
-                Manage Project Earnings
-              </Button>
-            </div>
-          </div>
-          
           <div>
             <h3 className="text-lg font-medium mb-2 flex items-center">
-              <FileText size={16} className="mr-2" />
+              <FileText size={16} className="mr-2 text-black" />
               Recent Documents
             </h3>
             {documentActivities.length > 0 ? (
@@ -254,7 +214,7 @@ const TimeTracker = ({
                       {assignedProjects.length > 0 && (
                         <div className="ml-6 mt-1">
                           <div className="text-xs text-gray-500 flex items-center">
-                            <Link size={12} className="mr-1" /> 
+                            <Link size={12} className="mr-1 text-black" /> 
                             Assigned to project{assignedProjects.length > 1 ? 's' : ''}:
                           </div>
                           <div className="flex flex-wrap gap-1 mt-1">
@@ -305,7 +265,7 @@ const TimeTracker = ({
                             }
                           }}
                         >
-                          <Plus size={14} />
+                          <Plus size={14} className="text-black" />
                         </Button>
                       </div>
                     </div>
