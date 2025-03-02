@@ -10,6 +10,8 @@ import { BlockedSite, TimeTrackerSettings, defaultSettings } from './types';
 import FocusDialog from './FocusDialog';
 import FocusSettings from './FocusSettings';
 import FocusIndicator from './FocusIndicator';
+import { Shield } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const FocusBlocker = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -107,14 +109,18 @@ const FocusBlocker = () => {
 
   return (
     <>
-      {/* Hidden trigger for the Focus dialog */}
+      {/* Visible trigger for the Focus dialog */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <button 
-            id="focus-dialog-trigger" 
-            className="hidden"
-            aria-label="Focus Mode"
-          />
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="fixed bottom-20 right-4 z-20 bg-black/50 text-white border-gray-700 hover:bg-black/70 backdrop-blur-sm"
+            aria-label="Open Focus Mode"
+          >
+            <Shield size={18} className="mr-2" />
+            <span className="hidden sm:inline">Focus Mode</span>
+          </Button>
         </DialogTrigger>
         
         <FocusDialog 

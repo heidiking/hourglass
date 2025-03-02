@@ -33,7 +33,7 @@ const FocusDialog = ({
   openSettings
 }: FocusDialogProps) => {
   return (
-    <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
+    <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800 max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="text-xl font-light mb-2">Focus Mode</DialogTitle>
         <DialogDescription className="text-white/60">
@@ -49,16 +49,21 @@ const FocusDialog = ({
         <>
           <BlockedSitesList blockedSites={blockedSites} setBlockedSites={setBlockedSites} />
           
-          <DialogFooter className="mt-4 flex justify-between">
+          <DialogFooter className="mt-4 flex flex-col sm:flex-row justify-between gap-2">
             <Button 
               onClick={openSettings}
               variant="outline" 
-              className="border-gray-700 text-white"
+              className="border-gray-700 text-white order-2 sm:order-1 w-full sm:w-auto"
+              aria-label="Open focus settings"
             >
-              <Settings size={18} />
+              <Settings size={18} className="mr-2" />
               Settings
             </Button>
-            <Button onClick={startFocusMode}>
+            <Button 
+              onClick={startFocusMode} 
+              className="order-1 sm:order-2 w-full sm:w-auto"
+              aria-label="Start focus mode"
+            >
               <Shield className="mr-2" size={18} />
               Start Focus Mode
             </Button>
