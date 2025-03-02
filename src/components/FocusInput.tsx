@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -197,8 +198,8 @@ const FocusInput = () => {
       </div>
       
       <div className="flex flex-col w-full">
-        <div className="flex flex-col w-full">
-          <label className="text-white text-xl md:text-2xl font-light mb-2">
+        <div className="flex flex-col w-full items-center">
+          <label className="text-white text-xl md:text-2xl font-light mb-2 text-center">
             Today, success means that I:
           </label>
           <div 
@@ -212,7 +213,7 @@ const FocusInput = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder=""
-              className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none"
+              className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1"
               aria-label="Daily goal input"
             />
           </div>
