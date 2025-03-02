@@ -80,6 +80,20 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     toast.success("Activity added to project");
   };
 
+  const handleStartNewProject = () => {
+    const newProject: Project = {
+      id: Date.now().toString(),
+      name: "New Project",
+      tags: [],
+      activities: [],
+      manualActivities: [],
+      earnings: 0,
+    };
+    
+    setEditingProject(newProject);
+    setCurrentTab("edit");
+  };
+
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -109,8 +123,9 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
             <ProjectList 
               projects={projects}
               setProjects={setProjects}
-              openProjectForEditing={openProjectForEditing}
               activities={activities}
+              openProjectForEditing={openProjectForEditing}
+              onStartNewProject={handleStartNewProject}
             />
           </TabsContent>
           

@@ -30,8 +30,9 @@ interface ProjectListProps {
   projects: Project[];
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   activities: ActivitySession[];
-  setEditingProject: React.Dispatch<React.SetStateAction<Project | null>>;
-  onStartNewProject: () => void;
+  setEditingProject?: React.Dispatch<React.SetStateAction<Project | null>>;
+  onStartNewProject?: () => void;
+  openProjectForEditing?: (project: Project) => void; // Added this prop to match what's passed in index.tsx
 }
 
 const ProjectList: React.FC<ProjectListProps> = ({ 
@@ -40,11 +41,16 @@ const ProjectList: React.FC<ProjectListProps> = ({
   activities,
   setEditingProject,
   onStartNewProject,
+  openProjectForEditing,
 }) => {
   const [projectIdToDelete, setProjectIdToDelete] = useState<string | null>(null);
 
   const handleEditProject = (project: Project) => {
-    setEditingProject(project);
+    if (openProjectForEditing) {
+      openProjectForEditing(project);
+    } else if (setEditingProject) {
+      setEditingProject(project);
+    }
   };
 
   const handleDeleteProject = (projectId: string) => {
@@ -149,7 +155,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {project.tags && project.tags.map((tag, index) => (
-                  <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full px-2 py-1 text-xs">{tag}</span>
+                  <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full px-2 py-1 text-xs">{tag.name}</span>
                 ))}
               </div>
             </div>
