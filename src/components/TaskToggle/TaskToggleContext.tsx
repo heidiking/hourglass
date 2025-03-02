@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield, FolderKanban } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -18,8 +18,6 @@ interface TaskToggleContextType {
   setEarningsTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   focusModeOpen: boolean;
   setFocusModeOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  projectManagerOpen: boolean;
-  setProjectManagerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   draggedItem: string | null;
   setDraggedItem: React.Dispatch<React.SetStateAction<string | null>>;
   handleDragStart: (id: string) => void;
@@ -36,18 +34,11 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
   const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
   const [focusModeOpen, setFocusModeOpen] = useState(false);
-  const [projectManagerOpen, setProjectManagerOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
   useEffect(() => {
     const initialButtons: ToolButton[] = [
-      {
-        id: 'projects',
-        icon: <FolderKanban size={24} className="text-white" />,
-        label: 'Projects',
-        onClick: () => setProjectManagerOpen(true),
-      },
       {
         id: 'settings',
         icon: <Settings size={24} className="text-white" />,
@@ -156,8 +147,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setEarningsTrackerOpen,
         focusModeOpen,
         setFocusModeOpen,
-        projectManagerOpen,
-        setProjectManagerOpen,
         draggedItem,
         setDraggedItem,
         handleDragStart,
