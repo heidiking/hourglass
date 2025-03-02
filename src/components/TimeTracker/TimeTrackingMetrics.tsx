@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Clock, FileText, Calendar, Watch } from 'lucide-react';
+import { Clock, FileText, Calendar, Watch, TrendingUp } from 'lucide-react';
 import { formatTimeDuration } from './utils';
 
 interface MetricsData {
@@ -10,6 +10,9 @@ interface MetricsData {
   avgSessionDuration: number;
   mostActiveDocument: string;
   mostActiveDocumentDuration: number;
+  avgDailyTime: number;
+  productiveHoursPerDay: number;
+  totalDaysTracked: number;
 }
 
 interface TimeTrackingMetricsProps {
@@ -49,6 +52,22 @@ const TimeTrackingMetrics: React.FC<TimeTrackingMetricsProps> = ({ metrics }) =>
           <h4 className="text-sm font-medium">Avg Session</h4>
         </div>
         <p className="text-black font-medium">{formatTimeDuration(metrics.avgSessionDuration)}</p>
+      </div>
+      
+      <div className="p-3 bg-black/10 rounded-md">
+        <div className="flex items-center text-black mb-1">
+          <Calendar size={14} className="mr-1" />
+          <h4 className="text-sm font-medium">Avg Daily Time</h4>
+        </div>
+        <p className="text-black font-medium">{formatTimeDuration(metrics.avgDailyTime)}</p>
+      </div>
+      
+      <div className="p-3 bg-black/10 rounded-md">
+        <div className="flex items-center text-black mb-1">
+          <TrendingUp size={14} className="mr-1" />
+          <h4 className="text-sm font-medium">Days Tracked</h4>
+        </div>
+        <p className="text-black font-medium">{metrics.totalDaysTracked}</p>
       </div>
     </div>
   );
