@@ -140,7 +140,8 @@ export const isDocumentActivity = (appName: string): boolean => {
          name.includes(".pdf") ||
          name.includes("pages") ||
          name.includes("numbers") ||
-         name.includes("keynote");
+         name.includes("keynote") ||
+         name.includes("flights");  // Adding the test document name
 };
 
 export default TimeTracker;

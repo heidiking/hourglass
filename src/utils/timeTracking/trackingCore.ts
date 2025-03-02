@@ -1,4 +1,3 @@
-
 import { ActivitySession } from './types';
 import { detectCurrentApp } from './mockData';
 import { TimeTrackerSettings, defaultSettings } from '@/components/FocusMode/types';
@@ -117,17 +116,39 @@ export const setupAutoTracking = (): void => {
   }
 };
 
+// Extract document name from app title
+const extractDocumentName = (appName: string): string => {
+  const documentPatterns = [
+    { regex: /^(.*?)(?:\s*\.docx?)?\s*-\s*(?:Microsoft\s*)?Word/i, group: 1 },
+    { regex: /^(.*?)(?:\s*\.xlsx?)?\s*-\s*(?:Microsoft\s*)?Excel/i, group: 1 },
+    { regex: /^(.*?)(?:\s*\.pptx?)?\s*-\s*(?:Microsoft\s*)?PowerPoint/i, group: 1 },
+    { regex: /^(.*?)(?:\s*\.pdf)?\s*-\s*(?:Adobe|PDF)/i, group: 1 },
+    { regex: /^(.*?)\s*-\s*Google\s*Docs/i, group: 1 },
+    { regex: /^(.*?)\s*-\s*.*/, group: 1 }
+  ];
+  
+  for (const pattern of documentPatterns) {
+    const match = appName.match(pattern.regex);
+    if (match && match[pattern.group]) {
+      return match[pattern.group].trim();
+    }
+  }
+  
+  return appName;
+};
+
 // Start tracking a new activity
 export const startActivity = (appName: string): ActivitySession => {
-  // End current activity if there is one
   if (currentActivity) {
     endActivity();
   }
 
+  const processedAppName = extractDocumentName(appName);
+
   const now = new Date();
   const newActivity: ActivitySession = {
     id: Date.now().toString(),
-    appName,
+    appName: processedAppName,
     startTime: now,
     endTime: null,
     duration: 0
@@ -157,7 +178,6 @@ export const endActivity = (): ActivitySession | null => {
 
 // Get the current activity
 export const getCurrentActivity = (): ActivitySession | null => {
-  // Update duration if there's a current activity
   if (currentActivity && !currentActivity.endTime) {
     const now = new Date();
     currentActivity.duration = now.getTime() - currentActivity.startTime.getTime();
