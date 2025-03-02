@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { formatCurrency, getProjectTotalTime, getAppIcon } from './utils';
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 interface ProjectListProps {
   projects: Project[];
@@ -108,12 +108,13 @@ const ProjectList: React.FC<ProjectListProps> = ({
                       <Copy className="mr-2 h-4 w-4" /> Duplicate
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <CopyToClipboard text={project.id} onCopy={() => toast.success("Project ID copied to clipboard")}>
-                        <div className="flex items-center">
-                          <Copy className="mr-2 h-4 w-4" /> Copy ID
-                        </div>
-                      </CopyToClipboard>
+                    <DropdownMenuItem 
+                      onClick={() => {
+                        navigator.clipboard.writeText(project.id);
+                        toast.success("Project ID copied to clipboard");
+                      }}
+                    >
+                      <Copy className="mr-2 h-4 w-4" /> Copy ID
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
@@ -131,8 +132,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel onClick={cancelDeleteProject}>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={confirmDeleteProject}>Continue</AlertDialogAction>
+                            <AlertDialogCancel onClick={cancelDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={confirmDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Continue</AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -165,8 +166,8 @@ const ProjectList: React.FC<ProjectListProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDeleteProject}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteProject}>Continue</AlertDialogAction>
+            <AlertDialogCancel onClick={cancelDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
