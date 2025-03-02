@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -80,12 +79,34 @@ const FocusInput = () => {
     }
   };
 
-  // This effect selects and sets the daily mantra based on the day of the month
+  // This effect loads the daily mantra
   useEffect(() => {
-    const today = new Date();
-    const dayOfMonth = today.getDate();
-    const mantraIndex = (dayOfMonth - 1) % DAILY_MANTRAS.length;
-    setDailyMantra(DAILY_MANTRAS[mantraIndex]);
+    const loadMantra = () => {
+      const today = new Date();
+      const dayOfMonth = today.getDate();
+      
+      // Check for custom mantras
+      const settings = localStorage.getItem('timeTrackerSettings');
+      let customMantra = '';
+      
+      if (settings) {
+        const parsedSettings = JSON.parse(settings);
+        if (parsedSettings.customMantra) {
+          customMantra = parsedSettings.customMantra;
+        }
+      }
+      
+      // If there's a custom mantra, use it sometimes (every 5th day)
+      if (customMantra && dayOfMonth % 5 === 0) {
+        setDailyMantra(customMantra);
+      } else {
+        // Otherwise use from the regular rotation
+        const mantraIndex = (dayOfMonth - 1) % DAILY_MANTRAS.length;
+        setDailyMantra(DAILY_MANTRAS[mantraIndex]);
+      }
+    };
+    
+    loadMantra();
   }, []);
 
   // This effect handles the case when a goal is already set and the user revisits the page
@@ -121,8 +142,26 @@ const FocusInput = () => {
       // Update the daily mantra for the new day
       const newDay = new Date();
       const newDayOfMonth = newDay.getDate();
-      const newMantraIndex = (newDayOfMonth - 1) % DAILY_MANTRAS.length;
-      setDailyMantra(DAILY_MANTRAS[newMantraIndex]);
+      
+      // Check for custom mantras
+      const settings = localStorage.getItem('timeTrackerSettings');
+      let customMantra = '';
+      
+      if (settings) {
+        const parsedSettings = JSON.parse(settings);
+        if (parsedSettings.customMantra) {
+          customMantra = parsedSettings.customMantra;
+        }
+      }
+      
+      // If there's a custom mantra, use it sometimes (every 5th day)
+      if (customMantra && newDayOfMonth % 5 === 0) {
+        setDailyMantra(customMantra);
+      } else {
+        // Otherwise use from the regular rotation
+        const newMantraIndex = (newDayOfMonth - 1) % DAILY_MANTRAS.length;
+        setDailyMantra(DAILY_MANTRAS[newMantraIndex]);
+      }
     }, timeUntilMidnight);
 
     return () => clearTimeout(midnightTimer);
@@ -132,9 +171,9 @@ const FocusInput = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setPlaceholder('Today, success means that I: ');
+        setPlaceholder('');
       } else {
-        setPlaceholder('Today, success means that I: ');
+        setPlaceholder('');
       }
     };
     
@@ -158,26 +197,25 @@ const FocusInput = () => {
       </div>
       
       <div className="flex flex-col w-full">
-        <div className="flex items-center w-full">
-          <label className="text-white text-xl md:text-2xl font-light whitespace-nowrap">
+        <div className="flex flex-col w-full">
+          <label className="text-white text-xl md:text-2xl font-light mb-2">
             Today, success means that I:
           </label>
-          <div className="flex-grow"></div>
-        </div>
-        <div 
-          className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 mt-1`}
-        >
-          <input
-            type="text"
-            value={goal}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder={placeholder}
-            className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1"
-            aria-label="Daily goal input"
-          />
+          <div 
+            className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
+          >
+            <input
+              type="text"
+              value={goal}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              placeholder=""
+              className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none"
+              aria-label="Daily goal input"
+            />
+          </div>
         </div>
       </div>
     </div>

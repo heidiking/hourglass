@@ -19,6 +19,7 @@ const SettingsDialog = () => {
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('17:00');
   const [customQuote, setCustomQuote] = useState('');
+  const [customMantra, setCustomMantra] = useState('');
 
   useEffect(() => {
     // Load settings from localStorage
@@ -29,6 +30,7 @@ const SettingsDialog = () => {
       setStartTime(settings.startTime || '09:00');
       setEndTime(settings.endTime || '17:00');
       setCustomQuote(settings.customQuote || '');
+      setCustomMantra(settings.customMantra || '');
     }
   }, []);
 
@@ -37,10 +39,11 @@ const SettingsDialog = () => {
       autoTrackEnabled,
       startTime,
       endTime,
-      customQuote
+      customQuote,
+      customMantra
     };
     localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
-  }, [autoTrackEnabled, startTime, endTime, customQuote]);
+  }, [autoTrackEnabled, startTime, endTime, customQuote, customMantra]);
 
   const handleTimeSettingSave = () => {
     toast("Settings saved!");
@@ -103,6 +106,21 @@ const SettingsDialog = () => {
                 className="text-black"
               />
               <p className="text-xs text-gray-500">This quote will be included in the daily rotation</p>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <h3 className="font-medium text-black">Custom Mantra</h3>
+            <div className="space-y-2">
+              <Label htmlFor="custom-mantra" className="text-black">Your Daily Mantra</Label>
+              <Input
+                id="custom-mantra"
+                placeholder="Enter your own creative mantra"
+                value={customMantra}
+                onChange={(e) => setCustomMantra(e.target.value)}
+                className="text-black"
+              />
+              <p className="text-xs text-gray-500">This mantra will be included in the daily rotation</p>
             </div>
           </div>
           
