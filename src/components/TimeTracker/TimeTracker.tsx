@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Trash2 } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -8,8 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { getCurrentActivity, getActivityHistory } from '@/utils/timeTracking';
+import { Button } from "@/components/ui/button";
+import { getCurrentActivity, getActivityHistory, clearActivityHistory } from '@/utils/timeTracking';
+import { toast } from "sonner";
 import CurrentActivitySection from './CurrentActivitySection';
 import RecentDocumentsSection from './RecentDocumentsSection';
 import { ActivitySession } from '@/utils/timeTracking/types';
@@ -61,6 +64,12 @@ const TimeTracker = ({
     return () => clearInterval(interval);
   }, []);
 
+  const handleClearHistory = () => {
+    clearActivityHistory();
+    setActivityHistory([]);
+    toast.success("Document history has been cleared");
+  };
+
   const positionStyles = {
     topLeft: "fixed top-4 left-4",
     topRight: "fixed top-4 right-4",
@@ -84,9 +93,9 @@ const TimeTracker = ({
           <Clock size={20} className="text-white" />
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white text-black border-gray-200">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-lg font-medium">
+          <DialogTitle className="flex items-center text-lg font-medium text-black">
             <Clock size={18} className="mr-2" />
             Document Time Tracker
           </DialogTitle>
@@ -99,6 +108,17 @@ const TimeTracker = ({
           
           <RecentDocumentsSection documentActivities={documentActivities} />
         </div>
+        <DialogFooter className="mt-4">
+          <Button 
+            onClick={handleClearHistory} 
+            variant="outline"
+            className="bg-white hover:bg-white/90 border-gray-300"
+            aria-label="Clear history"
+          >
+            <Trash2 className="mr-2 text-black" size={16} />
+            <span className="text-black">Clear Document History</span>
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -10,11 +10,20 @@ interface CurrentActivitySectionProps {
 }
 
 const CurrentActivitySection: React.FC<CurrentActivitySectionProps> = ({ currentActivity }) => {
+  // Format current date
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
   return (
     <div className="mb-4">
       <h3 className="text-lg font-medium flex items-center">
         <Clock size={16} className="mr-2" />
-        Current Activity
+        Activity for {formattedDate}
       </h3>
       {currentActivity ? (
         <div className="flex items-center p-3 bg-black/10 rounded-md mt-2">

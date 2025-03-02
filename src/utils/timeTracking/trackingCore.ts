@@ -28,6 +28,12 @@ export const saveState = (): void => {
   }
 };
 
+// Clear activity history
+export const clearActivityHistory = (): void => {
+  activityHistory = [];
+  saveState();
+};
+
 // Convert stored date strings back to Date objects
 const parseDates = (activity: any): ActivitySession => ({
   ...activity,
