@@ -85,10 +85,10 @@ const TaskToggleContainer = () => {
                   aria-label={button.label}
                 >
                   <div className="flex flex-col items-center">
-                    {/* Fixed the TypeScript error: Only clone if it's a valid ReactElement */}
-                    {React.isValidElement(button.icon) ? 
-                      React.cloneElement(button.icon, { className: "text-white" }) : 
-                      button.icon}
+                    {/* Fixed the TypeScript error by rendering the icon directly */}
+                    <div className="text-white">
+                      {button.icon}
+                    </div>
                     <span className="text-xs mt-1 text-white font-medium">{button.label}</span>
                   </div>
                 </button>
