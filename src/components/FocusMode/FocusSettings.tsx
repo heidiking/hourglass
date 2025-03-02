@@ -1,96 +1,113 @@
 
-import React from 'react';
-import { Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { 
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+  ArrowLeft,
+  Save,
+  Clock,
+  Bell
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { TimeTrackerSettings } from './types';
-import { setupAutoTracking } from '@/utils/timeTracking';
+import { TimeTrackerSettings, defaultSettings } from './types';
 
 interface FocusSettingsProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  settings: TimeTrackerSettings;
-  setSettings: React.Dispatch<React.SetStateAction<TimeTrackerSettings>>;
+  closeSettings: () => void;
 }
 
-const FocusSettings = ({ open, onOpenChange, settings, setSettings }: FocusSettingsProps) => {
-  const updateSettings = (newSettings: Partial<TimeTrackerSettings>) => {
-    const updatedSettings = { ...settings, ...newSettings };
-    setSettings(updatedSettings);
-    localStorage.setItem('timeTrackerSettings', JSON.stringify(updatedSettings));
-    setupAutoTracking(); // Apply the new settings
-    toast.success("Settings updated!");
+const FocusSettings: React.FC<FocusSettingsProps> = ({ closeSettings }) => {
+  const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
+  
+  useEffect(() => {
+    // Load settings from localStorage
+    const storedSettings = localStorage.getItem('timeTrackerSettings');
+    if (storedSettings) {
+      try {
+        setSettings(JSON.parse(storedSettings));
+      } catch (e) {
+        console.error("Error parsing settings:", e);
+        setSettings(defaultSettings);
+      }
+    }
+  }, []);
+  
+  const handleSettingChange = (key: keyof TimeTrackerSettings, value: any) => {
+    setSettings(prev => ({
+      ...prev,
+      [key]: value
+    }));
   };
-
+  
+  const saveSettings = () => {
+    localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
+    toast.success("Settings saved successfully");
+    closeSettings();
+  };
+  
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-2">Time Tracker Settings</DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="track-dormant" className="text-sm">
-              Track dormant activity
-              <p className="text-xs text-white/60">
-                When enabled, continues tracking even when you're not actively using the document
-              </p>
-            </Label>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <button 
+          onClick={closeSettings}
+          className="text-white hover:text-white/80 transition-colors flex items-center gap-2"
+        >
+          <ArrowLeft size={20} />
+          <span>Back to Focus Mode</span>
+        </button>
+      </div>
+      
+      <h2 className="text-xl font-light mt-4">Focus Settings</h2>
+      
+      <div className="space-y-6 mt-4">
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-white/80">Time Tracking</h3>
+          
+          <div className="flex items-center space-x-2">
             <Switch 
-              id="track-dormant"
+              id="track-dormant" 
               checked={settings.trackDormantActivity}
-              onCheckedChange={(checked) => updateSettings({ trackDormantActivity: checked })}
+              onCheckedChange={(checked) => handleSettingChange('trackDormantActivity', checked)}
             />
+            <Label htmlFor="track-dormant" className="text-white">Track inactive periods</Label>
           </div>
           
-          <div className="flex items-center justify-between">
-            <Label htmlFor="auto-track" className="text-sm">
-              Auto-track activity
-              <p className="text-xs text-white/60">
-                Automatically track document activity during set hours
-              </p>
-            </Label>
+          <div className="flex items-center space-x-2">
             <Switch 
-              id="auto-track"
+              id="auto-track" 
               checked={settings.autoTrackEnabled}
-              onCheckedChange={(checked) => updateSettings({ autoTrackEnabled: checked })}
+              onCheckedChange={(checked) => handleSettingChange('autoTrackEnabled', checked)}
             />
+            <Label htmlFor="auto-track" className="text-white">Auto-track time within working hours</Label>
           </div>
           
           {settings.autoTrackEnabled && (
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <div>
-                <Label htmlFor="start-time" className="text-sm mb-1 block">
-                  Start time
-                </Label>
-                <Input
-                  id="start-time"
-                  type="time"
+            <div className="grid grid-cols-2 gap-4 mt-2 bg-black/20 p-3 rounded">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-white/70" />
+                  <Label htmlFor="start-time" className="text-white/80">Start Time</Label>
+                </div>
+                <Input 
+                  id="start-time" 
+                  type="time" 
                   value={settings.startTime}
-                  onChange={(e) => updateSettings({ startTime: e.target.value })}
+                  onChange={(e) => handleSettingChange('startTime', e.target.value)}
                   className="bg-black/30 border-gray-700 text-white"
                 />
               </div>
-              <div>
-                <Label htmlFor="end-time" className="text-sm mb-1 block">
-                  End time
-                </Label>
-                <Input
-                  id="end-time"
-                  type="time"
+              
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-white/70" />
+                  <Label htmlFor="end-time" className="text-white/80">End Time</Label>
+                </div>
+                <Input 
+                  id="end-time" 
+                  type="time" 
                   value={settings.endTime}
-                  onChange={(e) => updateSettings({ endTime: e.target.value })}
+                  onChange={(e) => handleSettingChange('endTime', e.target.value)}
                   className="bg-black/30 border-gray-700 text-white"
                 />
               </div>
@@ -98,16 +115,37 @@ const FocusSettings = ({ open, onOpenChange, settings, setSettings }: FocusSetti
           )}
         </div>
         
-        <DialogFooter className="mt-4">
-          <Button 
-            onClick={() => onOpenChange(false)}
-            className="w-full"
-          >
-            Save Settings
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-white/80">Notifications</h3>
+          
+          <div className="flex items-center space-x-2">
+            <Switch 
+              id="focus-notifications" 
+              checked={true}
+              onCheckedChange={() => {}}
+            />
+            <Label htmlFor="focus-notifications" className="text-white">Focus session reminders</Label>
+          </div>
+          
+          <div className="bg-black/20 p-3 rounded text-sm text-white/70">
+            <div className="flex items-start gap-2">
+              <Bell size={16} className="mt-0.5 flex-shrink-0" />
+              <p>Focus reminders will notify you when you've been focused for significant periods and suggest short breaks.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="pt-4 mt-6 border-t border-gray-800">
+        <Button 
+          onClick={saveSettings}
+          className="w-full bg-white text-black hover:bg-white/90"
+        >
+          <Save size={18} className="mr-2 text-black" />
+          <span className="text-black">Save Settings</span>
+        </Button>
+      </div>
+    </div>
   );
 };
 
