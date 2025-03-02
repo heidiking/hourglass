@@ -80,7 +80,7 @@ const FocusDialog = ({
           <div className="mt-4 border-t border-gray-800 pt-4">
             <button 
               onClick={() => setQuickAddExpanded(!quickAddExpanded)}
-              className="flex items-center gap-2 text-sm text-white/80 hover:text-white mb-2 transition-colors"
+              className="flex items-center gap-2 text-sm text-black font-medium hover:text-black/80 mb-2 transition-colors"
               aria-expanded={quickAddExpanded}
               aria-controls="popular-sites-list"
             >
@@ -97,7 +97,7 @@ const FocusDialog = ({
                   <button
                     key={site.id}
                     onClick={() => addPopularSite(site)}
-                    className="text-sm bg-white/10 hover:bg-white/20 rounded p-2 text-left truncate transition-colors"
+                    className="text-sm bg-white hover:bg-white/90 rounded p-2 text-left truncate transition-colors text-black font-medium"
                     aria-label={`Block ${site.url}`}
                   >
                     {site.url.replace('https://', '')}
@@ -118,7 +118,7 @@ const FocusDialog = ({
             <Button 
               onClick={openSettings}
               variant="outline" 
-              className="border-gray-700 text-white order-2 sm:order-1 w-full sm:w-auto"
+              className="border-gray-700 text-black font-medium bg-white hover:bg-white/90 order-2 sm:order-1 w-full sm:w-auto"
               aria-label="Open focus settings"
             >
               <Settings size={18} className="mr-2" />
@@ -126,7 +126,7 @@ const FocusDialog = ({
             </Button>
             <Button 
               onClick={startFocusMode} 
-              className="order-1 sm:order-2 w-full sm:w-auto"
+              className="bg-white text-black font-medium hover:bg-white/90 order-1 sm:order-2 w-full sm:w-auto"
               disabled={blockedSites.length === 0}
               aria-label="Start focus mode"
             >
