@@ -5,7 +5,6 @@ import TaskToggleContainer from './TaskToggleContainer';
 import TimeTracker from '../TimeTracker';
 import { useTaskToggle } from './TaskToggleContext';
 import ProjectManager from '../ProjectManager';
-import FocusBlocker from '../FocusMode';
 
 // Main wrapper component that passes the TimeTracker component to the container
 const TaskToggle = () => {
@@ -23,8 +22,7 @@ const TaskToggleWrapper = () => {
     setTimeTrackerOpen,
     earningsTrackerOpen, 
     setEarningsTrackerOpen,
-    focusModeOpen,
-    setFocusModeOpen
+    focusModeOpen
   } = useTaskToggle();
   
   return (
@@ -32,7 +30,6 @@ const TaskToggleWrapper = () => {
       <TaskToggleContainer />
       {timeTrackerOpen && <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />}
       {earningsTrackerOpen && <ProjectManager open={earningsTrackerOpen} onOpenChange={setEarningsTrackerOpen} />}
-      {focusModeOpen && <FocusBlocker />}
     </>
   );
 };

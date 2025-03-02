@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ProjectManager from '../ProjectManager';
 import SettingsDialog from './SettingsDialog';
@@ -8,6 +8,8 @@ import GoalArchiveDialog from './GoalArchiveDialog';
 import { useTaskToggle } from './TaskToggleContext';
 import { toast } from 'sonner';
 import FocusDialog from '../FocusMode/FocusDialog';
+import { BlockedSite, TimeTrackerSettings, defaultSettings } from '../FocusMode/types';
+import { startActivity, endActivity } from "@/utils/timeTracking";
 
 const TaskToggleContainer = () => {
   const { 
@@ -26,6 +28,86 @@ const TaskToggleContainer = () => {
     handleDragOver,
     handleDragEnd
   } = useTaskToggle();
+
+  // State for focus mode functionality
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [blockedSites, setBlockedSites] = useState<BlockedSite[]>([]);
+  const [focusStartTime, setFocusStartTime] = useState<Date | null>(null);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
+
+  // Load saved state on component mount
+  useEffect(() => {
+    // Load blocked sites from local storage
+    const storedSites = localStorage.getItem('blockedSites');
+    if (storedSites) {
+      setBlockedSites(JSON.parse(storedSites));
+    }
+
+    // Load time tracker settings
+    const storedSettings = localStorage.getItem('timeTrackerSettings');
+    if (storedSettings) {
+      setSettings(JSON.parse(storedSettings));
+    } else {
+      // Initialize with default settings if not found
+      localStorage.setItem('timeTrackerSettings', JSON.stringify(defaultSettings));
+    }
+
+    // Check if focus mode was active
+    const focusStatus = localStorage.getItem('focusActive');
+    const startTimeStr = localStorage.getItem('focusStartTime');
+    
+    if (focusStatus === 'true' && startTimeStr) {
+      const startTime = new Date(startTimeStr);
+      setFocusStartTime(startTime);
+      setIsActive(true);
+      startActivity('Focus Mode');
+    }
+  }, []);
+
+  // Update elapsed time when focus mode is active
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (isActive && focusStartTime) {
+      interval = setInterval(() => {
+        const now = new Date();
+        const elapsed = now.getTime() - focusStartTime.getTime();
+        setElapsedTime(elapsed);
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isActive, focusStartTime]);
+
+  // Focus mode functions
+  const startFocusMode = useCallback(() => {
+    const now = new Date();
+    setFocusStartTime(now);
+    setIsActive(true);
+    localStorage.setItem('focusActive', 'true');
+    localStorage.setItem('focusStartTime', now.toString());
+    startActivity('Focus Mode');
+    toast.success("Focus mode activated!");
+    setFocusModeOpen(false);
+  }, [setFocusModeOpen]);
+
+  const endFocusMode = useCallback(() => {
+    setIsActive(false);
+    setFocusStartTime(null);
+    setElapsedTime(0);
+    localStorage.removeItem('focusActive');
+    localStorage.removeItem('focusStartTime');
+    endActivity();
+    toast.success("Focus session ended!");
+  }, []);
+
+  const openSettings = useCallback(() => {
+    // This would open settings dialog if needed
+    console.log("Opening focus mode settings");
+  }, []);
 
   // For earnings tracker, we'll open ProjectManager to the earnings tab directly
   useEffect(() => {
@@ -107,9 +189,17 @@ const TaskToggleContainer = () => {
       <TasksDialog />
       <GoalArchiveDialog />
       
-      {/* Add FocusDialog */}
+      {/* Add FocusDialog with all required props */}
       {focusModeOpen && (
-        <FocusDialog />
+        <FocusDialog 
+          isActive={isActive}
+          elapsedTime={elapsedTime}
+          blockedSites={blockedSites}
+          setBlockedSites={setBlockedSites}
+          startFocusMode={startFocusMode}
+          endFocusMode={endFocusMode}
+          openSettings={openSettings}
+        />
       )}
       
       <ProjectManager />
