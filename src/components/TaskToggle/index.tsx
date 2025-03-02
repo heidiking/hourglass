@@ -21,7 +21,7 @@ const TaskToggleWrapper = () => {
   return (
     <>
       <TaskToggleContainer />
-      <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />
+      {timeTrackerOpen && <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />}
     </>
   );
 };

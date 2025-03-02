@@ -1,11 +1,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/use-toast";
 import { 
   startActivity, 
-  endActivity, 
-  setupAutoTracking 
+  endActivity
 } from "@/utils/timeTracking";
 import { BlockedSite, TimeTrackerSettings, defaultSettings } from './types';
 import FocusDialog from './FocusDialog';
@@ -82,7 +81,10 @@ const FocusBlocker = () => {
     localStorage.setItem('focusActive', 'true');
     localStorage.setItem('focusStartTime', now.toString());
     startActivity('Focus Mode');
-    toast.success("Focus mode activated! Stay productive!");
+    toast({
+      title: "Focus mode activated!",
+      description: "Stay productive!"
+    });
     setOpen(false);
   }, []);
 
@@ -93,7 +95,10 @@ const FocusBlocker = () => {
     localStorage.removeItem('focusActive');
     localStorage.removeItem('focusStartTime');
     endActivity();
-    toast.success("Focus session ended!");
+    toast({
+      title: "Focus session ended!",
+      description: "Great job!"
+    });
   }, []);
 
   const openSettings = useCallback(() => {

@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { formatFocusTime } from '@/utils/timeTracking';
 
 const Clock = () => {
   const [time, setTime] = useState<string>('');
