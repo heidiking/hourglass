@@ -42,10 +42,28 @@
   color: #888;
 }
 
+/* More specific selectors for pencil/edit icons in the Project Manager dialog */
+[role="dialog"] button.bg-white svg[data-lucide="edit2"],
+[role="dialog"] button.bg-white svg[data-lucide="pencil"],
+[role="dialog"] button.bg-white svg[data-lucide="pen"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="edit2"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pencil"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pen"],
+button.bg-white svg[data-lucide="edit2"],
+button.bg-white svg[data-lucide="pencil"],
+button.bg-white svg[data-lucide="pen"] {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /* Ensure all pencil icons in buttons are black */
 button svg[data-lucide="pencil"],
 button svg[data-lucide="pencil-line"],
-button svg[data-lucide="edit2"] {
+button svg[data-lucide="edit2"],
+button svg[data-lucide="pen"] {
   color: black !important;
   stroke: black !important;
   fill: none !important;
@@ -55,7 +73,9 @@ button svg[data-lucide="edit2"] {
 button.bg-white *,
 button.hover\:bg-white:hover *,
 button.bg-white svg,
-button.hover\:bg-white:hover svg {
+button.hover\:bg-white:hover svg,
+button.white-button-with-black-content *,
+button.white-button-with-black-content svg {
   color: black !important;
   stroke: black !important;
 }
