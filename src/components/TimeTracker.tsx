@@ -17,20 +17,6 @@ import {
   ActivitySession 
 } from '@/utils/timeTracking';
 
-interface TimeTrackerProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  className?: string;
-  position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
-}
-
-interface Project {
-  id: string;
-  name: string;
-  activities: string[];
-  // ... other properties
-}
-
 const isDocumentActivity = (appName: string): boolean => {
   const name = appName.toLowerCase();
   return name.includes("word") || 
@@ -49,6 +35,20 @@ const isDocumentActivity = (appName: string): boolean => {
 const getAppIcon = (appName: string) => {
   return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
 };
+
+interface TimeTrackerProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  className?: string;
+  position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
+}
+
+interface Project {
+  id: string;
+  name: string;
+  activities: string[];
+  // ... other properties
+}
 
 const TimeTracker = ({ 
   open, 
@@ -142,11 +142,12 @@ const TimeTracker = ({
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full text-black hover:bg-black/50 hover:text-black transition-colors ${positionStyles[position]} ${className}`}
+          className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full hover:bg-black/50 hover:text-black transition-colors ${positionStyles[position]} ${className} flex flex-col items-center justify-center w-14 h-14`}
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-black" />
+          <span className="text-xs mt-1 text-black font-medium">Track</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

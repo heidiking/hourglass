@@ -57,3 +57,15 @@ export const getFocusTimeByDateRange = (startDate: Date, endDate: Date): number 
   const filteredActivities = getActivitiesByDateRange(startDate, endDate);
   return calculateTotalDuration(filteredActivities);
 };
+
+// Calculate hourly earnings for a set of activities with a total amount
+export const calculateHourlyRate = (activities: ActivitySession[], totalAmount: number): number => {
+  const totalDuration = calculateTotalDuration(activities);
+  
+  // Convert duration from milliseconds to hours
+  const totalHours = totalDuration / (1000 * 60 * 60);
+  
+  if (totalHours <= 0) return 0;
+  
+  return totalAmount / totalHours;
+};

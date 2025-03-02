@@ -62,7 +62,7 @@ const TaskToggleContainer = () => {
 
   return (
     <div className="fixed bottom-10 right-10 flex flex-col gap-4 z-10">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         {toolButtons.map((button) => (
           <div 
             key={button.id}
@@ -70,7 +70,7 @@ const TaskToggleContainer = () => {
             onDragStart={() => handleDragStart(button.id)}
             onDragOver={(e) => handleDragOver(e, button.id)}
             onDragEnd={handleDragEnd}
-            className="cursor-move"
+            className="cursor-move flex items-center justify-center"
           >
             <Dialog open={isButtonActive(button.id)} 
             onOpenChange={(open) => {
@@ -81,13 +81,13 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className={`p-3 ${isButtonActive(button.id) ? 'bg-black/60' : 'bg-black/30'} rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group`}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-black/60' : 'bg-black/30'} rounded-full text-black hover:bg-black/50 hover:text-black/80 transition-colors flex items-center justify-center w-14 h-14`}
                   aria-label={button.label}
                 >
-                  {button.icon}
-                  <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">
-                    {button.label}
-                  </span>
+                  <div className="flex flex-col items-center">
+                    {button.icon}
+                    <span className="text-xs mt-1 text-black font-medium">{button.label}</span>
+                  </div>
                 </button>
               </DialogTrigger>
             </Dialog>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
 import { 
@@ -31,6 +32,7 @@ type Project = {
   activities: string[]; // IDs of associated activities
   manualActivities: ManualActivity[]; // Manually added activities
   earnings: number; // Total earnings for the project
+  totalEarnings?: number; // Total project value (new field)
   hourlyRate?: number; // Optional hourly rate for the project
 };
 
@@ -91,6 +93,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [activityDate, setActivityDate] = useState(new Date().toISOString().split('T')[0]);
   const [newActivityEarnings, setNewActivityEarnings] = useState("");
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
+  const [projectTotalEarnings, setProjectTotalEarnings] = useState("");
 
   const [timelineActivities, setTimelineActivities] = useState<{[key: string]: ActivitySession[]}>({});
 
@@ -252,6 +255,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     setEditingProject(project);
     setSelectedActivities(project.activities);
     setProjectHourlyRate(project.hourlyRate?.toString() || "");
+    setProjectTotalEarnings(project.totalEarnings?.toString() || "");
     setCurrentTab("edit");
   };
 
@@ -331,6 +335,14 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       earnings: updatedEarnings,
     };
     
+    // If we have a total project value, recalculate the hourly rate
+    if (updatedProject.totalEarnings) {
+      const totalTime = getProjectTotalTime(updatedProject);
+      if (totalTime > 0) {
+        updatedProject.hourlyRate = (updatedProject.totalEarnings / (totalTime / (1000 * 60 * 60)));
+      }
+    }
+    
     const updatedProjects = projects.map(project => 
       project.id === editingProject.id ? updatedProject : project
     );
@@ -358,6 +370,14 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       earnings: updatedEarnings >= 0 ? updatedEarnings : 0,
     };
     
+    // If we have a total project value, recalculate the hourly rate
+    if (updatedProject.totalEarnings) {
+      const totalTime = getProjectTotalTime(updatedProject);
+      if (totalTime > 0) {
+        updatedProject.hourlyRate = (updatedProject.totalEarnings / (totalTime / (1000 * 60 * 60)));
+      }
+    }
+    
     if (editingProject?.id === projectId) {
       setEditingProject(updatedProject);
     }
@@ -370,17 +390,30 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     toast.success("Activity removed");
   };
 
-  const updateProjectHourlyRate = () => {
+  const updateProjectFinancials = () => {
     if (!editingProject) return;
     
     const hourlyRate = projectHourlyRate.trim() 
       ? parseFloat(projectHourlyRate) 
       : undefined;
+      
+    const totalEarnings = projectTotalEarnings.trim()
+      ? parseFloat(projectTotalEarnings)
+      : undefined;
     
     const updatedProject = {
       ...editingProject,
       hourlyRate,
+      totalEarnings
     };
+    
+    // Auto-calculate hourly rate if we have total earnings and time
+    if (totalEarnings) {
+      const totalTime = getProjectTotalTime(updatedProject);
+      if (totalTime > 0) {
+        updatedProject.hourlyRate = (totalEarnings / (totalTime / (1000 * 60 * 60)));
+      }
+    }
     
     const updatedProjects = projects.map(project => 
       project.id === editingProject.id ? updatedProject : project
@@ -388,7 +421,14 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     
     setProjects(updatedProjects);
     setEditingProject(updatedProject);
-    toast.success("Hourly rate updated");
+    
+    if (hourlyRate !== undefined && totalEarnings !== undefined) {
+      toast.success("Project financials updated");
+    } else if (totalEarnings !== undefined) {
+      toast.success("Total project value updated");
+    } else if (hourlyRate !== undefined) {
+      toast.success("Hourly rate updated");
+    }
   };
 
   const getProjectTotalTime = (project: Project): number => {
@@ -450,10 +490,11 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
-          className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
+          className="p-3 bg-black/30 rounded-full text-black hover:bg-black/50 hover:text-black/80 transition-colors flex flex-col items-center justify-center w-14 h-14"
           aria-label="Projects"
         >
-          <Folder size={24} />
+          <Folder size={24} className="text-black" />
+          <span className="text-xs mt-1 text-black font-medium">Projects</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-black/70 text-white border-gray-800">
@@ -483,7 +524,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
               </div>
               <Button onClick={addProject} variant="outline" className="border-gray-700 text-white">
                 <Plus size={16} className="mr-1" />
-                Add
+                Add Project
               </Button>
             </div>
 
@@ -510,6 +551,12 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                               <div>
                                 <DollarSign size={14} className="inline mr-1" />
                                 {formatCurrency(project.earnings)}
+                              </div>
+                            )}
+                            {project.totalEarnings && (
+                              <div title="Total project value">
+                                <DollarSign size={14} className="inline mr-1" />
+                                Total: {formatCurrency(project.totalEarnings)}
                               </div>
                             )}
                             {project.hourlyRate && (
@@ -669,7 +716,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                                       }
                                     }}
                                   >
-                                    <Plus size={14} />
+                                    <Plus size={14} /> ADD
                                   </Button>
                                 </div>
                               </div>
@@ -723,12 +770,29 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                       <label className="text-sm text-white/70">Project Financials</label>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="text-xs text-white/60">Total Earnings</label>
+                          <label className="text-xs text-white/60">Current Earnings</label>
                           <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3">
                             <DollarSign size={16} className="mr-1 text-green-300" />
                             <span>{formatCurrency(editingProject.earnings)}</span>
                           </div>
                         </div>
+                        <div>
+                          <label className="text-xs text-white/60">Total Project Value</label>
+                          <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
+                            <DollarSign size={16} className="text-green-300" />
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={projectTotalEarnings}
+                              onChange={(e) => setProjectTotalEarnings(e.target.value)}
+                              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="0.00"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
                         <div>
                           <label className="text-xs text-white/60">Hourly Rate Target</label>
                           <div className="flex items-center gap-2">
@@ -744,15 +808,16 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                                 placeholder="0.00"
                               />
                             </div>
-                            <Button 
-                              onClick={updateProjectHourlyRate}
-                              variant="outline" 
-                              className="border-gray-700"
-                              size="sm"
-                            >
-                              Set
-                            </Button>
                           </div>
+                        </div>
+                        <div className="flex items-end">
+                          <Button 
+                            onClick={updateProjectFinancials}
+                            variant="outline" 
+                            className="border-gray-700 w-full"
+                          >
+                            Update Financials
+                          </Button>
                         </div>
                       </div>
                       <div className="bg-black/20 rounded p-2 mt-1">
