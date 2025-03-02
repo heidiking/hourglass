@@ -68,9 +68,9 @@ const TasksDialog = () => {
               onChange={(e) => setNewTaskText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
             />
-            <Button onClick={handleAddTask} size="sm" className="flex items-center">
-              <Plus size={16} className="mr-1" />
-              Add
+            <Button onClick={handleAddTask} size="sm" className="flex items-center bg-white text-black hover:bg-white/90">
+              <Plus size={16} className="mr-1 text-black" />
+              <span className="text-black">Add</span>
             </Button>
           </div>
           
@@ -95,10 +95,10 @@ const TasksDialog = () => {
                     variant="ghost" 
                     size="sm" 
                     onClick={() => handleDeleteTask(task.id)}
-                    className="text-destructive flex items-center h-7 px-2"
+                    className="bg-white text-black hover:bg-white/90 flex items-center h-7 px-2"
                   >
-                    <Trash2 size={16} />
-                    <span className="ml-1 text-xs">Remove</span>
+                    <Trash2 size={16} className="text-black" />
+                    <span className="ml-1 text-xs text-black">Remove</span>
                   </Button>
                 </div>
               ))
