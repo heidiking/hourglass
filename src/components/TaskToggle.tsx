@@ -4,6 +4,7 @@ import { CheckSquare, Settings, Clock, Check, Plus, Trash2 } from 'lucide-react'
 import { toast } from "sonner";
 import ProjectManager from './ProjectManager';
 import FocusBlocker from './FocusBlocker';
+import GoalArchive from './GoalArchive';
 import {
   Dialog,
   DialogContent,
@@ -101,11 +102,11 @@ const TaskToggle = () => {
       <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
         <DialogTrigger asChild>
           <button
-            className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors flex items-center"
+            className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group"
             aria-label="Settings"
           >
-            <Settings size={24} className="mr-2" />
-            <span>Settings</span>
+            <Settings size={24} />
+            <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">Settings</span>
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -176,11 +177,11 @@ const TaskToggle = () => {
         <DialogTrigger asChild>
           <button
             onClick={handleToggle}
-            className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors flex items-center"
+            className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group"
             aria-label="Daily Tasks"
           >
-            <CheckSquare size={24} className="mr-2" />
-            <span>Tasks</span>
+            <CheckSquare size={24} />
+            <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">Tasks</span>
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
@@ -232,6 +233,8 @@ const TaskToggle = () => {
           </div>
         </DialogContent>
       </Dialog>
+      
+      <GoalArchive />
       
       <ProjectManager />
     </div>
