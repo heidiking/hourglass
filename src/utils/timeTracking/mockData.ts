@@ -15,7 +15,9 @@ export const mockDocNames = [
   'Client Contract.docx', 'Financial Report.xlsx', 'Team Presentation.pptx',
   'Research Paper.pages', 'Product Roadmap.numbers', 'Company Overview.key',
   'Design Guidelines.pdf', 'Technical Specifications.pdf',
-  'Project Timeline.notion', 'Team Discussion.slack'
+  'Project Timeline.notion', 'Team Discussion.slack',
+  'flights.docx', 'flights - Microsoft Word', 'Microsoft Word - flights.docx',
+  'flights - Google Docs', 'Google Docs - flights'
 ];
 
 // Mock function to simulate detecting active app/tab
@@ -32,6 +34,6 @@ export const detectCurrentApp = (): string => {
   } else if (returnType < 0.66) {
     return mockDocNames[randomDocIndex];
   } else {
-    return `${mockApps[randomIndex]} - ${mockDocNames[randomDocIndex]}`;
+    return `${mockDocNames[randomDocIndex]} - ${mockApps[randomIndex]}`;
   }
 };
