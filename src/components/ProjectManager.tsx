@@ -490,11 +490,11 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
-          className="p-3 bg-black/30 rounded-full text-black hover:bg-black/50 hover:text-black/80 transition-colors flex flex-col items-center justify-center w-14 h-14"
+          className="p-3 bg-black/30 rounded-full hover:bg-black/50 transition-colors flex flex-col items-center justify-center w-14 h-14"
           aria-label="Projects"
         >
-          <Folder size={24} className="text-black" />
-          <span className="text-xs mt-1 text-black font-medium">Projects</span>
+          <Folder size={24} className="text-white" />
+          <span className="text-xs mt-1 text-white font-medium">Projects</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-black/70 text-white border-gray-800">
