@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { 
@@ -21,6 +21,7 @@ const FocusBlocker = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
 
+  // Load saved state on component mount
   useEffect(() => {
     // Load blocked sites from local storage
     const storedSites = localStorage.getItem('blockedSites');
@@ -48,6 +49,7 @@ const FocusBlocker = () => {
       startActivity('Focus Mode');
     }
 
+    // Clean up on unmount
     return () => {
       if (isActive) {
         endActivity();
@@ -72,7 +74,8 @@ const FocusBlocker = () => {
     };
   }, [isActive, focusStartTime]);
 
-  const startFocusMode = () => {
+  // Memoize handlers to prevent unnecessary re-renders
+  const startFocusMode = useCallback(() => {
     const now = new Date();
     setFocusStartTime(now);
     setIsActive(true);
@@ -81,9 +84,9 @@ const FocusBlocker = () => {
     startActivity('Focus Mode');
     toast.success("Focus mode activated! Stay productive!");
     setOpen(false);
-  };
+  }, []);
 
-  const endFocusMode = () => {
+  const endFocusMode = useCallback(() => {
     setIsActive(false);
     setFocusStartTime(null);
     setElapsedTime(0);
@@ -91,11 +94,11 @@ const FocusBlocker = () => {
     localStorage.removeItem('focusStartTime');
     endActivity();
     toast.success("Focus session ended!");
-  };
+  }, []);
 
-  const openSettings = () => {
+  const openSettings = useCallback(() => {
     setSettingsOpen(true);
-  };
+  }, []);
 
   return (
     <>

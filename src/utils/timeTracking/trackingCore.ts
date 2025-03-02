@@ -1,10 +1,22 @@
 
 import { ActivitySession } from './types';
 import { detectCurrentApp } from './mockData';
+import { TimeTrackerSettings, defaultSettings } from '@/components/FocusMode/types';
 
 let currentActivity: ActivitySession | null = null;
 let activityHistory: ActivitySession[] = [];
 let autoTrackingInterval: number | null = null;
+
+// Load settings from localStorage, with fallback to defaults
+export const getTrackerSettings = (): TimeTrackerSettings => {
+  try {
+    const settingsJson = localStorage.getItem('timeTrackerSettings');
+    return settingsJson ? JSON.parse(settingsJson) : defaultSettings;
+  } catch (error) {
+    console.error('Error loading tracker settings:', error);
+    return defaultSettings;
+  }
+};
 
 // Save current state to localStorage
 export const saveState = (): void => {
@@ -16,27 +28,24 @@ export const saveState = (): void => {
   }
 };
 
+// Convert stored date strings back to Date objects
+const parseDates = (activity: any): ActivitySession => ({
+  ...activity,
+  startTime: new Date(activity.startTime),
+  endTime: activity.endTime ? new Date(activity.endTime) : null
+});
+
 // Initialize with stored data from localStorage if available
 export const initializeTimeTracking = (): void => {
   try {
     const storedHistory = localStorage.getItem('activityHistory');
     if (storedHistory) {
-      const parsedHistory = JSON.parse(storedHistory);
-      activityHistory = parsedHistory.map((activity: any) => ({
-        ...activity,
-        startTime: new Date(activity.startTime),
-        endTime: activity.endTime ? new Date(activity.endTime) : null
-      }));
+      activityHistory = JSON.parse(storedHistory).map(parseDates);
     }
 
     const storedCurrent = localStorage.getItem('currentActivity');
-    if (storedCurrent) {
-      const parsedCurrent = JSON.parse(storedCurrent);
-      currentActivity = {
-        ...parsedCurrent,
-        startTime: new Date(parsedCurrent.startTime),
-        endTime: parsedCurrent.endTime ? new Date(parsedCurrent.endTime) : null
-      };
+    if (storedCurrent && storedCurrent !== '') {
+      currentActivity = parseDates(JSON.parse(storedCurrent));
     }
 
     // Setup automatic tracking based on stored settings
@@ -46,13 +55,42 @@ export const initializeTimeTracking = (): void => {
   }
 };
 
+// Check if current time is within the tracking window
+const isWithinTrackingWindow = (settings: TimeTrackerSettings): boolean => {
+  const now = new Date();
+  const currentHours = now.getHours();
+  const currentMinutes = now.getMinutes();
+  const currentTimeMinutes = currentHours * 60 + currentMinutes;
+
+  const [startHours, startMinutes] = settings.startTime.split(':').map(Number);
+  const [endHours, endMinutes] = settings.endTime.split(':').map(Number);
+  
+  const startTimeMinutes = startHours * 60 + startMinutes;
+  const endTimeMinutes = endHours * 60 + endMinutes;
+
+  return currentTimeMinutes >= startTimeMinutes && currentTimeMinutes <= endTimeMinutes;
+};
+
+// Check and update tracking based on time window
+const checkAndStartTracking = (): void => {
+  const settings = getTrackerSettings();
+  
+  if (!settings.autoTrackEnabled) return;
+  
+  if (isWithinTrackingWindow(settings)) {
+    if (!currentActivity) {
+      const currentApp = detectCurrentApp();
+      startActivity(currentApp);
+    }
+  } else if (currentActivity) {
+    endActivity();
+  }
+};
+
 // Setup automatic tracking based on user settings
 export const setupAutoTracking = (): void => {
   try {
-    const settingsJson = localStorage.getItem('timeTrackerSettings');
-    if (!settingsJson) return;
-
-    const settings = JSON.parse(settingsJson);
+    const settings = getTrackerSettings();
     if (!settings.autoTrackEnabled) {
       if (autoTrackingInterval) {
         clearInterval(autoTrackingInterval);
@@ -64,33 +102,6 @@ export const setupAutoTracking = (): void => {
     if (autoTrackingInterval) {
       clearInterval(autoTrackingInterval);
     }
-
-    // Check if current time is within the tracking window
-    const checkAndStartTracking = () => {
-      const now = new Date();
-      const currentHours = now.getHours();
-      const currentMinutes = now.getMinutes();
-      const currentTimeMinutes = currentHours * 60 + currentMinutes;
-
-      const [startHours, startMinutes] = settings.startTime.split(':').map(Number);
-      const [endHours, endMinutes] = settings.endTime.split(':').map(Number);
-      
-      const startTimeMinutes = startHours * 60 + startMinutes;
-      const endTimeMinutes = endHours * 60 + endMinutes;
-
-      // If within tracking window and not already tracking, start tracking
-      if (currentTimeMinutes >= startTimeMinutes && currentTimeMinutes <= endTimeMinutes) {
-        if (!currentActivity) {
-          const currentApp = detectCurrentApp();
-          startActivity(currentApp);
-        }
-      } else {
-        // Outside tracking window, end tracking if active
-        if (currentActivity) {
-          endActivity();
-        }
-      }
-    };
 
     // Run immediately and then every minute
     checkAndStartTracking();
@@ -130,7 +141,7 @@ export const endActivity = (): ActivitySession | null => {
   currentActivity.endTime = now;
   currentActivity.duration = now.getTime() - currentActivity.startTime.getTime();
   
-  activityHistory.push(currentActivity);
+  activityHistory.push({ ...currentActivity });
   const ended = { ...currentActivity };
   currentActivity = null;
   saveState();
@@ -145,10 +156,10 @@ export const getCurrentActivity = (): ActivitySession | null => {
     const now = new Date();
     currentActivity.duration = now.getTime() - currentActivity.startTime.getTime();
   }
-  return currentActivity;
+  return currentActivity ? { ...currentActivity } : null;
 };
 
 // Get all activity history
 export const getActivityHistory = (): ActivitySession[] => {
-  return activityHistory;
+  return [...activityHistory];
 };
