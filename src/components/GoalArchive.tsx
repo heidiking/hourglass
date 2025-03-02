@@ -43,15 +43,15 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
     return (
       <div className={className || ''}>
         {archivedGoals.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {archivedGoals.map((goal, index) => (
               <div 
                 key={index} 
-                className="p-3 bg-white/10 rounded-lg flex justify-between items-center"
+                className="p-2 bg-white/10 rounded-lg flex justify-between items-center"
               >
                 <div>
-                  <p className="text-sm text-white/60">{goal.date}</p>
-                  <p className="text-lg">{goal.text}</p>
+                  <p className="text-xs text-white/60">{goal.date}</p>
+                  <p className="text-base">{goal.text}</p>
                 </div>
               </div>
             ))}
@@ -64,7 +64,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
           <div className="mt-4 flex justify-end">
             <button
               onClick={clearArchive}
-              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors"
+              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
             >
               <X size={16} />
               <span>Clear History</span>
@@ -90,7 +90,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
               Archive
             </span>
           ) : (
-            <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">Archive</span>
+            <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1 text-black">Archive</span>
           )}
         </button>
       </DialogTrigger>
@@ -103,15 +103,15 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
         </DialogHeader>
         <div className="max-h-[50vh] overflow-y-auto">
           {archivedGoals.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {archivedGoals.map((goal, index) => (
                 <div 
                   key={index} 
-                  className="p-3 bg-white/10 rounded-lg flex justify-between items-center"
+                  className="p-2 bg-white/10 rounded-lg flex justify-between items-center"
                 >
                   <div>
-                    <p className="text-sm text-white/60">{goal.date}</p>
-                    <p className="text-lg">{goal.text}</p>
+                    <p className="text-xs text-white/60">{goal.date}</p>
+                    <p className="text-base">{goal.text}</p>
                   </div>
                 </div>
               ))}
@@ -124,7 +124,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
           <div className="mt-4 flex justify-end">
             <button
               onClick={clearArchive}
-              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors"
+              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
             >
               <X size={16} />
               <span>Clear History</span>
