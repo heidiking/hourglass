@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
 import { 
@@ -522,8 +521,8 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                   className="bg-black/30 border-gray-700 text-white"
                 />
               </div>
-              <Button onClick={addProject} variant="outline" className="border-gray-700 text-white">
-                <Plus size={16} className="mr-1" />
+              <Button onClick={addProject} variant="outline" className="border-gray-700 bg-white text-black hover:bg-white/90 hover:text-black">
+                <Plus size={16} className="text-black" />
                 Add Project
               </Button>
             </div>
@@ -823,11 +822,11 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                       <div className="bg-black/20 rounded p-2 mt-1">
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div>
-                            <label className="text-xs text-white/60">Total Time</label>
+                            <label className="text-xs text-white/70">Total Time</label>
                             <div className="font-medium">{formatFocusTime(getProjectTotalTime(editingProject))}</div>
                           </div>
                           <div>
-                            <label className="text-xs text-white/60">Actual Hourly Rate</label>
+                            <label className="text-xs text-white/70">Actual Hourly Rate</label>
                             <div className="font-medium">{getProjectHourlyEarnings(editingProject)}</div>
                           </div>
                         </div>
