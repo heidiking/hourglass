@@ -220,7 +220,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
               className="border-gray-300 flex-1 bg-white text-black hover:bg-white/90 hover:text-black"
             >
               <Save size={14} className="mr-1" />
-              Save Changes
+              <span className="text-black">Save Changes</span>
             </Button>
             <Button 
               onClick={cancelEditing}
@@ -228,7 +228,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
               className="border-gray-300 bg-white text-black hover:bg-white/90 hover:text-black"
             >
               <X size={14} className="mr-1" />
-              Cancel
+              <span className="text-black">Cancel</span>
             </Button>
           </div>
         ) : (
@@ -238,7 +238,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
             className="border-gray-300 w-full bg-white text-black hover:bg-white/90 hover:text-black mt-2"
           >
             <Plus size={14} className="mr-1" />
-            Add Time Entry
+            <span className="text-black">Add Time Entry</span>
           </Button>
         )}
       </div>

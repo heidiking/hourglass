@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
