@@ -66,11 +66,18 @@ const FocusInput = () => {
     
     // Position the cursor after the colon when empty
     if (inputRef.current && !goal) {
-      const placeholderText = placeholder + ' ';
-      inputRef.current.value = placeholderText;
-      // Set the cursor position to after the colon plus one space
-      inputRef.current.selectionStart = placeholderText.length;
-      inputRef.current.selectionEnd = placeholderText.length;
+      const startText = placeholder;
+      inputRef.current.value = startText + " ";
+      setGoal("");
+      
+      // We need to set this after the DOM updates
+      setTimeout(() => {
+        if (inputRef.current) {
+          // Set cursor position one space after the colon
+          inputRef.current.selectionStart = startText.length + 1;
+          inputRef.current.selectionEnd = startText.length + 1;
+        }
+      }, 0);
     }
   };
 
