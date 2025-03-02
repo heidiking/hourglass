@@ -1,5 +1,13 @@
 
-// This file now just re-exports from the modular files to maintain compatibility
+/**
+ * trackingCore.ts
+ * 
+ * Central module that re-exports functionality from specialized time tracking modules
+ * to maintain backward compatibility with existing application code.
+ * This architecture allows for better separation of concerns while preserving the public API.
+ */
+
+// Import from mockData for compatibility
 import { detectCurrentApp } from './mockData';
 
 // Re-export from activityManager

@@ -1,4 +1,12 @@
 
+/**
+ * index.ts
+ * 
+ * Main entry point for the time tracking system.
+ * Provides a clean public API for other application modules.
+ */
+
+// Re-export core functionality from trackingCore
 export {
   startActivity,
   endActivity,
@@ -11,7 +19,8 @@ export {
   detectCurrentApp,
 } from './trackingCore';
 
+// Type exports
 export type { ActivitySession } from './types';
 
-// We need to export this utility function that's used by multiple components
+// Utility functions
 export { formatFocusTime } from './utils';
