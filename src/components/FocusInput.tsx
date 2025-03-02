@@ -10,7 +10,7 @@ type ArchivedGoal = {
 const FocusInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [placeholder, setPlaceholder] = useState<string>('What is your main goal for today?');
+  const [placeholder, setPlaceholder] = useState<string>('My main goal for today is');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoal(e.target.value);
@@ -99,9 +99,9 @@ const FocusInput = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setPlaceholder('Today\'s main goal?');
+        setPlaceholder('My main goal today is');
       } else {
-        setPlaceholder('What is your main goal for today?');
+        setPlaceholder('My main goal for today is');
       }
     };
     
@@ -118,7 +118,7 @@ const FocusInput = () => {
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
       <div 
-        className={`relative border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
+        className={`relative border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 text-left`}
       >
         <input
           type="text"
@@ -128,7 +128,7 @@ const FocusInput = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-center placeholder-white/70 outline-none"
+          className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-left placeholder-white/70 outline-none"
           aria-label="Daily goal input"
         />
       </div>

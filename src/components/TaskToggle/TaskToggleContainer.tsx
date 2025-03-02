@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ProjectManager from '../ProjectManager';
@@ -172,13 +171,11 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full ${button.id === 'focus' ? 'hover:bg-white' : 'hover:bg-black/50'} transition-colors flex items-center justify-center w-12 h-12`}
-                  aria-label={button.label}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-black/30 text-white'} rounded-full hover:bg-black/50 hover:text-white transition-colors flex items-center justify-center w-12 h-12`}
+                  aria-label={button.label || button.id}
                   id={button.id === 'projects' ? 'project-manager-trigger' : undefined}
                 >
-                  <div className={`${button.id === 'focus' ? 'text-black' : 'text-white'} ${isButtonActive(button.id) && 'text-black'}`}>
-                    {button.icon}
-                  </div>
+                  {button.icon}
                 </button>
               </DialogTrigger>
               

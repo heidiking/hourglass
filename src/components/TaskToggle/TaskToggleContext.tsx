@@ -45,43 +45,43 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       {
         id: 'projects',
         icon: <FolderKanban size={24} className="text-white" />,
-        label: 'Projects',
+        label: '',
         onClick: () => setProjectManagerOpen(true),
       },
       {
         id: 'settings',
         icon: <Settings size={24} className="text-white" />,
-        label: 'Settings',
+        label: '',
         onClick: () => setSettingsOpen(true),
       },
       {
         id: 'tasks',
         icon: <CheckSquare size={24} className="text-white" />,
-        label: 'Tasks',
+        label: '',
         onClick: () => setTasksOpen(true),
       },
       {
         id: 'archive',
         icon: <Scroll size={24} className="text-white" />,
-        label: 'Archive',
+        label: '',
         onClick: () => setGoalArchiveOpen(true),
       },
       {
         id: 'tracker',
         icon: <Clock size={24} className="text-white" />,
-        label: 'Tracker',
+        label: '',
         onClick: () => setTimeTrackerOpen(true),
       },
       {
         id: 'earnings',
         icon: <DollarSign size={24} className="text-white" />,
-        label: 'Earnings',
+        label: '',
         onClick: () => setEarningsTrackerOpen(true),
       },
       {
         id: 'focus',
         icon: <Shield size={24} className="text-white" />,
-        label: 'Focus',
+        label: '',
         onClick: () => setFocusModeOpen(true),
       }
     ];
