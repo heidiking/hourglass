@@ -16,11 +16,13 @@ const Weather = () => {
     city: string | null;
     loading: boolean;
     error: string | null;
+    weatherIcon: string | null;
   }>({
     temperature: null,
     city: null,
     loading: true,
-    error: null
+    error: null,
+    weatherIcon: null
   });
 
   useEffect(() => {
@@ -37,12 +39,14 @@ const Weather = () => {
         }
         
         const data = await response.json();
+        console.log('Weather data fetched successfully:', data);
         
         setWeatherData({
           temperature: Math.round(data.main.temp),
           city: data.name,
           loading: false,
-          error: null
+          error: null,
+          weatherIcon: getWeatherIcon(data.weather[0].main)
         });
 
         // Also store the background weather data if it's available
@@ -52,6 +56,7 @@ const Weather = () => {
           // Update the background data with real weather if possible
           if (bgData && !bgData.isCustom) {
             bgData.temperature = Math.round(data.main.temp);
+            bgData.location = data.name;
             bgData.weatherIcon = getWeatherIcon(data.weather[0].main);
             localStorage.setItem('currentBackgroundData', JSON.stringify(bgData));
           }
@@ -82,10 +87,17 @@ const Weather = () => {
       return conditionMap[condition] || '🌤️';
     };
 
-    // Get user's location
+    // Get user's location with more precise options
     if (navigator.geolocation) {
+      const geoOptions = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      };
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log('Location detected:', position.coords.latitude, position.coords.longitude);
           fetchWeatherData(position.coords.latitude, position.coords.longitude);
         },
         (error) => {
@@ -93,17 +105,32 @@ const Weather = () => {
           setWeatherData(prev => ({
             ...prev,
             loading: false,
-            error: 'Location access denied'
+            error: `Location access denied: ${error.message}`
           }));
-        }
+        },
+        geoOptions
       );
     } else {
       setWeatherData(prev => ({
         ...prev,
         loading: false,
-        error: 'Geolocation not supported'
+        error: 'Geolocation not supported in your browser'
       }));
     }
+
+    // Set up interval to refresh weather data every 30 minutes
+    const refreshInterval = setInterval(() => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            fetchWeatherData(position.coords.latitude, position.coords.longitude);
+          },
+          () => {} // Silently fail on refresh
+        );
+      }
+    }, 30 * 60 * 1000);
+
+    return () => clearInterval(refreshInterval);
   }, []);
 
   // Try to get weather from background data if available
@@ -118,6 +145,7 @@ const Weather = () => {
               ...prev,
               city: bgData.location,
               temperature: bgData.temperature,
+              weatherIcon: bgData.weatherIcon,
               loading: false
             }));
           }
@@ -145,9 +173,9 @@ const Weather = () => {
         if (bgData && bgData.location) {
           content = (
             <div className="flex flex-col items-end">
-              <span className="text-sm">{bgData.location}</span>
+              <span className="text-sm text-black">{bgData.location}</span>
               {bgData.temperature && (
-                <span className="text-3xl font-light">{bgData.temperature}°</span>
+                <span className="text-3xl font-light text-black">{bgData.temperature}°</span>
               )}
             </div>
           );
@@ -160,7 +188,7 @@ const Weather = () => {
     // If still no content, show error state
     if (!content) {
       content = (
-        <div className="flex items-center text-white/70">
+        <div className="flex items-center text-black">
           <span className="text-sm">Weather unavailable</span>
         </div>
       );
@@ -169,17 +197,18 @@ const Weather = () => {
     content = (
       <>
         <div className="flex items-center">
-          <span className="text-3xl font-light">{weatherData.temperature}°</span>
+          <span className="text-3xl font-light text-black">{weatherData.temperature}°</span>
+          {weatherData.weatherIcon && <span className="ml-1 text-2xl">{weatherData.weatherIcon}</span>}
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-sm">{weatherData.city}</span>
+          <span className="text-sm text-black">{weatherData.city}</span>
         </div>
       </>
     );
   }
 
   return (
-    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10">
+    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10 bg-white/30 backdrop-blur-sm rounded-lg">
       {content}
     </div>
   );

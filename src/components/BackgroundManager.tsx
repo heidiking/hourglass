@@ -42,6 +42,22 @@ const BackgroundManager = () => {
   // Store the background data in localStorage so other components can access it
   useEffect(() => {
     if (backgroundData) {
+      // If there's weather data available, try to update the location
+      try {
+        const weatherData = localStorage.getItem('currentWeatherData');
+        if (weatherData) {
+          const parsedWeatherData = JSON.parse(weatherData);
+          if (parsedWeatherData && parsedWeatherData.city) {
+            backgroundData.location = parsedWeatherData.city;
+          }
+          if (parsedWeatherData && parsedWeatherData.temperature) {
+            backgroundData.temperature = parsedWeatherData.temperature;
+          }
+        }
+      } catch (e) {
+        console.error('Error reading weather data:', e);
+      }
+      
       localStorage.setItem('currentBackgroundData', JSON.stringify(backgroundData));
     }
   }, [backgroundData]);
