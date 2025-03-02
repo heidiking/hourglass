@@ -45,7 +45,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }), "[&>span]:text-black [&>svg]:text-black")}
+        className={cn(
+          buttonVariants({ variant, size, className }), 
+          "text-black", // Explicitly set text color to black
+          "[&>span]:!text-black [&>svg]:!text-black", // Force child span and svg to be black with !important
+          "[&>*]:!text-black" // Force all direct children to be black
+        )}
         ref={ref}
         {...props}
       />
