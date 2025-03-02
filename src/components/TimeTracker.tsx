@@ -65,16 +65,16 @@ const TimeTracker = () => {
         <DialogTrigger asChild>
           <button
             onClick={() => setOpen(true)}
-            className="flex flex-col items-center justify-center p-2 text-white hover:text-white/80 transition-colors relative"
+            className="flex flex-col items-center justify-center p-2 text-white hover:text-white/80 transition-colors relative group"
             aria-label="Time Tracker"
           >
             <div className="mb-1 relative">
               <Clock size={20} />
               {isTracking && (
-                <span className="absolute -top-1 -right-1 h-2 w-2 bg-green-500 rounded-full"></span>
+                <span className="absolute -top-1 -right-1 h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
               )}
             </div>
-            <span className="text-xs font-light">Tracker</span>
+            <span className="text-xs font-light opacity-0 group-hover:opacity-100 transition-opacity">Tracker</span>
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[500px]">

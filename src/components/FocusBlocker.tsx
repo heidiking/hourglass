@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Shield, Lock, ExternalLink } from 'lucide-react';
+import { Shield, Lock, ExternalLink, Settings } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -13,11 +13,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { startActivity, endActivity, formatFocusTime } from "@/utils/timeTracking";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { startActivity, endActivity, formatFocusTime, setupAutoTracking } from "@/utils/timeTracking";
 
 type BlockedSite = {
   id: string;
   url: string;
+};
+
+type TimeTrackerSettings = {
+  trackDormantActivity: boolean;
+  autoTrackEnabled: boolean;
+  startTime: string;
+  endTime: string;
+};
+
+const defaultSettings: TimeTrackerSettings = {
+  trackDormantActivity: true,
+  autoTrackEnabled: true,
+  startTime: '09:00',
+  endTime: '17:00',
 };
 
 const FocusBlocker = () => {
@@ -27,12 +43,23 @@ const FocusBlocker = () => {
   const [focusStartTime, setFocusStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [open, setOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
 
   useEffect(() => {
     // Load blocked sites from local storage
     const storedSites = localStorage.getItem('blockedSites');
     if (storedSites) {
       setBlockedSites(JSON.parse(storedSites));
+    }
+
+    // Load time tracker settings
+    const storedSettings = localStorage.getItem('timeTrackerSettings');
+    if (storedSettings) {
+      setSettings(JSON.parse(storedSettings));
+    } else {
+      // Initialize with default settings if not found
+      localStorage.setItem('timeTrackerSettings', JSON.stringify(defaultSettings));
     }
 
     // Check if focus mode was active
@@ -117,6 +144,14 @@ const FocusBlocker = () => {
     localStorage.setItem('blockedSites', JSON.stringify(updatedSites));
   };
 
+  const updateSettings = (newSettings: Partial<TimeTrackerSettings>) => {
+    const updatedSettings = { ...settings, ...newSettings };
+    setSettings(updatedSettings);
+    localStorage.setItem('timeTrackerSettings', JSON.stringify(updatedSettings));
+    setupAutoTracking(); // Apply the new settings
+    toast.success("Settings updated!");
+  };
+
   return (
     <>
       {/* Hidden trigger for the Focus dialog */}
@@ -196,14 +231,99 @@ const FocusBlocker = () => {
                 </div>
               </div>
               
-              <DialogFooter className="mt-4">
-                <Button onClick={startFocusMode} className="w-full">
+              <DialogFooter className="mt-4 flex justify-between">
+                <Button 
+                  onClick={() => setSettingsOpen(true)}
+                  variant="outline" 
+                  className="border-gray-700 text-white"
+                >
+                  <Settings size={18} />
+                  Settings
+                </Button>
+                <Button onClick={startFocusMode}>
                   <Shield className="mr-2" size={18} />
                   Start Focus Mode
                 </Button>
               </DialogFooter>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Settings Dialog */}
+      <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-light mb-2">Time Tracker Settings</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="track-dormant" className="text-sm">
+                Track dormant activity
+                <p className="text-xs text-white/60">
+                  When enabled, continues tracking even when you're not actively using the document
+                </p>
+              </Label>
+              <Switch 
+                id="track-dormant"
+                checked={settings.trackDormantActivity}
+                onCheckedChange={(checked) => updateSettings({ trackDormantActivity: checked })}
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <Label htmlFor="auto-track" className="text-sm">
+                Auto-track activity
+                <p className="text-xs text-white/60">
+                  Automatically track document activity during set hours
+                </p>
+              </Label>
+              <Switch 
+                id="auto-track"
+                checked={settings.autoTrackEnabled}
+                onCheckedChange={(checked) => updateSettings({ autoTrackEnabled: checked })}
+              />
+            </div>
+            
+            {settings.autoTrackEnabled && (
+              <div className="grid grid-cols-2 gap-4 pt-2">
+                <div>
+                  <Label htmlFor="start-time" className="text-sm mb-1 block">
+                    Start time
+                  </Label>
+                  <Input
+                    id="start-time"
+                    type="time"
+                    value={settings.startTime}
+                    onChange={(e) => updateSettings({ startTime: e.target.value })}
+                    className="bg-black/30 border-gray-700 text-white"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="end-time" className="text-sm mb-1 block">
+                    End time
+                  </Label>
+                  <Input
+                    id="end-time"
+                    type="time"
+                    value={settings.endTime}
+                    onChange={(e) => updateSettings({ endTime: e.target.value })}
+                    className="bg-black/30 border-gray-700 text-white"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter className="mt-4">
+            <Button 
+              onClick={() => setSettingsOpen(false)}
+              className="w-full"
+            >
+              Save Settings
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 

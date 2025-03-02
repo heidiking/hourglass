@@ -36,10 +36,11 @@ const GoalArchive = () => {
     <Dialog>
       <DialogTrigger asChild>
         <button
-          className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors"
+          className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group"
           aria-label="Goal Archive"
         >
           <Scroll size={20} />
+          <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">Archive</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
