@@ -12,7 +12,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TaskToggleProvider } from '@/components/TaskToggle/TaskToggleContext';
 
 const Index = () => {
-  const [trackerOpen, setTrackerOpen] = useState(true);
+  const [trackerOpen, setTrackerOpen] = useState(false);
 
   useEffect(() => {
     // Initialize time tracking on page load
