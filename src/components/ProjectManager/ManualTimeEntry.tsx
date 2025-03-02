@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Project, ManualActivity } from './types';
+import { Label } from "@/components/ui/label";
 
 interface ManualTimeEntryProps {
   editingProject: Project;
@@ -142,58 +143,75 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
         {editingActivity ? "Edit Time Entry" : "Add Manual Time Entry"}
       </h3>
-      <div className="space-y-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <Input
-          value={newActivityName}
-          onChange={(e) => setNewActivityName(e.target.value)}
-          placeholder="Activity name"
-          className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 mb-3"
-        />
-        
-        <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="space-y-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="space-y-2">
+          <Label htmlFor="activity-name" className="text-black">Activity Name</Label>
           <Input
-            type="date"
-            value={activityDate}
-            onChange={(e) => setActivityDate(e.target.value)}
-            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
+            id="activity-name"
+            value={newActivityName}
+            onChange={(e) => setNewActivityName(e.target.value)}
+            placeholder="Activity name"
+            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-black"
           />
-          
-          <div className="flex items-center gap-1">
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="activity-date" className="text-black">Date</Label>
             <Input
-              type="number"
-              value={newActivityTime}
-              onChange={(e) => setNewActivityTime(e.target.value)}
-              className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 w-20"
-              min="0"
+              id="activity-date"
+              type="date"
+              value={activityDate}
+              onChange={(e) => setActivityDate(e.target.value)}
+              className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-black"
             />
-            
-            <select 
-              value={newActivityTimeUnit}
-              onChange={(e) => setNewActivityTimeUnit(e.target.value)}
-              className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded px-2 py-2 flex-1"
-            >
-              <option value="minute">M</option>
-              <option value="hour">H</option>
-              <option value="day">D</option>
-            </select>
           </div>
           
-          <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2">
-            <DollarSign size={16} className="text-green-500" />
-            <Input
-              type="number"
-              step="0.01"
-              min="0"
-              value={newActivityEarnings}
-              onChange={(e) => setNewActivityEarnings(e.target.value)}
-              className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              placeholder="Earnings"
-            />
+          <div className="space-y-2">
+            <Label htmlFor="activity-duration" className="text-black">Duration</Label>
+            <div className="flex items-center gap-1">
+              <Input
+                id="activity-duration"
+                type="number"
+                value={newActivityTime}
+                onChange={(e) => setNewActivityTime(e.target.value)}
+                className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-black w-20"
+                min="0"
+              />
+              
+              <select 
+                id="activity-unit"
+                value={newActivityTimeUnit}
+                onChange={(e) => setNewActivityTimeUnit(e.target.value)}
+                className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-black rounded px-2 py-2 flex-1"
+              >
+                <option value="minute">Minutes</option>
+                <option value="hour">Hours</option>
+                <option value="day">Days</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="activity-earnings" className="text-black">Earnings</Label>
+            <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2">
+              <DollarSign size={16} className="text-green-500" />
+              <Input
+                id="activity-earnings"
+                type="number"
+                step="0.01"
+                min="0"
+                value={newActivityEarnings}
+                onChange={(e) => setNewActivityEarnings(e.target.value)}
+                className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+                placeholder="Amount"
+              />
+            </div>
           </div>
         </div>
         
         {editingActivity ? (
-          <div className="flex gap-2">
+          <div className="flex gap-2 pt-2">
             <Button 
               onClick={addManualActivity}
               variant="outline" 
@@ -215,7 +233,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           <Button 
             onClick={addManualActivity} 
             variant="outline" 
-            className="border-gray-300 w-full bg-white text-black hover:bg-white/90 hover:text-black"
+            className="border-gray-300 w-full bg-white text-black hover:bg-white/90 hover:text-black mt-2"
           >
             <Plus size={14} className="mr-1" />
             Add Time Entry
