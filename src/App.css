@@ -42,33 +42,6 @@
   color: #888;
 }
 
-/* More specific selectors for pencil/edit icons in the Project Manager dialog */
-[role="dialog"] button.bg-white svg[data-lucide="edit2"],
-[role="dialog"] button.bg-white svg[data-lucide="pencil"],
-[role="dialog"] button.bg-white svg[data-lucide="pen"],
-[role="dialog"] button.white-button-with-black-content svg[data-lucide="edit2"],
-[role="dialog"] button.white-button-with-black-content svg[data-lucide="pencil"],
-[role="dialog"] button.white-button-with-black-content svg[data-lucide="pen"],
-button.bg-white svg[data-lucide="edit2"],
-button.bg-white svg[data-lucide="pencil"],
-button.bg-white svg[data-lucide="pen"] {
-  color: black !important;
-  stroke: black !important;
-  fill: none !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Ensure all pencil icons in buttons are black */
-button svg[data-lucide="pencil"],
-button svg[data-lucide="pencil-line"],
-button svg[data-lucide="edit2"],
-button svg[data-lucide="pen"] {
-  color: black !important;
-  stroke: black !important;
-  fill: none !important;
-}
-
 /* Ensure all white buttons have black text and icons */
 button.bg-white *,
 button.hover\:bg-white:hover *,
@@ -109,6 +82,34 @@ button .button-text {
   opacity: 1 !important;
 }
 
+/* Glass effect for panels */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+.dark .glass-panel {
+  background: rgba(17, 25, 40, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Additional styles for dialog boxes */
+[role="dialog"] .dialog-content {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dark [role="dialog"] .dialog-content {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Performance optimizations */
 .animate-in, 
 .animate-out {
@@ -126,4 +127,31 @@ button.bg-white:hover,
 button.bg-white:focus,
 button.hover\:bg-white:hover {
   color: black !important;
+}
+
+/* More specific selectors for pencil/edit icons in the Project Manager dialog */
+[role="dialog"] button.bg-white svg[data-lucide="edit2"],
+[role="dialog"] button.bg-white svg[data-lucide="pencil"],
+[role="dialog"] button.bg-white svg[data-lucide="pen"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="edit2"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pencil"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pen"],
+button.bg-white svg[data-lucide="edit2"],
+button.bg-white svg[data-lucide="pencil"],
+button.bg-white svg[data-lucide="pen"] {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure all pencil icons in buttons are black */
+button svg[data-lucide="pencil"],
+button svg[data-lucide="pencil-line"],
+button svg[data-lucide="edit2"],
+button svg[data-lucide="pen"] {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
 }

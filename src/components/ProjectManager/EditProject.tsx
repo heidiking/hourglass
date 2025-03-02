@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -30,18 +30,33 @@ const EditProject: React.FC<EditProjectProps> = ({
   const [selectedActivities, setSelectedActivities] = useState<string[]>(editingProject.activities);
   const [editingActivity, setEditingActivity] = useState<ManualActivity | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setSelectedActivities(editingProject.activities);
   }, [editingProject]);
 
   const updateProject = (updatedProject: Project) => {
-    setEditingProject(updatedProject);
+    // Ensure hourly rate calculations are updated whenever a project is updated
+    const totalEarnings = calculateTotalEarnings(updatedProject);
+    
+    const finalUpdatedProject = {
+      ...updatedProject,
+      earnings: totalEarnings,
+    };
+    
+    setEditingProject(finalUpdatedProject);
     
     const updatedProjects = projects.map(project => 
-      project.id === updatedProject.id ? updatedProject : project
+      project.id === finalUpdatedProject.id ? finalUpdatedProject : project
     );
     
     setProjects(updatedProjects);
+  };
+
+  // Calculate total earnings from all manual entries
+  const calculateTotalEarnings = (project: Project): number => {
+    return (project.manualActivities || []).reduce((total, activity) => 
+      total + (activity.earnings || 0), 0
+    );
   };
 
   const updateProjectName = () => {
@@ -66,33 +81,33 @@ const EditProject: React.FC<EditProjectProps> = ({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 bg-gray-50 dark:bg-gray-900 p-5 rounded-lg shadow-sm">
       <div className="flex items-center gap-4">
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-gray-700"
+          className="border-gray-300 dark:border-gray-700 bg-white text-black"
           onClick={onBackToProjects}
         >
           Back
         </Button>
-        <h3 className="text-lg font-medium">Editing: {editingProject.name}</h3>
+        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">Editing: {editingProject.name}</h3>
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-sm text-white/70">Project Name</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Project Name</label>
             <div className="flex items-center gap-2">
               <Input
                 value={editingProject.name}
                 onChange={(e) => setEditingProject({...editingProject, name: e.target.value})}
-                className="bg-black/30 border-gray-700 text-white"
+                className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
               />
               <Button 
                 onClick={updateProjectName} 
                 variant="outline" 
-                className="border-gray-700 whitespace-nowrap bg-white text-black hover:bg-white/90 hover:text-black"
+                className="border-gray-300 whitespace-nowrap bg-white text-black hover:bg-white/90 hover:text-black"
               >
                 Save Name
               </Button>
@@ -111,7 +126,7 @@ const EditProject: React.FC<EditProjectProps> = ({
           />
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-6">
           <ManualTimeEntry 
             editingProject={editingProject}
             onUpdateProject={updateProject}

@@ -109,16 +109,15 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       };
       
       // Update project total earnings if this activity has earnings
-      const updatedEarnings = editingProject.earnings + (earnings || 0);
+      const updatedManualActivities = [...(editingProject.manualActivities || []), newActivity];
+      const updatedEarnings = updatedManualActivities.reduce((total, activity) => 
+        total + (activity.earnings || 0), 0);
       
       const updatedProject = {
         ...editingProject,
-        manualActivities: [...(editingProject.manualActivities || []), newActivity],
+        manualActivities: updatedManualActivities,
         earnings: updatedEarnings,
       };
-      
-      // Don't automatically update the hourly rate target value, as it's meant to be 
-      // user-defined. The actual hourly rate will be calculated separately.
       
       onUpdateProject(updatedProject);
       setNewActivityName("");
@@ -139,24 +138,24 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm text-white/70">
+    <div className="space-y-3">
+      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
         {editingActivity ? "Edit Time Entry" : "Add Manual Time Entry"}
-      </label>
-      <div className="space-y-2 bg-black/20 p-2 rounded">
+      </h3>
+      <div className="space-y-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <Input
           value={newActivityName}
           onChange={(e) => setNewActivityName(e.target.value)}
           placeholder="Activity name"
-          className="bg-black/30 border-gray-700 text-white mb-2"
+          className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 mb-3"
         />
         
-        <div className="grid grid-cols-3 gap-2 mb-2">
+        <div className="grid grid-cols-3 gap-3 mb-3">
           <Input
             type="date"
             value={activityDate}
             onChange={(e) => setActivityDate(e.target.value)}
-            className="bg-black/30 border-gray-700 text-white"
+            className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700"
           />
           
           <div className="flex items-center gap-1">
@@ -164,14 +163,14 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
               type="number"
               value={newActivityTime}
               onChange={(e) => setNewActivityTime(e.target.value)}
-              className="bg-black/30 border-gray-700 text-white w-20"
+              className="bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 w-20"
               min="0"
             />
             
             <select 
               value={newActivityTimeUnit}
               onChange={(e) => setNewActivityTimeUnit(e.target.value)}
-              className="bg-black/30 border-gray-700 text-white rounded px-2 py-1 flex-1"
+              className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded px-2 py-2 flex-1"
             >
               <option value="minute">M</option>
               <option value="hour">H</option>
@@ -179,8 +178,8 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
             </select>
           </div>
           
-          <div className="flex items-center bg-black/30 border border-gray-700 rounded px-2">
-            <DollarSign size={16} className="text-green-300" />
+          <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2">
+            <DollarSign size={16} className="text-green-500" />
             <Input
               type="number"
               step="0.01"
@@ -198,17 +197,17 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
             <Button 
               onClick={addManualActivity}
               variant="outline" 
-              className="border-gray-700 flex-1 bg-white text-black hover:bg-white/90 hover:text-black"
+              className="border-gray-300 flex-1 bg-white text-black hover:bg-white/90 hover:text-black"
             >
-              <Save size={14} className="mr-1 text-black" />
+              <Save size={14} className="mr-1" />
               Save Changes
             </Button>
             <Button 
               onClick={cancelEditing}
               variant="outline" 
-              className="border-gray-700 bg-white text-black hover:bg-white/90 hover:text-black"
+              className="border-gray-300 bg-white text-black hover:bg-white/90 hover:text-black"
             >
-              <X size={14} className="mr-1 text-black" />
+              <X size={14} className="mr-1" />
               Cancel
             </Button>
           </div>
@@ -216,9 +215,9 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           <Button 
             onClick={addManualActivity} 
             variant="outline" 
-            className="border-gray-700 w-full bg-white text-black hover:bg-white/90 hover:text-black"
+            className="border-gray-300 w-full bg-white text-black hover:bg-white/90 hover:text-black"
           >
-            <Plus size={14} className="mr-1 text-black" />
+            <Plus size={14} className="mr-1" />
             Add Time Entry
           </Button>
         )}

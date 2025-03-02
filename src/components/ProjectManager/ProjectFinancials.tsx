@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -61,13 +62,13 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
   };
 
   return (
-    <div className="space-y-1">
-      <label className="text-sm text-white/70">Project Financials</label>
-      <div className="grid grid-cols-2 gap-2">
+    <div className="space-y-3 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Project Financials</h3>
+      <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-xs text-white/60">Current Earnings</label>
-          <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3">
-            <DollarSign size={16} className="mr-1 text-green-300" />
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Current Earnings</label>
+          <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded h-10 px-3">
+            <DollarSign size={16} className="mr-1 text-green-500" />
             <Input
               type="number"
               step="0.01"
@@ -80,9 +81,9 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           </div>
         </div>
         <div>
-          <label className="text-xs text-white/60">Total Project Value</label>
-          <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
-            <DollarSign size={16} className="text-green-300" />
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Total Project Value</label>
+          <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded h-10 px-3 flex-1">
+            <DollarSign size={16} className="text-green-500" />
             <Input
               type="number"
               step="0.01"
@@ -95,12 +96,12 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2 mt-2">
+      <div className="grid grid-cols-2 gap-4 mt-2">
         <div>
-          <label className="text-xs text-white/60">Hourly Rate Target</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Hourly Rate Target</label>
           <div className="flex items-center gap-2">
-            <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
-              <DollarSign size={16} className="text-green-300" />
+            <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded h-10 px-3 flex-1">
+              <DollarSign size={16} className="text-green-500" />
               <Input
                 type="number"
                 step="0.01"
@@ -114,10 +115,10 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           </div>
         </div>
         <div>
-          <label className="text-xs text-white/60">Word Count</label>
+          <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Word Count</label>
           <div className="flex items-center gap-2">
-            <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3 flex-1">
-              <Type size={16} className="text-blue-300 mr-2" />
+            <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded h-10 px-3 flex-1">
+              <Type size={16} className="text-blue-500 mr-2" />
               <Input
                 type="number"
                 min="0"
@@ -130,34 +131,34 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           </div>
         </div>
       </div>
-      <div className="mt-2">
+      <div className="mt-3">
         <Button 
           onClick={updateProjectFinancials}
           variant="outline" 
-          className="border-gray-700 bg-white text-black hover:bg-white/90 hover:text-black w-full"
+          className="border-gray-300 bg-white text-black hover:bg-white/90 hover:text-black w-full"
         >
           Update Financials
         </Button>
       </div>
-      <div className="bg-black/20 rounded p-2 mt-1">
-        <div className="grid grid-cols-2 gap-2 text-sm">
+      <div className="bg-gray-50 dark:bg-gray-900 rounded p-3 mt-3">
+        <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
-            <label className="text-xs text-white/70">Total Time</label>
-            <div className="font-medium">{formatFocusTime(getProjectTotalTime(editingProject, activities))}</div>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Total Time</label>
+            <div className="font-medium text-gray-800 dark:text-gray-200">{formatFocusTime(getProjectTotalTime(editingProject, activities))}</div>
           </div>
           <div>
-            <label className="text-xs text-white/70">Actual Hourly Rate</label>
-            <div className="font-medium">{getProjectHourlyEarnings(editingProject, activities)}</div>
+            <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Actual Hourly Rate</label>
+            <div className="font-medium text-green-600 dark:text-green-400">{getProjectHourlyEarnings(editingProject, activities)}</div>
           </div>
           {editingProject.wordCount > 0 && (
             <>
               <div>
-                <label className="text-xs text-white/70">Word Count</label>
-                <div className="font-medium">{editingProject.wordCount?.toLocaleString() || 0}</div>
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Word Count</label>
+                <div className="font-medium text-gray-800 dark:text-gray-200">{editingProject.wordCount?.toLocaleString() || 0}</div>
               </div>
               <div>
-                <label className="text-xs text-white/70">Per-Word Rate</label>
-                <div className="font-medium">{getProjectWordRate(editingProject)}</div>
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Per-Word Rate</label>
+                <div className="font-medium text-green-600 dark:text-green-400">{getProjectWordRate(editingProject)}</div>
               </div>
             </>
           )}
