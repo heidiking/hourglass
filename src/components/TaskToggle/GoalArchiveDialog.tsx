@@ -15,10 +15,10 @@ const GoalArchiveDialog = () => {
 
   return (
     <Dialog open={goalArchiveOpen} onOpenChange={setGoalArchiveOpen}>
-      <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
+      <DialogContent className="sm:max-w-md bg-white text-black border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-2">Goal History</DialogTitle>
-          <DialogDescription className="text-white/60">
+          <DialogTitle className="text-xl font-light mb-2 text-black">Goal History</DialogTitle>
+          <DialogDescription className="text-black/70">
             View and manage your completed goals
           </DialogDescription>
         </DialogHeader>

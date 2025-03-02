@@ -48,34 +48,34 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
             <DialogTrigger asChild>
               <button
                 onClick={button.onClick}
-                className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full ${button.id === 'focus' ? 'hover:bg-white' : 'hover:bg-black/50'} transition-colors flex items-center justify-center w-12 h-12`}
+                className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
                 aria-label={button.label}
               >
-                <div className={`${isButtonActive(button.id) ? 'text-black' : 'text-white'}`} style={{ color: isButtonActive(button.id) ? 'black' : 'white' }}>
+                <div className="text-black">
                   {button.icon}
                 </div>
-                <span className="sr-only">{button.label}</span>
+                <span className="sr-only text-black">{button.label}</span>
               </button>
             </DialogTrigger>
             
             {/* Render appropriate dialog content based on the button */}
             {button.id === 'settings' && settingsOpen && (
-              <DialogContent className="dialog-content">
+              <DialogContent className="dialog-content bg-white text-black">
                 <SettingsDialog />
               </DialogContent>
             )}
             {button.id === 'tasks' && tasksOpen && (
-              <DialogContent className="dialog-content">
+              <DialogContent className="dialog-content bg-white text-black">
                 <TasksDialog />
               </DialogContent>
             )}
             {button.id === 'archive' && goalArchiveOpen && (
-              <DialogContent className="dialog-content">
+              <DialogContent className="dialog-content bg-white text-black">
                 <GoalArchiveDialog />
               </DialogContent>
             )}
             {button.id === 'focus' && focusModeOpen && (
-              <DialogContent className="dialog-content">
+              <DialogContent className="dialog-content bg-white text-black">
                 <FocusModeManager 
                   focusModeOpen={focusModeOpen}
                   setFocusModeOpen={setFocusModeOpen}

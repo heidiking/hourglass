@@ -47,27 +47,27 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
             {archivedGoals.map((goal, index) => (
               <div 
                 key={index} 
-                className="p-1.5 bg-white/10 rounded-lg flex justify-between items-center"
+                className="p-1.5 bg-gray-100 rounded-lg flex justify-between items-center"
               >
                 <div>
-                  <p className="text-xs text-black">{goal.date}</p>
+                  <p className="text-xs text-gray-500">{goal.date}</p>
                   <p className="text-sm leading-tight text-black">{goal.text}</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-black py-4">No archived goals yet</p>
+          <p className="text-center text-gray-500 py-4">No archived goals yet</p>
         )}
         
         {archivedGoals.length > 0 && (
           <div className="mt-3 flex justify-end">
             <button
               onClick={clearArchive}
-              className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
+              className="flex items-center gap-1 bg-white text-red-500 hover:bg-white/90 border border-gray-300"
             >
-              <X size={16} className="text-black" />
-              <span className="text-black">Clear History</span>
+              <X size={16} className="text-red-500" />
+              <span className="text-red-500">Clear History</span>
             </button>
           </div>
         )}
@@ -80,17 +80,17 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
     <Dialog>
       <DialogTrigger asChild>
         <button
-          className={`p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group ${className || ''}`}
+          className={`p-3 bg-white rounded-full text-black hover:bg-white/90 transition-colors group border border-gray-300 ${className || ''}`}
           aria-label="Goal Archive"
         >
-          <Scroll size={20} />
+          <Scroll size={20} className="text-black" />
           {showLabel ? (
-            <span className="ml-2 flex items-center">
-              <Scroll size={14} className="mr-1" />
+            <span className="ml-2 flex items-center text-black">
+              <Scroll size={14} className="mr-1 text-black" />
               Archive
             </span>
           ) : (
-            <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1 text-black">Archive</span>
+            <span className="sr-only text-black">Archive</span>
           )}
         </button>
       </DialogTrigger>
@@ -124,7 +124,7 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
           <div className="mt-3 flex justify-end">
             <button
               onClick={clearArchive}
-              className="flex items-center gap-1 bg-white hover:bg-white/90 text-red-500 transition-colors"
+              className="flex items-center gap-1 bg-white hover:bg-white/90 text-red-500 transition-colors border border-gray-300"
             >
               <X size={16} className="text-red-500" />
               <span className="text-red-500">Clear History</span>

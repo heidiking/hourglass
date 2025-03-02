@@ -99,22 +99,22 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
-          className="p-3 bg-black/30 rounded-full hover:bg-black/50 transition-colors flex items-center justify-center w-12 h-12"
+          className="p-3 bg-white rounded-full text-black hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12 border border-gray-300"
           aria-label="Projects"
         >
-          <Folder size={24} className="text-white" />
+          <Folder size={24} className="text-black" />
         </button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-black/70 text-white border-gray-800">
+      <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-black border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-4">Projects & Time Tracking</DialogTitle>
+          <DialogTitle className="text-xl font-light mb-4 text-black">Projects & Time Tracking</DialogTitle>
         </DialogHeader>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-white data-[state=active]:text-black">Projects</TabsTrigger>
-            <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-white data-[state=active]:text-black">Timeline</TabsTrigger>
-            <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-white data-[state=active]:text-black">
+            <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">Projects</TabsTrigger>
+            <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">Timeline</TabsTrigger>
+            <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
               {editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}
             </TabsTrigger>
           </TabsList>
