@@ -1,20 +1,9 @@
-
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, AreaChart, Area } from 'recharts';
 import { formatTimeDuration } from './utils';
 import { ActivitySession } from '@/utils/timeTracking/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-interface TimeOfDayData {
-  hour: number;
-  count: number;
-  duration: number;
-}
-
-interface WeeklyTrend {
-  date: Date;
-  totalDuration: number;
-}
+import { TimeOfDayData, WeeklyTrend } from './ActivityPatternCalculator';
 
 interface ActivityStatsChartProps {
   timeOfDayData: TimeOfDayData[];
@@ -41,7 +30,6 @@ const ActivityStatsChart: React.FC<ActivityStatsChartProps> = ({
     hours: Math.round(item.totalDuration / 1000 / 60 / 60 * 10) / 10
   }));
   
-  // Document distribution data
   const documentData = React.useMemo(() => {
     const docMap: Record<string, number> = {};
     

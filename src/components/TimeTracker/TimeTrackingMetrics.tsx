@@ -1,22 +1,10 @@
-
 import React from 'react';
 import { Clock, FileText, Calendar, Watch, TrendingUp } from 'lucide-react';
 import { formatTimeDuration } from './utils';
-
-interface MetricsData {
-  totalDurationToday: number;
-  totalDurationAll: number;
-  uniqueDocuments: number;
-  avgSessionDuration: number;
-  mostActiveDocument: string;
-  mostActiveDocumentDuration: number;
-  avgDailyTime: number;
-  productiveHoursPerDay: number;
-  totalDaysTracked: number;
-}
+import { ActivityMetrics } from './ActivityMetricsCalculator';
 
 interface TimeTrackingMetricsProps {
-  metrics: MetricsData;
+  metrics: ActivityMetrics;
 }
 
 const TimeTrackingMetrics: React.FC<TimeTrackingMetricsProps> = ({ metrics }) => {
