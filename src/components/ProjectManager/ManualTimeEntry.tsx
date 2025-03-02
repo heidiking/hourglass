@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Plus, DollarSign, Save, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -26,12 +25,10 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
   const [activityDate, setActivityDate] = React.useState(new Date().toISOString().split('T')[0]);
   const [newActivityEarnings, setNewActivityEarnings] = React.useState("");
 
-  // Set form values when editingActivity changes
   React.useEffect(() => {
     if (editingActivity) {
       setNewActivityName(editingActivity.name);
       
-      // Convert the duration back to the appropriate unit
       let duration = editingActivity.duration;
       let unit = "minute";
       let value = Math.round(duration / (60 * 1000));
@@ -49,7 +46,6 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       setActivityDate(editingActivity.date);
       setNewActivityEarnings(editingActivity.earnings ? editingActivity.earnings.toString() : "");
     } else {
-      // Reset form for new entry
       setNewActivityName("");
       setNewActivityTime("1");
       setNewActivityTimeUnit("minute");
@@ -71,7 +67,6 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
     const earnings = newActivityEarnings.trim() ? parseFloat(newActivityEarnings) : undefined;
     
     if (editingActivity) {
-      // Update existing activity
       const updatedActivities = editingProject.manualActivities.map(activity => {
         if (activity.id === editingActivity.id) {
           return {
@@ -85,7 +80,6 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
         return activity;
       });
       
-      // Recalculate total earnings
       const totalEarnings = updatedActivities.reduce((total, activity) => 
         total + (activity.earnings || 0), 0
       );
@@ -100,7 +94,6 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       setEditingActivity(null);
       toast.success("Time entry updated");
     } else {
-      // Add new activity
       const newActivity: ManualActivity = {
         id: Date.now().toString(),
         name: newActivityName,
@@ -110,7 +103,6 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
         earnings: earnings,
       };
       
-      // Update project total earnings if this activity has earnings
       const updatedManualActivities = [...(editingProject.manualActivities || []), newActivity];
       const updatedEarnings = updatedManualActivities.reduce((total, activity) => 
         total + (activity.earnings || 0), 0
@@ -187,9 +179,9 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
                 onChange={(e) => setNewActivityTimeUnit(e.target.value)}
                 className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-black rounded px-2 py-2 flex-1"
               >
-                <option value="minute">Minutes</option>
-                <option value="hour">Hours</option>
-                <option value="day">Days</option>
+                <option value="minute">M</option>
+                <option value="hour">H</option>
+                <option value="day">D</option>
               </select>
             </div>
           </div>
@@ -205,7 +197,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
                 min="0"
                 value={newActivityEarnings}
                 onChange={(e) => setNewActivityEarnings(e.target.value)}
-                className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+                className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-full"
                 placeholder="Amount"
               />
             </div>

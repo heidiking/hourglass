@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -161,7 +160,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           variant="outline" 
           className="border-gray-300 bg-white text-black hover:bg-white/90 hover:text-black w-full"
         >
-          Update Financials
+          <span className="text-black">Update Financials</span>
         </Button>
       </div>
       <div className="bg-gray-50 dark:bg-gray-900 rounded p-3 mt-3">
