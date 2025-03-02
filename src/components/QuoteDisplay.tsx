@@ -11,22 +11,22 @@ const QuoteDisplay = () => {
   const [quote, setQuote] = useState<Quote | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const loadQuote = async () => {
-      try {
-        const todayQuote = await getQuoteForToday();
-        setQuote(todayQuote);
-        setIsVisible(true);
-      } catch (error) {
-        console.error('Failed to load quote:', error);
-        setQuote({
-          text: "We perform our best when we are having fun and feeling good about ourselves.",
-          author: ""
-        });
-        setIsVisible(true);
-      }
-    };
+  const loadQuote = async () => {
+    try {
+      const todayQuote = await getQuoteForToday();
+      setQuote(todayQuote);
+      setIsVisible(true);
+    } catch (error) {
+      console.error('Failed to load quote:', error);
+      setQuote({
+        text: "We perform our best when we are having fun and feeling good about ourselves.",
+        author: ""
+      });
+      setIsVisible(true);
+    }
+  };
 
+  useEffect(() => {
     loadQuote();
 
     // Refresh quote at midnight
@@ -42,6 +42,20 @@ const QuoteDisplay = () => {
     }, timeUntilMidnight);
 
     return () => clearTimeout(midnightTimer);
+  }, []);
+
+  // Listen for changes to custom quotes
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'timeTrackerSettings') {
+        // Reload quote when settings change (might contain new custom quote)
+        setIsVisible(false);
+        setTimeout(() => loadQuote(), 500);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   if (!quote) return null;

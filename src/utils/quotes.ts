@@ -51,15 +51,29 @@ const quotes: Quote[] = [
 // Function to get a quote based on the current date
 export const getQuoteForToday = async (): Promise<Quote> => {
   return new Promise((resolve) => {
-    // In a real app, this might fetch from an API
-    // For now, we'll use the day of the month to select a quote
+    // Get current quotes list
+    let currentQuotes = [...quotes];
+    
+    // Check for custom quote
+    const settings = localStorage.getItem('timeTrackerSettings');
+    if (settings) {
+      const parsedSettings = JSON.parse(settings);
+      if (parsedSettings.customQuote) {
+        currentQuotes.push({
+          text: parsedSettings.customQuote,
+          author: "You"
+        });
+      }
+    }
+    
+    // Use the day of the month to select a quote
     const today = new Date();
     const dayOfMonth = today.getDate();
-    const quoteIndex = dayOfMonth % quotes.length;
+    const quoteIndex = dayOfMonth % currentQuotes.length;
     
     // Simulate network delay
     setTimeout(() => {
-      resolve(quotes[quoteIndex]);
+      resolve(currentQuotes[quoteIndex]);
     }, 800);
   });
 };
