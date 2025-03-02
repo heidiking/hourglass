@@ -89,7 +89,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [customColorInput, setCustomColorInput] = useState("");
   const [newActivityName, setNewActivityName] = useState("");
   const [newActivityTime, setNewActivityTime] = useState("1");
-  const [newActivityTimeUnit, setNewActivityTimeUnit] = useState("hour");
+  const [newActivityTimeUnit, setNewActivityTimeUnit] = useState("minute"); // Changed from "hour" to "minute"
   const [activityDate, setActivityDate] = useState(new Date().toISOString().split('T')[0]);
   const [newActivityEarnings, setNewActivityEarnings] = useState("");
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
@@ -1005,7 +1005,6 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                   </div>
                   
                   <div className="space-y-4">
-                    {/* Repositioned Manual Time Entry Section to the top */}
                     <div className="space-y-2">
                       <label className="text-sm text-white/70">Add Manual Time Entry</label>
                       <div className="space-y-2 bg-black/20 p-2 rounded">
@@ -1038,9 +1037,9 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                               onChange={(e) => setNewActivityTimeUnit(e.target.value)}
                               className="bg-black/30 border-gray-700 text-white rounded px-2 py-1 flex-1"
                             >
-                              <option value="minute">minutes</option>
-                              <option value="hour">hours</option>
-                              <option value="day">days</option>
+                              <option value="minute">M</option>
+                              <option value="hour">H</option>
+                              <option value="day">D</option>
                             </select>
                           </div>
                           
@@ -1061,7 +1060,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                         <Button 
                           onClick={addManualActivity} 
                           variant="outline" 
-                          className="border-gray-700 text-white w-full bg-white"
+                          className="border-gray-700 text-black w-full bg-white hover:bg-white/90 hover:text-black"
                         >
                           <Plus size={14} className="mr-1 text-black" />
                           <span className="text-black">Add Time Entry</span>
@@ -1076,7 +1075,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                           onClick={saveActivityAssociations} 
                           size="sm" 
                           variant="outline" 
-                          className="border-gray-700 bg-white"
+                          className="border-gray-700 bg-white hover:bg-white/90 hover:text-black"
                         >
                           <span className="text-black">Save Associations</span>
                         </Button>
