@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -94,6 +95,26 @@ const FocusInput = () => {
     return () => clearTimeout(midnightTimer);
   }, []);
 
+  // Adjust placeholder text based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setPlaceholder('Today\'s main goal?');
+      } else {
+        setPlaceholder('What is your main goal for today?');
+      }
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
       <div 
@@ -107,7 +128,8 @@ const FocusInput = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="w-full bg-transparent text-white text-2xl font-light text-center placeholder-white/70 outline-none"
+          className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-center placeholder-white/70 outline-none"
+          aria-label="Daily goal input"
         />
       </div>
     </div>
