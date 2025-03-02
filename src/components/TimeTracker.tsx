@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Clock, FileText } from 'lucide-react';
 import { toast } from "sonner";
@@ -17,7 +16,6 @@ interface TimeTrackerProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-// Check if an activity is document-related
 const isDocumentActivity = (appName: string): boolean => {
   const name = appName.toLowerCase();
   return name.includes("word") || 
@@ -33,7 +31,6 @@ const isDocumentActivity = (appName: string): boolean => {
          name.includes(".pdf");
 };
 
-// Get app icon based on app name
 const getAppIcon = (appName: string) => {
   if (appName.includes("Word") || appName.includes("Doc") || appName.includes(".doc")) {
     return <FileText size={16} className="mr-2 text-blue-500 flex-shrink-0" />;
@@ -53,14 +50,12 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [isTracking, setIsTracking] = useState(false);
   
-  // Sync the local state with the prop
   useEffect(() => {
     if (open !== undefined) {
       setDialogOpen(open);
     }
   }, [open]);
 
-  // Notify parent of changes if callback provided
   const handleOpenChange = useCallback((newOpen: boolean) => {
     setDialogOpen(newOpen);
     if (onOpenChange) {
@@ -68,7 +63,6 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
     }
   }, [onOpenChange]);
   
-  // Update activity data at regular intervals
   useEffect(() => {
     const updateActivityData = () => {
       const current = getCurrentActivity();
@@ -79,15 +73,12 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
       setIsTracking(Boolean(current));
     };
     
-    // Initial update
     updateActivityData();
     
-    // Set up interval for updates
     const interval = setInterval(updateActivityData, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Filter only document-related activities
   const documentActivities = activityHistory.filter(activity => 
     isDocumentActivity(activity.appName)
   );
@@ -96,7 +87,7 @@ const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className="hidden" // Hidden as we're controlling it from TaskToggle
+          className="hidden"
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
