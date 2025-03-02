@@ -81,12 +81,12 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className={`p-3 ${isButtonActive(button.id) ? 'bg-black/60' : 'bg-black/30'} rounded-full text-black hover:bg-black/50 hover:text-black/80 transition-colors flex items-center justify-center w-14 h-14`}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-black/60' : 'bg-black/30'} rounded-full hover:bg-black/50 transition-colors flex items-center justify-center w-14 h-14`}
                   aria-label={button.label}
                 >
                   <div className="flex flex-col items-center">
                     {button.icon}
-                    <span className="text-xs mt-1 text-black font-medium">{button.label}</span>
+                    <span className="text-xs mt-1 text-white font-medium">{button.label}</span>
                   </div>
                 </button>
               </DialogTrigger>

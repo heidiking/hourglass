@@ -147,8 +147,8 @@ const TimeTracker = ({
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
-          <Clock size={20} className="text-black" />
-          <span className="text-xs mt-1 text-black font-medium">Track</span>
+          <Clock size={20} className="text-white" />
+          <span className="text-xs mt-1 text-white font-medium">Track</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

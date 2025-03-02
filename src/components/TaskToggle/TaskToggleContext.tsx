@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Clock, DollarSign } from 'lucide-react';
@@ -37,31 +38,31 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const initialButtons: ToolButton[] = [
       {
         id: 'settings',
-        icon: <Settings size={24} />,
+        icon: <Settings size={24} className="text-white" />,
         label: 'Settings',
         onClick: () => setSettingsOpen(true),
       },
       {
         id: 'tasks',
-        icon: <CheckSquare size={24} />,
+        icon: <CheckSquare size={24} className="text-white" />,
         label: 'Tasks',
         onClick: () => setTasksOpen(true),
       },
       {
         id: 'archive',
-        icon: <Scroll size={24} />,
+        icon: <Scroll size={24} className="text-white" />,
         label: 'Archive',
         onClick: () => setGoalArchiveOpen(true),
       },
       {
         id: 'tracker',
-        icon: <Clock size={24} />,
+        icon: <Clock size={24} className="text-white" />,
         label: 'Tracker',
         onClick: () => setTimeTrackerOpen(true),
       },
       {
         id: 'earnings',
-        icon: <DollarSign size={24} />,
+        icon: <DollarSign size={24} className="text-white" />,
         label: 'Earnings',
         onClick: () => setEarningsTrackerOpen(true),
       }
