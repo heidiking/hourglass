@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
-import { Clock, FileText, DollarSign } from 'lucide-react';
+import { Clock, FileText, DollarSign, Link } from 'lucide-react';
 import { toast } from "sonner";
 import { 
   Dialog,
@@ -11,13 +10,26 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getCurrentActivity, formatFocusTime, getActivityHistory } from '@/utils/timeTracking';
+import { 
+  getCurrentActivity, 
+  formatFocusTime, 
+  getActivityHistory,
+  ActivitySession 
+} from '@/utils/timeTracking';
+import { useEffect as useReactEffect } from 'react';
 
 interface TimeTrackerProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   className?: string;
   position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
+}
+
+interface Project {
+  id: string;
+  name: string;
+  activities: string[];
+  // ... other properties
 }
 
 const isDocumentActivity = (appName: string): boolean => {
@@ -36,13 +48,13 @@ const isDocumentActivity = (appName: string): boolean => {
 };
 
 const getAppIcon = (appName: string) => {
-  if (appName.includes("Word") || appName.includes("Doc") || appName.includes(".doc")) {
+  if (appName.toLowerCase().includes("word") || appName.toLowerCase().includes("doc") || appName.toLowerCase().includes(".doc")) {
     return <FileText size={16} className="mr-2 text-blue-500 flex-shrink-0" />;
-  } else if (appName.includes("Excel") || appName.includes("Sheet") || appName.includes(".xls")) {
+  } else if (appName.toLowerCase().includes("excel") || appName.toLowerCase().includes("sheet") || appName.toLowerCase().includes(".xls")) {
     return <FileText size={16} className="mr-2 text-green-500 flex-shrink-0" />;
-  } else if (appName.includes("PowerPoint") || appName.includes("Presentation") || appName.includes(".ppt")) {
+  } else if (appName.toLowerCase().includes("powerpoint") || appName.toLowerCase().includes("presentation") || appName.toLowerCase().includes(".ppt")) {
     return <FileText size={16} className="mr-2 text-orange-500 flex-shrink-0" />;
-  } else if (appName.includes("PDF") || appName.includes(".pdf")) {
+  } else if (appName.toLowerCase().includes("pdf") || appName.toLowerCase().includes(".pdf")) {
     return <FileText size={16} className="mr-2 text-red-500 flex-shrink-0" />;
   }
   return <FileText size={16} className="mr-2 flex-shrink-0" />;
@@ -55,16 +67,25 @@ const TimeTracker = ({
   position = "floating" 
 }: TimeTrackerProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [currentActivity, setCurrentActivity] = useState<any>(null);
-  const [activityHistory, setActivityHistory] = useState<any[]>([]);
+  const [currentActivity, setCurrentActivity] = useState<ActivitySession | null>(null);
+  const [activityHistory, setActivityHistory] = useState<ActivitySession[]>([]);
   const [isTracking, setIsTracking] = useState(false);
   const [totalEarnings, setTotalEarnings] = useState(0);
+  const [projects, setProjects] = useState<Project[]>([]);
   
   useEffect(() => {
     if (open !== undefined) {
       setDialogOpen(open);
     }
   }, [open]);
+
+  // Load projects
+  useEffect(() => {
+    const storedProjects = localStorage.getItem('projects');
+    if (storedProjects) {
+      setProjects(JSON.parse(storedProjects));
+    }
+  }, []);
 
   const handleOpenChange = useCallback((newOpen: boolean) => {
     setDialogOpen(newOpen);
@@ -100,6 +121,34 @@ const TimeTracker = ({
     const interval = setInterval(updateActivityData, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const addActivityToProject = (projectId: string, activityId: string) => {
+    const projectToUpdate = projects.find(p => p.id === projectId);
+    
+    if (!projectToUpdate) return;
+    
+    if (projectToUpdate.activities.includes(activityId)) {
+      toast.info("This activity is already added to the project");
+      return;
+    }
+    
+    const updatedProject = {
+      ...projectToUpdate,
+      activities: [...projectToUpdate.activities, activityId],
+    };
+    
+    const updatedProjects = projects.map(project => 
+      project.id === projectId ? updatedProject : project
+    );
+    
+    setProjects(updatedProjects);
+    localStorage.setItem('projects', JSON.stringify(updatedProjects));
+    toast.success("Activity added to project");
+  };
+
+  const getProjectsForActivity = (activityId: string): Project[] => {
+    return projects.filter(project => project.activities.includes(activityId));
+  };
 
   const documentActivities = activityHistory.filter(activity => 
     isDocumentActivity(activity.appName)
@@ -192,17 +241,67 @@ const TimeTracker = ({
             </h3>
             {documentActivities.length > 0 ? (
               <div className="space-y-2">
-                {documentActivities.map((activity, index) => (
-                  <div key={index} className="flex items-center p-2 bg-black/10 rounded">
-                    {getAppIcon(activity.appName)}
-                    <div className="flex-1 min-w-0">
-                      <div className="truncate">{activity.appName}</div>
-                      <div className="text-xs text-gray-500">
-                        {new Date(activity.startTime).toLocaleString()} • {formatFocusTime(activity.duration)}
+                {documentActivities.map((activity, index) => {
+                  const assignedProjects = getProjectsForActivity(activity.id);
+                  
+                  return (
+                    <div key={index} className="p-2 bg-black/10 rounded">
+                      <div className="flex items-center">
+                        {getAppIcon(activity.appName)}
+                        <div className="flex-1 min-w-0">
+                          <div className="truncate">{activity.appName}</div>
+                          <div className="text-xs text-gray-500">
+                            {new Date(activity.startTime).toLocaleString()} • {formatFocusTime(activity.duration)}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Assigned Projects */}
+                      {assignedProjects.length > 0 && (
+                        <div className="ml-6 mt-1">
+                          <div className="text-xs text-gray-500 flex items-center">
+                            <Link size={12} className="mr-1" /> 
+                            Assigned to project{assignedProjects.length > 1 ? 's' : ''}:
+                          </div>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {assignedProjects.map(project => (
+                              <div key={project.id} className="text-xs px-2 py-1 bg-blue-500/20 text-blue-200 rounded-full">
+                                {project.name}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Project Assignment Dropdown */}
+                      <div className="mt-2 flex items-center">
+                        <span className="text-xs mr-2">Add to project:</span>
+                        <select 
+                          className="bg-black/30 border-gray-700 text-white text-sm rounded px-2 py-1 flex-1"
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              addActivityToProject(e.target.value, activity.id);
+                              e.target.value = ""; // Reset after selection
+                            }
+                          }}
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Select...</option>
+                          {projects.map(project => (
+                            <option 
+                              key={project.id} 
+                              value={project.id}
+                              disabled={project.activities.includes(activity.id)}
+                            >
+                              {project.name}
+                              {project.activities.includes(activity.id) ? ' (already added)' : ''}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="p-2 bg-black/10 rounded text-gray-500">

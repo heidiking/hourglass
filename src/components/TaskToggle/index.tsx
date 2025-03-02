@@ -4,6 +4,7 @@ import { TaskToggleProvider } from './TaskToggleContext';
 import TaskToggleContainer from './TaskToggleContainer';
 import TimeTracker from '../TimeTracker';
 import { useTaskToggle } from './TaskToggleContext';
+import ProjectManager from '../ProjectManager';
 
 // Main wrapper component that passes the TimeTracker component to the container
 const TaskToggle = () => {
@@ -27,12 +28,7 @@ const TaskToggleWrapper = () => {
     <>
       <TaskToggleContainer />
       {timeTrackerOpen && <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />}
-      {earningsTrackerOpen && (
-        <div className="hidden">
-          {/* The actual earnings tracking functionality is integrated directly into the ProjectManager component */}
-          <button onClick={() => setEarningsTrackerOpen(false)}>Close</button>
-        </div>
-      )}
+      {earningsTrackerOpen && <ProjectManager open={earningsTrackerOpen} onOpenChange={setEarningsTrackerOpen} />}
     </>
   );
 };
