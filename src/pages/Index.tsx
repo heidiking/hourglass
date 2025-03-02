@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import Clock from '@/components/Clock';
-import { NavIcons, Weather } from '@/components/NavIcons';
+import { NavIcons } from '@/components/NavIcons';
+import Weather from '@/components/Weather';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
