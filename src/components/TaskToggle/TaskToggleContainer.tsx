@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ProjectManager from '../ProjectManager';
@@ -18,11 +19,13 @@ const TaskToggleContainer = () => {
     goalArchiveOpen,
     earningsTrackerOpen,
     focusModeOpen,
+    projectManagerOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
     setEarningsTrackerOpen,
     setFocusModeOpen,
+    setProjectManagerOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
@@ -142,7 +145,8 @@ const TaskToggleContainer = () => {
     return (buttonId === 'settings' && settingsOpen) || 
       (buttonId === 'tasks' && tasksOpen) ||
       (buttonId === 'archive' && goalArchiveOpen) ||
-      (buttonId === 'focus' && focusModeOpen);
+      (buttonId === 'focus' && focusModeOpen) ||
+      (buttonId === 'projects' && projectManagerOpen);
   };
 
   return (
@@ -163,12 +167,14 @@ const TaskToggleContainer = () => {
               if (button.id === 'tasks') setTasksOpen(open);
               if (button.id === 'archive') setGoalArchiveOpen(open);
               if (button.id === 'focus') setFocusModeOpen(open);
+              if (button.id === 'projects') setProjectManagerOpen(open);
             }}>
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
                   className={`p-3 ${isButtonActive(button.id) ? 'bg-white' : 'bg-black/30'} rounded-full ${button.id === 'focus' ? 'hover:bg-white' : 'hover:bg-black/50'} transition-colors flex items-center justify-center w-12 h-12`}
                   aria-label={button.label}
+                  id={button.id === 'projects' ? 'project-manager-trigger' : undefined}
                 >
                   <div className={`${button.id === 'focus' ? 'text-black' : 'text-white'} ${isButtonActive(button.id) && 'text-black'}`}>
                     {button.icon}
@@ -180,6 +186,7 @@ const TaskToggleContainer = () => {
               {button.id === 'settings' && settingsOpen && <SettingsDialog />}
               {button.id === 'tasks' && tasksOpen && <TasksDialog />}
               {button.id === 'archive' && goalArchiveOpen && <GoalArchiveDialog />}
+              {button.id === 'projects' && projectManagerOpen && <ProjectManager />}
               {button.id === 'focus' && focusModeOpen && (
                 <FocusDialog 
                   isActive={isActive}
@@ -195,8 +202,6 @@ const TaskToggleContainer = () => {
           </div>
         ))}
       </div>
-      
-      <ProjectManager />
     </div>
   );
 };
