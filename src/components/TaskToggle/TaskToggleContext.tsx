@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Clock, DollarSign } from 'lucide-react';
@@ -35,7 +34,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
   useEffect(() => {
-    // Initialize tool buttons
     const initialButtons: ToolButton[] = [
       {
         id: 'settings',
@@ -69,17 +67,14 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       }
     ];
     
-    // Load custom order from localStorage if it exists
     const storedOrder = localStorage.getItem('taskToggleOrder');
     if (storedOrder) {
       try {
         const orderIds = JSON.parse(storedOrder);
-        // Reorder based on stored order
         const orderedButtons = orderIds
           .map(id => initialButtons.find(button => button.id === id))
           .filter(Boolean);
         
-        // Add any new buttons that might not be in the stored order
         initialButtons.forEach(button => {
           if (!orderedButtons.some(b => b.id === button.id)) {
             orderedButtons.push(button);
@@ -97,7 +92,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   }, []);
 
   useEffect(() => {
-    // Save the current order of buttons when it changes
     const orderIds = toolButtons.map(button => button.id);
     localStorage.setItem('taskToggleOrder', JSON.stringify(orderIds));
   }, [toolButtons]);
