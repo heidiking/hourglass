@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
 import { 
   startActivity, 
@@ -10,14 +10,15 @@ import { BlockedSite, TimeTrackerSettings, defaultSettings } from './types';
 import FocusDialog from './FocusDialog';
 import FocusSettings from './FocusSettings';
 import FocusIndicator from './FocusIndicator';
-import { useTaskToggle } from '@/components/TaskToggle/TaskToggleContext';
+import { Shield } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const FocusBlocker = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [blockedSites, setBlockedSites] = useState<BlockedSite[]>([]);
   const [focusStartTime, setFocusStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
-  const { focusOpen, setFocusOpen } = useTaskToggle();
+  const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
 
@@ -86,8 +87,8 @@ const FocusBlocker = () => {
       title: "Focus mode activated!",
       description: "Stay productive!"
     });
-    setFocusOpen(false);
-  }, [setFocusOpen]);
+    setOpen(false);
+  }, []);
 
   const endFocusMode = useCallback(() => {
     setIsActive(false);
@@ -108,8 +109,20 @@ const FocusBlocker = () => {
 
   return (
     <>
-      {/* Using the TaskToggle context for dialog state */}
-      <Dialog open={focusOpen} onOpenChange={setFocusOpen}>
+      {/* Visible trigger for the Focus dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="fixed bottom-20 right-4 z-20 bg-black/50 text-white border-gray-700 hover:bg-black/70 backdrop-blur-sm"
+            aria-label="Open Focus Mode"
+          >
+            <Shield size={18} className="mr-2" />
+            <span className="hidden sm:inline">Focus Mode</span>
+          </Button>
+        </DialogTrigger>
+        
         <FocusDialog 
           isActive={isActive}
           elapsedTime={elapsedTime}

@@ -7,7 +7,6 @@ import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import { useTaskToggle } from './TaskToggleContext';
 import { toast } from 'sonner';
-import { Shield } from 'lucide-react'; // Import Shield icon for focus mode
 
 const TaskToggleContainer = () => {
   const { 
@@ -22,9 +21,7 @@ const TaskToggleContainer = () => {
     setEarningsTrackerOpen,
     handleDragStart,
     handleDragOver,
-    handleDragEnd,
-    focusOpen, // Need to add this state from context
-    setFocusOpen, // Need to add this setter from context
+    handleDragEnd
   } = useTaskToggle();
 
   // For earnings tracker, we'll open ProjectManager to the earnings tab directly
@@ -60,8 +57,7 @@ const TaskToggleContainer = () => {
   const isButtonActive = (buttonId: string) => {
     return (buttonId === 'settings' && settingsOpen) || 
       (buttonId === 'tasks' && tasksOpen) ||
-      (buttonId === 'archive' && goalArchiveOpen) ||
-      (buttonId === 'focus' && focusOpen); // Add focus mode to active state check
+      (buttonId === 'archive' && goalArchiveOpen);
   };
 
   return (
@@ -81,7 +77,6 @@ const TaskToggleContainer = () => {
               if (button.id === 'settings') setSettingsOpen(open);
               if (button.id === 'tasks') setTasksOpen(open);
               if (button.id === 'archive') setGoalArchiveOpen(open);
-              if (button.id === 'focus') setFocusOpen(open); // Handle focus mode dialog
             }}>
               <DialogTrigger asChild>
                 <button
