@@ -159,7 +159,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
         <Button 
           onClick={updateProjectFinancials}
           variant="outline" 
-          className="border-gray-300 bg-white text-black hover:bg-white/90 hover:text-black w-full"
+          className="border-gray-300 bg-white hover:bg-white/90 w-full"
         >
           <span className="text-black">Update Financials</span>
         </Button>
