@@ -59,3 +59,11 @@ button.hover\:bg-white:hover svg {
   color: black !important;
   stroke: black !important;
 }
+
+/* Ensure dialog buttons have visible text */
+.dialog-content button span,
+.dialog-content button .button-text {
+  display: inline !important;
+  visibility: visible !important;
+  color: inherit !important;
+}

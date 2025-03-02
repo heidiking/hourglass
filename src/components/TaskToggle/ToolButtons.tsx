@@ -54,6 +54,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                 <div className={`${isButtonActive(button.id) ? 'text-black' : 'text-white'}`} style={{ color: isButtonActive(button.id) ? 'black' : 'white' }}>
                   {button.icon}
                 </div>
+                <span className="sr-only">{button.label}</span>
               </button>
             </DialogTrigger>
             

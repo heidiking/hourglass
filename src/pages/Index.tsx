@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons, Weather } from '@/components/NavIcons';
 import QuoteDisplay from '@/components/QuoteDisplay';
@@ -11,6 +11,8 @@ import { initializeTimeTracking } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 
 const Index = () => {
+  const [trackerOpen, setTrackerOpen] = useState(true);
+
   useEffect(() => {
     // Initialize time tracking on page load
     initializeTimeTracking();
@@ -23,7 +25,7 @@ const Index = () => {
       <Weather />
       
       {/* Position the TimeTracker at the top left with high z-index */}
-      <TimeTracker position="topLeft" className="z-20" />
+      <TimeTracker position="topLeft" className="z-20" open={trackerOpen} onOpenChange={setTrackerOpen} />
       
       <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">
         <Clock />
