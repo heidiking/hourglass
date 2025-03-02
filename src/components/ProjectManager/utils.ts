@@ -33,7 +33,7 @@ export const getProjectHourlyEarnings = (project: Project, activities: ActivityS
   }
   
   const hourlyEarnings = project.earnings / totalTimeHours;
-  return `$${hourlyEarnings.toFixed(2)}/hr`;
+  return formatCurrency(hourlyEarnings) + "/hr";
 };
 
 export const getProjectWordRate = (project: Project): string => {

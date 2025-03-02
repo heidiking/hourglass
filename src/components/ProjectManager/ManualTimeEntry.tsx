@@ -51,16 +51,8 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
       earnings: updatedEarnings,
     };
     
-    // If we have a total project value, recalculate the hourly rate
-    if (updatedProject.totalEarnings) {
-      // We need to calculate the total time now that we've added the new activity
-      const totalDuration = updatedProject.manualActivities.reduce((total, activity) => 
-        total + activity.duration, 0);
-        
-      if (totalDuration > 0) {
-        updatedProject.hourlyRate = (updatedProject.totalEarnings / (totalDuration / (1000 * 60 * 60)));
-      }
-    }
+    // Don't automatically update the hourly rate target value, as it's meant to be 
+    // user-defined. The actual hourly rate will be calculated separately.
     
     onUpdateProject(updatedProject);
     setNewActivityName("");
@@ -126,7 +118,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
         <Button 
           onClick={addManualActivity} 
           variant="outline" 
-          className="border-gray-700 text-black w-full bg-white hover:bg-white/90 hover:text-black"
+          className="border-gray-700 w-full bg-white text-black hover:bg-white/90 hover:text-black"
         >
           <Plus size={14} className="mr-1 text-black" />
           Add Time Entry

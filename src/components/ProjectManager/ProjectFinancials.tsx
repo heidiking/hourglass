@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -56,14 +55,6 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
       wordCount,
       earnings
     };
-    
-    // Auto-calculate hourly rate if we have total earnings and time
-    if (totalEarnings) {
-      const totalTime = getProjectTotalTime(updatedProject, activities);
-      if (totalTime > 0) {
-        updatedProject.hourlyRate = (totalEarnings / (totalTime / (1000 * 60 * 60)));
-      }
-    }
     
     onUpdateProject(updatedProject);
     toast.success("Project financials updated");
