@@ -53,6 +53,13 @@ const TaskToggleContainer = () => {
     }
   }, [earningsTrackerOpen, setEarningsTrackerOpen]);
 
+  // Get active state for a button
+  const isButtonActive = (buttonId: string) => {
+    return (buttonId === 'settings' && settingsOpen) || 
+      (buttonId === 'tasks' && tasksOpen) ||
+      (buttonId === 'archive' && goalArchiveOpen);
+  };
+
   return (
     <div className="fixed bottom-10 right-10 flex flex-col gap-4 z-10">
       <div className="flex flex-col gap-2">
@@ -65,11 +72,7 @@ const TaskToggleContainer = () => {
             onDragEnd={handleDragEnd}
             className="cursor-move"
           >
-            <Dialog open={
-              (button.id === 'settings' && settingsOpen) || 
-              (button.id === 'tasks' && tasksOpen) ||
-              (button.id === 'archive' && goalArchiveOpen)
-            } 
+            <Dialog open={isButtonActive(button.id)} 
             onOpenChange={(open) => {
               if (button.id === 'settings') setSettingsOpen(open);
               if (button.id === 'tasks') setTasksOpen(open);
@@ -78,7 +81,7 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className="p-3 bg-black/30 rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group"
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-black/60' : 'bg-black/30'} rounded-full text-white hover:bg-black/50 hover:text-white/80 transition-colors group`}
                   aria-label={button.label}
                 >
                   {button.icon}

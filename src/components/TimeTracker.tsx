@@ -47,15 +47,6 @@ const isDocumentActivity = (appName: string): boolean => {
 };
 
 const getAppIcon = (appName: string) => {
-  if (appName.toLowerCase().includes("word") || appName.toLowerCase().includes("doc") || appName.toLowerCase().includes(".doc")) {
-    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
-  } else if (appName.toLowerCase().includes("excel") || appName.toLowerCase().includes("sheet") || appName.toLowerCase().includes(".xls")) {
-    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
-  } else if (appName.toLowerCase().includes("powerpoint") || appName.toLowerCase().includes("presentation") || appName.toLowerCase().includes(".ppt")) {
-    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
-  } else if (appName.toLowerCase().includes("pdf") || appName.toLowerCase().includes(".pdf")) {
-    return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
-  }
   return <FileText size={16} className="mr-2 text-black flex-shrink-0" />;
 };
 
@@ -151,7 +142,7 @@ const TimeTracker = ({
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className={`p-3 bg-black/30 rounded-full text-black hover:bg-black/50 hover:text-black transition-colors ${positionStyles[position]} ${className}`}
+          className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full text-black hover:bg-black/50 hover:text-black transition-colors ${positionStyles[position]} ${className}`}
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
@@ -254,7 +245,7 @@ const TimeTracker = ({
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="ml-2 border-gray-700"
+                          className="ml-2 border-gray-700 whitespace-nowrap"
                           onClick={() => {
                             if (projects.length > 0 && !projects[0].activities.includes(activity.id)) {
                               addActivityToProject(projects[0].id, activity.id);
@@ -265,7 +256,7 @@ const TimeTracker = ({
                             }
                           }}
                         >
-                          <Plus size={14} className="text-black" />
+                          <Plus size={14} className="text-black" /> ADD
                         </Button>
                       </div>
                     </div>
