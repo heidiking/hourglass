@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Clock, DollarSign } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -16,6 +16,8 @@ interface TaskToggleContextType {
   setTimeTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   earningsTrackerOpen: boolean;
   setEarningsTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  focusModeOpen: boolean;
+  setFocusModeOpen: React.Dispatch<React.SetStateAction<boolean>>;
   draggedItem: string | null;
   setDraggedItem: React.Dispatch<React.SetStateAction<string | null>>;
   handleDragStart: (id: string) => void;
@@ -31,6 +33,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [goalArchiveOpen, setGoalArchiveOpen] = useState(false);
   const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
   const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
+  const [focusModeOpen, setFocusModeOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
@@ -65,6 +68,12 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         icon: <DollarSign size={24} className="text-white" />,
         label: 'Earnings',
         onClick: () => setEarningsTrackerOpen(true),
+      },
+      {
+        id: 'focus',
+        icon: <Shield size={24} className="text-white" />,
+        label: 'Focus',
+        onClick: () => setFocusModeOpen(true),
       }
     ];
     
@@ -136,6 +145,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setTimeTrackerOpen,
         earningsTrackerOpen,
         setEarningsTrackerOpen,
+        focusModeOpen,
+        setFocusModeOpen,
         draggedItem,
         setDraggedItem,
         handleDragStart,

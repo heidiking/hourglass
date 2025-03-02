@@ -7,6 +7,7 @@ import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import { useTaskToggle } from './TaskToggleContext';
 import { toast } from 'sonner';
+import FocusDialog from '../FocusMode/FocusDialog';
 
 const TaskToggleContainer = () => {
   const { 
@@ -15,10 +16,12 @@ const TaskToggleContainer = () => {
     tasksOpen, 
     goalArchiveOpen,
     earningsTrackerOpen,
+    focusModeOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
     setEarningsTrackerOpen,
+    setFocusModeOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
@@ -57,7 +60,8 @@ const TaskToggleContainer = () => {
   const isButtonActive = (buttonId: string) => {
     return (buttonId === 'settings' && settingsOpen) || 
       (buttonId === 'tasks' && tasksOpen) ||
-      (buttonId === 'archive' && goalArchiveOpen);
+      (buttonId === 'archive' && goalArchiveOpen) ||
+      (buttonId === 'focus' && focusModeOpen);
   };
 
   return (
@@ -77,6 +81,7 @@ const TaskToggleContainer = () => {
               if (button.id === 'settings') setSettingsOpen(open);
               if (button.id === 'tasks') setTasksOpen(open);
               if (button.id === 'archive') setGoalArchiveOpen(open);
+              if (button.id === 'focus') setFocusModeOpen(open);
             }}>
               <DialogTrigger asChild>
                 <button
@@ -85,7 +90,6 @@ const TaskToggleContainer = () => {
                   aria-label={button.label}
                 >
                   <div className="flex flex-col items-center">
-                    {/* Fixed the TypeScript error by rendering the icon directly */}
                     <div className="text-white">
                       {button.icon}
                     </div>
@@ -102,6 +106,12 @@ const TaskToggleContainer = () => {
       <SettingsDialog />
       <TasksDialog />
       <GoalArchiveDialog />
+      
+      {/* Add FocusDialog */}
+      {focusModeOpen && <FocusDialog 
+        open={focusModeOpen} 
+        onOpenChange={setFocusModeOpen} 
+      />}
       
       <ProjectManager />
     </div>
