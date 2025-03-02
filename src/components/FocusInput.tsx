@@ -7,10 +7,29 @@ type ArchivedGoal = {
   date: string;
 };
 
+const DAILY_MANTRAS = [
+  "Start before you're ready. Creativity flows from action.",
+  "The world needs your unique creative voice today.",
+  "Create without judgment. Edit later.",
+  "Small steps daily lead to creative mastery.",
+  "Your art matters. Someone needs to experience it.",
+  "Doubts are normal. Create anyway.",
+  "Perfectionism blocks creativity. Progress over perfection.",
+  "Trust the process. The muse rewards consistency.",
+  "Your creative work changes lives, including your own.",
+  "Today's effort plants seeds for tomorrow's inspiration.",
+  "Writer's block is just a signal to play and experiment.",
+  "The blank page is possibility, not pressure.",
+  "You are at your most powerful when creating authentically.",
+  "Creativity is courage made visible.",
+  "Your artistic journey is valid exactly as it is."
+];
+
 const FocusInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [placeholder, setPlaceholder] = useState<string>('');
+  const [dailyMantra, setDailyMantra] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoal(e.target.value);
@@ -61,6 +80,14 @@ const FocusInput = () => {
     }
   };
 
+  // This effect selects and sets the daily mantra based on the day of the month
+  useEffect(() => {
+    const today = new Date();
+    const dayOfMonth = today.getDate();
+    const mantraIndex = (dayOfMonth - 1) % DAILY_MANTRAS.length;
+    setDailyMantra(DAILY_MANTRAS[mantraIndex]);
+  }, []);
+
   // This effect handles the case when a goal is already set and the user revisits the page
   useEffect(() => {
     const savedGoal = localStorage.getItem('dailyGoal');
@@ -90,6 +117,12 @@ const FocusInput = () => {
       toast.info('New day, new goals!', {
         duration: 4000,
       });
+
+      // Update the daily mantra for the new day
+      const newDay = new Date();
+      const newDayOfMonth = newDay.getDate();
+      const newMantraIndex = (newDayOfMonth - 1) % DAILY_MANTRAS.length;
+      setDailyMantra(DAILY_MANTRAS[newMantraIndex]);
     }, timeUntilMidnight);
 
     return () => clearTimeout(midnightTimer);
@@ -99,9 +132,9 @@ const FocusInput = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setPlaceholder('Today\'s main goal?');
+        setPlaceholder('Today, success means that I: ');
       } else {
-        setPlaceholder('What is your main goal for today?');
+        setPlaceholder('Today, success means that I: ');
       }
     };
     
@@ -117,10 +150,17 @@ const FocusInput = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
+      {/* Daily mantra section */}
+      <div className="mb-4 text-center animate-fade-in">
+        <p className="text-white/90 text-sm md:text-base font-medium italic">
+          "{dailyMantra}"
+        </p>
+      </div>
+      
       <div className="flex flex-col w-full">
         <div className="flex items-center w-full">
           <label className="text-white text-xl md:text-2xl font-light whitespace-nowrap">
-            My main goal for today is:
+            Today, success means that I:
           </label>
           <div className="flex-grow"></div>
         </div>
@@ -135,7 +175,7 @@ const FocusInput = () => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={placeholder}
-            className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none"
+            className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1"
             aria-label="Daily goal input"
           />
         </div>
