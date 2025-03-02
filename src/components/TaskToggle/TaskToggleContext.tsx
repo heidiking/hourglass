@@ -1,7 +1,7 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Clock } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -12,6 +12,8 @@ interface TaskToggleContextType {
   setTasksOpen: React.Dispatch<React.SetStateAction<boolean>>;
   goalArchiveOpen: boolean;
   setGoalArchiveOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  timeTrackerOpen: boolean;
+  setTimeTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   draggedItem: string | null;
   setDraggedItem: React.Dispatch<React.SetStateAction<string | null>>;
   handleDragStart: (id: string) => void;
@@ -25,6 +27,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [tasksOpen, setTasksOpen] = useState(false);
   const [goalArchiveOpen, setGoalArchiveOpen] = useState(false);
+  const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
@@ -48,6 +51,12 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         icon: <Scroll size={24} />,
         label: 'Archive',
         onClick: () => setGoalArchiveOpen(true),
+      },
+      {
+        id: 'tracker',
+        icon: <Clock size={24} />,
+        label: 'Tracker',
+        onClick: () => setTimeTrackerOpen(true),
       }
     ];
     
@@ -119,6 +128,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setTasksOpen,
         goalArchiveOpen,
         setGoalArchiveOpen,
+        timeTrackerOpen,
+        setTimeTrackerOpen,
         draggedItem,
         setDraggedItem,
         handleDragStart,

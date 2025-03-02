@@ -8,14 +8,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { detectCurrentApp, getCurrentActivity, formatFocusTime, getActivityHistory } from '@/utils/timeTracking';
 
-const TimeTracker = () => {
-  const [open, setOpen] = useState(true); // Start with dialog open
+interface TimeTrackerProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const TimeTracker = ({ open, onOpenChange }: TimeTrackerProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [currentActivity, setCurrentActivity] = useState<any>(null);
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [isTracking, setIsTracking] = useState(false);
+  
+  // Sync the local state with the prop
+  useEffect(() => {
+    if (open !== undefined) {
+      setDialogOpen(open);
+    }
+  }, [open]);
+
+  // Notify parent of changes if callback provided
+  const handleOpenChange = (newOpen: boolean) => {
+    setDialogOpen(newOpen);
+    if (onOpenChange) {
+      onOpenChange(newOpen);
+    }
+  };
   
   useEffect(() => {
     // Update the UI every second to show current activity
@@ -61,20 +82,13 @@ const TimeTracker = () => {
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
           <button
-            onClick={() => setOpen(true)}
-            className="flex flex-col items-center justify-center p-2 text-white hover:text-white/80 transition-colors relative group"
+            className="hidden" // Hidden as we're controlling it from TaskToggle
             aria-label="Time Tracker"
           >
-            <div className="mb-1 relative">
-              <Clock size={20} />
-              {isTracking && (
-                <span className="absolute -top-1 -right-1 h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
-              )}
-            </div>
-            <span className="text-xs font-light opacity-0 group-hover:opacity-100 transition-opacity">Tracker</span>
+            <Clock size={20} />
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[500px]">
@@ -83,6 +97,9 @@ const TimeTracker = () => {
               <Clock size={18} className="mr-2" />
               Document Time Tracker
             </DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
+              Track your time spent on documents and applications
+            </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto">
             <div className="mb-4">
