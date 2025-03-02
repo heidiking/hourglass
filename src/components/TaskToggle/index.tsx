@@ -21,8 +21,7 @@ const TaskToggleWrapper = () => {
     timeTrackerOpen, 
     setTimeTrackerOpen,
     earningsTrackerOpen, 
-    setEarningsTrackerOpen,
-    focusModeOpen
+    setEarningsTrackerOpen
   } = useTaskToggle();
   
   return (

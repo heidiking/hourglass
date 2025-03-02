@@ -179,28 +179,26 @@ const TaskToggleContainer = () => {
                   </div>
                 </button>
               </DialogTrigger>
+              
+              {/* Render appropriate dialog content based on the button */}
+              {button.id === 'settings' && settingsOpen && <SettingsDialog />}
+              {button.id === 'tasks' && tasksOpen && <TasksDialog />}
+              {button.id === 'archive' && goalArchiveOpen && <GoalArchiveDialog />}
+              {button.id === 'focus' && focusModeOpen && (
+                <FocusDialog 
+                  isActive={isActive}
+                  elapsedTime={elapsedTime}
+                  blockedSites={blockedSites}
+                  setBlockedSites={setBlockedSites}
+                  startFocusMode={startFocusMode}
+                  endFocusMode={endFocusMode}
+                  openSettings={openSettings}
+                />
+              )}
             </Dialog>
           </div>
         ))}
       </div>
-      
-      {/* Render all dialogs */}
-      <SettingsDialog />
-      <TasksDialog />
-      <GoalArchiveDialog />
-      
-      {/* Add FocusDialog with all required props */}
-      {focusModeOpen && (
-        <FocusDialog 
-          isActive={isActive}
-          elapsedTime={elapsedTime}
-          blockedSites={blockedSites}
-          setBlockedSites={setBlockedSites}
-          startFocusMode={startFocusMode}
-          endFocusMode={endFocusMode}
-          openSettings={openSettings}
-        />
-      )}
       
       <ProjectManager />
     </div>
