@@ -43,25 +43,25 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
     return (
       <div className={className || ''}>
         {archivedGoals.length > 0 ? (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {archivedGoals.map((goal, index) => (
               <div 
                 key={index} 
-                className="p-2 bg-white/10 rounded-lg flex justify-between items-center"
+                className="p-1.5 bg-white/10 rounded-lg flex justify-between items-center"
               >
                 <div>
                   <p className="text-xs text-white/60">{goal.date}</p>
-                  <p className="text-base">{goal.text}</p>
+                  <p className="text-sm leading-tight">{goal.text}</p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-white/60 py-6">No archived goals yet</p>
+          <p className="text-center text-white/60 py-4">No archived goals yet</p>
         )}
         
         {archivedGoals.length > 0 && (
-          <div className="mt-4 flex justify-end">
+          <div className="mt-3 flex justify-end">
             <button
               onClick={clearArchive}
               className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"
@@ -103,25 +103,25 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
         </DialogHeader>
         <div className="max-h-[50vh] overflow-y-auto">
           {archivedGoals.length > 0 ? (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {archivedGoals.map((goal, index) => (
                 <div 
                   key={index} 
-                  className="p-2 bg-white/10 rounded-lg flex justify-between items-center"
+                  className="p-1.5 bg-white/10 rounded-lg flex justify-between items-center"
                 >
                   <div>
                     <p className="text-xs text-white/60">{goal.date}</p>
-                    <p className="text-base">{goal.text}</p>
+                    <p className="text-sm leading-tight">{goal.text}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-white/60 py-6">No archived goals yet</p>
+            <p className="text-center text-white/60 py-4">No archived goals yet</p>
           )}
         </div>
         {archivedGoals.length > 0 && (
-          <div className="mt-4 flex justify-end">
+          <div className="mt-3 flex justify-end">
             <button
               onClick={clearArchive}
               className="flex items-center gap-1 text-red-400 hover:text-red-300 transition-colors text-black"

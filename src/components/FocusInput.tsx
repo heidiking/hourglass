@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
@@ -117,7 +118,7 @@ const FocusInput = () => {
   return (
     <div className="w-full max-w-2xl mx-auto mt-4 px-4">
       <div className="flex items-center">
-        <label className="text-white text-xl md:text-2xl font-light text-left mr-2">
+        <label className="text-white text-xl md:text-2xl font-light whitespace-nowrap mr-2">
           My main goal for today is:
         </label>
         <div 
@@ -131,7 +132,7 @@ const FocusInput = () => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={placeholder}
-            className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-left outline-none"
+            className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none"
             aria-label="Daily goal input"
           />
         </div>
