@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { Clock, FileText, Link, Plus } from 'lucide-react';
 import { toast } from "sonner";
@@ -17,7 +16,6 @@ import {
   ActivitySession 
 } from '@/utils/timeTracking';
 
-// Helper functions for TimeTracker
 const isDocumentActivity = (appName: string): boolean => {
   const name = appName.toLowerCase();
   return name.includes("word") || 
@@ -257,12 +255,11 @@ const TimeTracker = ({
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
-          className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full hover:bg-black/50 transition-colors ${positionStyles[position]} ${className} flex flex-col items-center justify-center w-14 h-14`}
+          className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full hover:bg-black/50 transition-colors ${positionStyles[position]} ${className} flex items-center justify-center w-12 h-12`}
           aria-label="Time Tracker"
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-white" />
-          <span className="text-xs mt-1 text-white font-medium">Track</span>
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
