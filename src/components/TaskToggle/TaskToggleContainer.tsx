@@ -85,7 +85,7 @@ const TaskToggleContainer = () => {
                   aria-label={button.label}
                 >
                   <div className="flex flex-col items-center">
-                    {button.icon}
+                    {React.cloneElement(button.icon, { className: "text-white" })}
                     <span className="text-xs mt-1 text-white font-medium">{button.label}</span>
                   </div>
                 </button>
