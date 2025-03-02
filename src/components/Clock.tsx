@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { formatFocusTime, getCurrentActivity } from '@/utils/timeTracking';
+import { useTaskToggle } from '@/components/TaskToggle/TaskToggleContext';
 
 const Clock = () => {
   const [time, setTime] = useState<string>('');
   const [amPm, setAmPm] = useState<string>('');
   const [focusedTime, setFocusedTime] = useState<string>('0m');
+  const { setFocusModeOpen } = useTaskToggle();
 
   useEffect(() => {
     const updateTime = () => {
@@ -49,6 +51,10 @@ const Clock = () => {
     return () => clearInterval(trackingInterval);
   }, []);
 
+  const handleFocusTimeClick = () => {
+    setFocusModeOpen(true);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex items-end">
@@ -58,9 +64,13 @@ const Clock = () => {
         <div className="text-white text-2xl mb-8 ml-2 opacity-80 font-light">
           {amPm}
         </div>
-        <div className="text-white text-2xl mb-5 ml-4 opacity-80 font-light">
+        <button 
+          onClick={handleFocusTimeClick}
+          className="text-white text-2xl mb-5 ml-4 opacity-80 font-light hover:opacity-100 cursor-pointer"
+          aria-label="Open focus mode"
+        >
           {focusedTime}
-        </div>
+        </button>
       </div>
     </div>
   );
