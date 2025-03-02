@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator } from 'lucide-react';
 import { 
   Dialog,
@@ -74,8 +73,8 @@ const PASTEL_COLORS = [
   { name: "Soft Orange", value: "bg-orange-200" },
 ];
 
-const ProjectManager = () => {
-  const [open, setOpen] = useState(false);
+const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?: (open: boolean) => void }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [newProjectName, setNewProjectName] = useState<string>('');
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -94,6 +93,19 @@ const ProjectManager = () => {
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
 
   const [timelineActivities, setTimelineActivities] = useState<{[key: string]: ActivitySession[]}>({});
+
+  useEffect(() => {
+    if (open !== undefined) {
+      setDialogOpen(open);
+    }
+  }, [open]);
+
+  const handleOpenChange = useCallback((newOpen: boolean) => {
+    setDialogOpen(newOpen);
+    if (onOpenChange) {
+      onOpenChange(newOpen);
+    }
+  }, [onOpenChange]);
 
   useEffect(() => {
     const storedProjects = localStorage.getItem('projects');
@@ -434,7 +446,7 @@ const ProjectManager = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
@@ -645,6 +657,20 @@ const ProjectManager = () => {
                                       </option>
                                     ))}
                                   </select>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    className="ml-2 border-gray-700"
+                                    onClick={() => {
+                                      if (projects.length > 0) {
+                                        addActivityToProject(projects[0].id, activity.id);
+                                      } else {
+                                        toast.error("Create a project first");
+                                      }
+                                    }}
+                                  >
+                                    <Plus size={14} />
+                                  </Button>
                                 </div>
                               </div>
                             </div>

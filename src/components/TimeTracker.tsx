@@ -16,7 +16,6 @@ import {
   getActivityHistory,
   ActivitySession 
 } from '@/utils/timeTracking';
-import { useEffect as useReactEffect } from 'react';
 
 interface TimeTrackerProps {
   open?: boolean;
@@ -79,7 +78,6 @@ const TimeTracker = ({
     }
   }, [open]);
 
-  // Load projects
   useEffect(() => {
     const storedProjects = localStorage.getItem('projects');
     if (storedProjects) {
@@ -103,7 +101,6 @@ const TimeTracker = ({
       setActivityHistory(history);
       setIsTracking(Boolean(current));
 
-      // Calculate total earnings from localStorage
       try {
         const projectsData = localStorage.getItem('projects');
         if (projectsData) {
@@ -154,7 +151,6 @@ const TimeTracker = ({
     isDocumentActivity(activity.appName)
   );
 
-  // Determine the position styling
   const positionStyles = {
     topLeft: "fixed top-4 left-4",
     topRight: "fixed top-4 right-4",
@@ -221,7 +217,6 @@ const TimeTracker = ({
                 className="w-full mt-2"
                 onClick={() => {
                   handleOpenChange(false);
-                  // Find the earnings button and click it
                   const projectManagerTrigger = document.getElementById('project-manager-trigger');
                   if (projectManagerTrigger) {
                     projectManagerTrigger.click();
@@ -256,7 +251,6 @@ const TimeTracker = ({
                         </div>
                       </div>
                       
-                      {/* Assigned Projects */}
                       {assignedProjects.length > 0 && (
                         <div className="ml-6 mt-1">
                           <div className="text-xs text-gray-500 flex items-center">
@@ -273,7 +267,6 @@ const TimeTracker = ({
                         </div>
                       )}
                       
-                      {/* Project Assignment Dropdown */}
                       <div className="mt-2 flex items-center">
                         <span className="text-xs mr-2">Add to project:</span>
                         <select 
