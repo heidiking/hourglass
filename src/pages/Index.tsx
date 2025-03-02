@@ -23,7 +23,7 @@ const Index = () => {
       <NavIcons />
       <Weather />
       
-      {/* Add the TimeTracker component to the top left */}
+      {/* Position the TimeTracker at the top left with high z-index */}
       <TimeTracker position="topLeft" className="z-20" />
       
       <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Clock, FileText, DollarSign, Link } from 'lucide-react';
+import { Clock, FileText, DollarSign, Link, Plus } from 'lucide-react';
 import { toast } from "sonner";
 import { 
   Dialog,
@@ -291,6 +291,22 @@ const TimeTracker = ({
                             </option>
                           ))}
                         </select>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="ml-2 border-gray-700"
+                          onClick={() => {
+                            if (projects.length > 0 && !projects[0].activities.includes(activity.id)) {
+                              addActivityToProject(projects[0].id, activity.id);
+                            } else if (projects.length === 0) {
+                              toast.error("Create a project first");
+                            } else {
+                              toast.info("Activity already added to this project");
+                            }
+                          }}
+                        >
+                          <Plus size={14} />
+                        </Button>
                       </div>
                     </div>
                   );
