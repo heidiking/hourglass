@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 
 type ArchivedGoal = {
   text: string;
@@ -14,42 +15,52 @@ const FocusInput = () => {
     setGoal(e.target.value);
   };
 
+  const saveGoalToArchive = (goalText: string) => {
+    // Save to archive
+    const today = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    const newArchivedGoal: ArchivedGoal = {
+      text: goalText,
+      date: today
+    };
+    
+    // Get existing archived goals
+    const existingGoalsStr = localStorage.getItem('archivedGoals');
+    const existingGoals: ArchivedGoal[] = existingGoalsStr ? JSON.parse(existingGoalsStr) : [];
+    
+    // Add new goal to archive
+    const updatedGoals = [newArchivedGoal, ...existingGoals];
+    
+    // Only keep the 50 most recent goals
+    const trimmedGoals = updatedGoals.slice(0, 50);
+    
+    // Save updated archive
+    localStorage.setItem('archivedGoals', JSON.stringify(trimmedGoals));
+    
+    // Show a toast notification
+    toast.success('Goal archived successfully!', {
+      duration: 3000,
+    });
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && goal.trim()) {
       // Save goal to local storage
       localStorage.setItem('dailyGoal', goal);
       
-      // Save to archive
-      const today = new Date().toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-      
-      const newArchivedGoal: ArchivedGoal = {
-        text: goal,
-        date: today
-      };
-      
-      // Get existing archived goals
-      const existingGoalsStr = localStorage.getItem('archivedGoals');
-      const existingGoals: ArchivedGoal[] = existingGoalsStr ? JSON.parse(existingGoalsStr) : [];
-      
-      // Add new goal to archive
-      const updatedGoals = [newArchivedGoal, ...existingGoals];
-      
-      // Only keep the 50 most recent goals
-      const trimmedGoals = updatedGoals.slice(0, 50);
-      
-      // Save updated archive
-      localStorage.setItem('archivedGoals', JSON.stringify(trimmedGoals));
+      // Archive the goal
+      saveGoalToArchive(goal);
       
       setIsFocused(false);
     }
   };
 
-  // Load saved goal from local storage on component mount
+  // This effect handles the case when a goal is already set and the user revisits the page
   useEffect(() => {
     const savedGoal = localStorage.getItem('dailyGoal');
     if (savedGoal) {
@@ -64,8 +75,20 @@ const FocusInput = () => {
     const timeUntilMidnight = tomorrow.getTime() - now.getTime();
 
     const midnightTimer = setTimeout(() => {
+      const currentGoal = localStorage.getItem('dailyGoal');
+      
+      // Archive the current goal before clearing it
+      if (currentGoal) {
+        saveGoalToArchive(currentGoal);
+      }
+      
+      // Clear the current goal
       setGoal('');
       localStorage.removeItem('dailyGoal');
+      
+      toast.info('New day, new goals!', {
+        duration: 4000,
+      });
     }, timeUntilMidnight);
 
     return () => clearTimeout(midnightTimer);
