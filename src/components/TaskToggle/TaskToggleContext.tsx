@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Clock, DollarSign, Shield, FolderKanban } from 'lucide-react';
@@ -44,7 +43,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const initialButtons: ToolButton[] = [
       {
         id: 'projects',
-        icon: <FolderKanban size={24} className="text-white" />,
+        icon: <FolderKanban size={24} className="text-black" />,
         label: '',
         onClick: () => setProjectManagerOpen(true),
       },

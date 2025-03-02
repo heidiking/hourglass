@@ -30,31 +30,25 @@ const TaskToggleContainer = () => {
     handleDragEnd
   } = useTaskToggle();
 
-  // State for focus mode functionality
   const [isActive, setIsActive] = useState<boolean>(false);
   const [blockedSites, setBlockedSites] = useState<BlockedSite[]>([]);
   const [focusStartTime, setFocusStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
 
-  // Load saved state on component mount
   useEffect(() => {
-    // Load blocked sites from local storage
     const storedSites = localStorage.getItem('blockedSites');
     if (storedSites) {
       setBlockedSites(JSON.parse(storedSites));
     }
 
-    // Load time tracker settings
     const storedSettings = localStorage.getItem('timeTrackerSettings');
     if (storedSettings) {
       setSettings(JSON.parse(storedSettings));
     } else {
-      // Initialize with default settings if not found
       localStorage.setItem('timeTrackerSettings', JSON.stringify(defaultSettings));
     }
 
-    // Check if focus mode was active
     const focusStatus = localStorage.getItem('focusActive');
     const startTimeStr = localStorage.getItem('focusStartTime');
     
@@ -66,7 +60,6 @@ const TaskToggleContainer = () => {
     }
   }, []);
 
-  // Update elapsed time when focus mode is active
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
@@ -83,7 +76,6 @@ const TaskToggleContainer = () => {
     };
   }, [isActive, focusStartTime]);
 
-  // Focus mode functions
   const startFocusMode = useCallback(() => {
     const now = new Date();
     setFocusStartTime(now);
@@ -106,21 +98,16 @@ const TaskToggleContainer = () => {
   }, []);
 
   const openSettings = useCallback(() => {
-    // This would open settings dialog if needed
     console.log("Opening focus mode settings");
   }, []);
 
-  // For earnings tracker, we'll open ProjectManager to the earnings tab directly
   useEffect(() => {
     if (earningsTrackerOpen) {
-      // Find the project manager trigger button and click it
       const projectManagerTrigger = document.getElementById('project-manager-trigger');
       if (projectManagerTrigger) {
         projectManagerTrigger.click();
         
-        // Set a short timeout to allow the dialog to open before we click the projects tab
         setTimeout(() => {
-          // Find and click the Projects tab to ensure we're on the right tab
           const projectsTab = document.querySelector('[data-value="projects"]');
           if (projectsTab) {
             (projectsTab as HTMLElement).click();
@@ -134,12 +121,10 @@ const TaskToggleContainer = () => {
           }
         }, 100);
       }
-      // Reset the state
       setEarningsTrackerOpen(false);
     }
   }, [earningsTrackerOpen, setEarningsTrackerOpen]);
 
-  // Get active state for a button
   const isButtonActive = (buttonId: string) => {
     return (buttonId === 'settings' && settingsOpen) || 
       (buttonId === 'tasks' && tasksOpen) ||
@@ -171,7 +156,7 @@ const TaskToggleContainer = () => {
               <DialogTrigger asChild>
                 <button
                   onClick={button.onClick}
-                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-black/30 text-white'} rounded-full hover:bg-black/50 hover:text-white transition-colors flex items-center justify-center w-12 h-12`}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : button.id === 'projects' ? 'bg-white text-black' : 'bg-black/30 text-white'} rounded-full hover:bg-black/50 hover:text-white transition-colors flex items-center justify-center w-12 h-12`}
                   aria-label={button.label || button.id}
                   id={button.id === 'projects' ? 'project-manager-trigger' : undefined}
                 >
@@ -179,7 +164,6 @@ const TaskToggleContainer = () => {
                 </button>
               </DialogTrigger>
               
-              {/* Render appropriate dialog content based on the button */}
               {button.id === 'settings' && settingsOpen && <SettingsDialog />}
               {button.id === 'tasks' && tasksOpen && <TasksDialog />}
               {button.id === 'archive' && goalArchiveOpen && <GoalArchiveDialog />}
