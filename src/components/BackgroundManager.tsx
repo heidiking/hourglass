@@ -60,6 +60,27 @@ const BackgroundManager = () => {
         />
       )}
       <div className="fixed inset-0 bg-black/20 z-[-1]" aria-hidden="true" />
+      
+      {/* Image credit display */}
+      {backgroundData && (
+        <div className="fixed bottom-2 left-2 text-xs text-white/70 z-10 max-w-[200px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
+          {backgroundData.author ? (
+            <a 
+              href={backgroundData.sourceUrl || '#'} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-white/90 transition-colors"
+            >
+              Photo: {backgroundData.author}
+              {backgroundData.location && ` - ${backgroundData.location}`}
+            </a>
+          ) : (
+            <span>
+              {backgroundData.location || 'Background image'}
+            </span>
+          )}
+        </div>
+      )}
     </>
   );
 };
