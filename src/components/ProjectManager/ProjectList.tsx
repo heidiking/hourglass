@@ -32,7 +32,7 @@ interface ProjectListProps {
   activities: ActivitySession[];
   setEditingProject?: React.Dispatch<React.SetStateAction<Project | null>>;
   onStartNewProject?: () => void;
-  openProjectForEditing?: (project: Project) => void; // Added this prop to match what's passed in index.tsx
+  openProjectForEditing?: (project: Project) => void;
 }
 
 const ProjectList: React.FC<ProjectListProps> = ({ 
@@ -86,7 +86,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
         <h2 className="text-lg font-medium text-gray-800 dark:text-gray-200">Projects</h2>
         <Button variant="outline" onClick={onStartNewProject} className="bg-white text-black hover:bg-white/90 hover:text-black">
           <Plus size={14} className="mr-2" />
-          New Project
+          <span className="text-black">New Project</span>
         </Button>
       </div>
       
@@ -95,57 +95,22 @@ const ProjectList: React.FC<ProjectListProps> = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map(project => (
-            <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700">
+            <div 
+              key={project.id} 
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+              onClick={() => handleEditProject(project)}
+            >
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300">{project.name}</h3>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => handleEditProject(project)}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDuplicateProject(project)}>
-                      <Copy className="mr-2 h-4 w-4" /> Duplicate
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={() => {
-                        navigator.clipboard.writeText(project.id);
-                        toast.success("Project ID copied to clipboard");
-                      }}
-                    >
-                      <Copy className="mr-2 h-4 w-4" /> Copy ID
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="ghost" className="text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 data-[state=open]:bg-red-500/10">
-                            <Trash className="mr-2 h-4 w-4" /> Delete
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the project and remove all of its data.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel onClick={cancelDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={confirmDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Continue</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button 
+                  variant="ghost" 
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering the parent onClick
+                  }}
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 Total Time: { (getProjectTotalTime(project, activities) / (60 * 60 * 1000)).toFixed(1) } hours
