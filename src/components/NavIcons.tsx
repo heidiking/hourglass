@@ -173,9 +173,9 @@ const Weather = () => {
         if (bgData && bgData.location) {
           content = (
             <div className="flex flex-col items-end">
-              <span className="text-sm text-black">{bgData.location}</span>
+              <span className="text-sm text-white">{bgData.location}</span>
               {bgData.temperature && (
-                <span className="text-3xl font-light text-black">{bgData.temperature}°</span>
+                <span className="text-3xl font-light text-white">{bgData.temperature}°</span>
               )}
             </div>
           );
@@ -188,7 +188,7 @@ const Weather = () => {
     // If still no content, show error state
     if (!content) {
       content = (
-        <div className="flex items-center text-black">
+        <div className="flex items-center text-white">
           <span className="text-sm">Weather unavailable</span>
         </div>
       );
@@ -197,18 +197,18 @@ const Weather = () => {
     content = (
       <>
         <div className="flex items-center">
-          <span className="text-3xl font-light text-black">{weatherData.temperature}°</span>
+          <span className="text-3xl font-light text-white">{weatherData.temperature}°</span>
           {weatherData.weatherIcon && <span className="ml-1 text-2xl">{weatherData.weatherIcon}</span>}
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-sm text-black">{weatherData.city}</span>
+          <span className="text-sm text-white">{weatherData.city}</span>
         </div>
       </>
     );
   }
 
   return (
-    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10 bg-white/30 backdrop-blur-sm rounded-lg">
+    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10 bg-black/30 backdrop-blur-sm rounded-lg">
       {content}
     </div>
   );
