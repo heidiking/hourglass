@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 type ArchivedGoal = {
@@ -10,7 +9,8 @@ type ArchivedGoal = {
 const FocusInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [placeholder, setPlaceholder] = useState<string>('My main goal for today is');
+  const [placeholder, setPlaceholder] = useState<string>('My main goal for today is:');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGoal(e.target.value);
@@ -61,7 +61,19 @@ const FocusInput = () => {
     }
   };
 
-  // This effect handles the case when a goal is already set and the user revisits the page
+  const handleFocus = () => {
+    setIsFocused(true);
+    
+    // Position the cursor after the placeholder text when empty
+    if (inputRef.current && !goal) {
+      // Add a space to the input value to allow cursor positioning
+      inputRef.current.value = ' ';
+      // Set the cursor position to after the space
+      inputRef.current.selectionStart = 1;
+      inputRef.current.selectionEnd = 1;
+    }
+  };
+
   useEffect(() => {
     const savedGoal = localStorage.getItem('dailyGoal');
     if (savedGoal) {
@@ -95,13 +107,12 @@ const FocusInput = () => {
     return () => clearTimeout(midnightTimer);
   }, []);
 
-  // Adjust placeholder text based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setPlaceholder('My main goal today is');
+        setPlaceholder('My main goal today is:');
       } else {
-        setPlaceholder('My main goal for today is');
+        setPlaceholder('My main goal for today is:');
       }
     };
     
@@ -121,11 +132,12 @@ const FocusInput = () => {
         className={`relative border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1 text-left`}
       >
         <input
+          ref={inputRef}
           type="text"
           value={goal}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
+          onFocus={handleFocus}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className="w-full bg-transparent text-white text-xl md:text-2xl font-light text-left placeholder-white/70 outline-none"
