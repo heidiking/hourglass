@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { formatCurrency, getProjectTotalTime, getAppIcon } from './utils';
 import { Button } from "@/components/ui/button";
-import { CalendarIcon, Copy, Edit, MoreHorizontal, Plus, Trash } from "lucide-react";
+import { CalendarIcon, Copy, Edit, Plus, Trash } from "lucide-react";
 import { ActivitySession } from '@/utils/timeTracking';
 import {
   DropdownMenu,
@@ -102,15 +101,6 @@ const ProjectList: React.FC<ProjectListProps> = ({
             >
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300">{project.name}</h3>
-                <Button 
-                  variant="ghost" 
-                  className="h-8 w-8 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering the parent onClick
-                  }}
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 Total Time: { (getProjectTotalTime(project, activities) / (60 * 60 * 1000)).toFixed(1) } hours
