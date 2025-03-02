@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Folder, Plus, Minus, X, Tag, Edit2, Clock, FileText, Trash2, DollarSign, Calculator, Type } from 'lucide-react';
 import { 
@@ -96,6 +95,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
   const [projectTotalEarnings, setProjectTotalEarnings] = useState("");
   const [projectWordCount, setProjectWordCount] = useState("");
+  const [currentEarnings, setCurrentEarnings] = useState("");
 
   const [timelineActivities, setTimelineActivities] = useState<{[key: string]: ActivitySession[]}>({});
 
@@ -136,6 +136,12 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   useEffect(() => {
     localStorage.setItem('projects', JSON.stringify(projects));
   }, [projects]);
+
+  useEffect(() => {
+    if (editingProject) {
+      setCurrentEarnings(editingProject.earnings.toString());
+    }
+  }, [editingProject]);
 
   const addProject = () => {
     if (!newProjectName.trim()) return;
@@ -409,11 +415,16 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       ? parseInt(projectWordCount)
       : 0;
     
+    const earnings = currentEarnings.trim()
+      ? parseFloat(currentEarnings)
+      : 0;
+    
     const updatedProject = {
       ...editingProject,
       hourlyRate,
       totalEarnings,
-      wordCount
+      wordCount,
+      earnings
     };
     
     // Auto-calculate hourly rate if we have total earnings and time
@@ -796,7 +807,15 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                           <label className="text-xs text-white/60">Current Earnings</label>
                           <div className="flex items-center bg-black/30 border border-gray-700 rounded h-10 px-3">
                             <DollarSign size={16} className="mr-1 text-green-300" />
-                            <span>{formatCurrency(editingProject.earnings)}</span>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              value={currentEarnings}
+                              onChange={(e) => setCurrentEarnings(e.target.value)}
+                              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                              placeholder="0.00"
+                            />
                           </div>
                         </div>
                         <div>
@@ -856,7 +875,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                           variant="outline" 
                           className="border-gray-700 bg-white w-full"
                         >
-                          Update Financials
+                          <span className="text-black">Update Financials</span>
                         </Button>
                       </div>
                       <div className="bg-black/20 rounded p-2 mt-1">
@@ -983,7 +1002,10 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                         <p className="text-sm text-white/60">No tags yet</p>
                       )}
                     </div>
-                    
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {/* Repositioned Manual Time Entry Section to the top */}
                     <div className="space-y-2">
                       <label className="text-sm text-white/70">Add Manual Time Entry</label>
                       <div className="space-y-2 bg-black/20 p-2 rounded">
@@ -1046,9 +1068,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                         </Button>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-4">
+                    
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <label className="text-sm text-white/70">Associated Activities</label>
