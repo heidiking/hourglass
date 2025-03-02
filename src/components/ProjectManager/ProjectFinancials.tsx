@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DollarSign, Type } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -98,7 +99,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
               min="0"
               value={currentEarnings}
               onChange={(e) => setCurrentEarnings(e.target.value)}
-              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-24"
               placeholder="0.00"
             />
           </div>
@@ -113,7 +114,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
               min="0"
               value={projectTotalEarnings}
               onChange={(e) => setProjectTotalEarnings(e.target.value)}
-              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+              className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-24"
               placeholder="0.00"
             />
           </div>
@@ -131,7 +132,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
                 min="0"
                 value={projectHourlyRate}
                 onChange={(e) => setProjectHourlyRate(e.target.value)}
-                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-24"
                 placeholder="0.00"
               />
             </div>
@@ -147,7 +148,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
                 min="0"
                 value={projectWordCount}
                 onChange={(e) => setProjectWordCount(e.target.value)}
-                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black"
+                className="border-0 bg-transparent h-8 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-24"
                 placeholder="0"
               />
             </div>

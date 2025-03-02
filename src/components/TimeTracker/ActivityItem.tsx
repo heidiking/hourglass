@@ -71,7 +71,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
         <Button 
           variant="outline" 
           size="sm"
-          className="ml-2 border-gray-300 whitespace-nowrap"
+          className="ml-2 border-gray-300 whitespace-nowrap bg-white hover:bg-white/90"
           onClick={() => {
             if (projects.length > 0 && !projects[0].activities.includes(activity.id)) {
               addActivityToProject(projects[0].id, activity.id);
@@ -82,7 +82,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
             }
           }}
         >
-          <Plus size={14} /> ADD
+          <Plus size={14} className="mr-1" /> <span className="text-black">ADD</span>
         </Button>
       </div>
     </div>
