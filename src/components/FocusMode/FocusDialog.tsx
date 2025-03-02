@@ -39,14 +39,14 @@ const FocusDialog = ({
   const [showSettings, setShowSettings] = useState(false);
   
   return (
-    <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800 max-h-[90vh] overflow-y-auto">
+    <DialogContent className="sm:max-w-md bg-white text-black border-gray-200 max-h-[90vh] overflow-y-auto">
       {showSettings ? (
         <FocusSettings closeSettings={() => setShowSettings(false)} />
       ) : (
         <>
           <DialogHeader>
-            <DialogTitle className="text-xl font-light mb-2">Focus Mode</DialogTitle>
-            <DialogDescription className="text-white/60">
+            <DialogTitle className="text-xl font-light mb-2 text-black">Focus Mode</DialogTitle>
+            <DialogDescription className="text-black/70">
               {isActive 
                 ? "You're currently in focus mode. Stay concentrated!" 
                 : "Block distracting websites and focus on your work."}
@@ -71,7 +71,7 @@ const FocusDialog = ({
                 <Button 
                   onClick={() => setShowSettings(true)}
                   variant="outline" 
-                  className="border-gray-700 bg-white hover:bg-white/90 order-2 sm:order-1 w-full sm:w-auto"
+                  className="border-gray-300 bg-white hover:bg-white/90 order-2 sm:order-1 w-full sm:w-auto"
                   aria-label="Open focus settings"
                 >
                   <Settings size={18} className="mr-2 text-black" />
