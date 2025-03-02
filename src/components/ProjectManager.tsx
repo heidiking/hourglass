@@ -89,7 +89,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [customColorInput, setCustomColorInput] = useState("");
   const [newActivityName, setNewActivityName] = useState("");
   const [newActivityTime, setNewActivityTime] = useState("1");
-  const [newActivityTimeUnit, setNewActivityTimeUnit] = useState("minute"); // Changed from "hour" to "minute"
+  const [newActivityTimeUnit, setNewActivityTimeUnit] = useState("minute");
   const [activityDate, setActivityDate] = useState(new Date().toISOString().split('T')[0]);
   const [newActivityEarnings, setNewActivityEarnings] = useState("");
   const [projectHourlyRate, setProjectHourlyRate] = useState("");
@@ -1052,7 +1052,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
                               value={newActivityEarnings}
                               onChange={(e) => setNewActivityEarnings(e.target.value)}
                               className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                              placeholder="Earnings (optional)"
+                              placeholder="Earnings"
                             />
                           </div>
                         </div>
