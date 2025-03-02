@@ -46,7 +46,10 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
         >
           <Scroll size={20} />
           {showLabel ? (
-            <span className="ml-2">Archive</span>
+            <span className="ml-2 flex items-center">
+              <Scroll size={14} className="mr-1" />
+              Archive
+            </span>
           ) : (
             <span className="sr-only opacity-0 group-hover:opacity-100 transition-opacity text-xs absolute mt-1 ml-1">Archive</span>
           )}
@@ -54,7 +57,10 @@ const GoalArchive = ({ className, showLabel = false }: GoalArchiveProps) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-black/70 text-white border-gray-800">
         <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-4">Goal History</DialogTitle>
+          <DialogTitle className="text-xl font-light mb-4 flex items-center">
+            <Scroll size={18} className="mr-2" />
+            Goal History
+          </DialogTitle>
         </DialogHeader>
         <div className="max-h-[50vh] overflow-y-auto">
           {archivedGoals.length > 0 ? (

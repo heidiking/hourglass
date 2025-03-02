@@ -12,7 +12,7 @@ import {
 import { detectCurrentApp, getCurrentActivity, formatFocusTime, getActivityHistory } from '@/utils/timeTracking';
 
 const TimeTracker = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true); // Start with dialog open
   const [currentActivity, setCurrentActivity] = useState<any>(null);
   const [activityHistory, setActivityHistory] = useState<any[]>([]);
   const [isTracking, setIsTracking] = useState(false);
@@ -79,11 +79,17 @@ const TimeTracker = () => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Document Time Tracker</DialogTitle>
+            <DialogTitle className="flex items-center text-lg font-medium">
+              <Clock size={18} className="mr-2" />
+              Document Time Tracker
+            </DialogTitle>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto">
             <div className="mb-4">
-              <h3 className="text-lg font-medium">Current Activity</h3>
+              <h3 className="text-lg font-medium flex items-center">
+                <Clock size={16} className="mr-2" />
+                Current Activity
+              </h3>
               {currentActivity ? (
                 <div className="flex items-center p-2 bg-black/10 rounded mt-2">
                   {getAppIcon(currentActivity.appName)}
@@ -100,7 +106,10 @@ const TimeTracker = () => {
             </div>
             
             <div>
-              <h3 className="text-lg font-medium mb-2">Recent Documents</h3>
+              <h3 className="text-lg font-medium mb-2 flex items-center">
+                <FileText size={16} className="mr-2" />
+                Recent Documents
+              </h3>
               {documentActivities.length > 0 ? (
                 <div className="space-y-2">
                   {documentActivities.map((activity, index) => (
