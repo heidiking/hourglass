@@ -108,10 +108,9 @@ const TaskToggleContainer = () => {
       <GoalArchiveDialog />
       
       {/* Add FocusDialog */}
-      {focusModeOpen && <FocusDialog 
-        open={focusModeOpen} 
-        onOpenChange={setFocusModeOpen} 
-      />}
+      {focusModeOpen && (
+        <FocusDialog />
+      )}
       
       <ProjectManager />
     </div>

@@ -32,7 +32,7 @@ const TaskToggleWrapper = () => {
       <TaskToggleContainer />
       {timeTrackerOpen && <TimeTracker open={timeTrackerOpen} onOpenChange={setTimeTrackerOpen} />}
       {earningsTrackerOpen && <ProjectManager open={earningsTrackerOpen} onOpenChange={setEarningsTrackerOpen} />}
-      {focusModeOpen && <FocusBlocker isDialogMode={true} open={focusModeOpen} onOpenChange={setFocusModeOpen} />}
+      {focusModeOpen && <FocusBlocker />}
     </>
   );
 };
