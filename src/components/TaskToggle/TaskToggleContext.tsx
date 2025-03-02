@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Settings, ListTodo, Archive, Coins, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
@@ -13,11 +14,13 @@ interface TaskToggleContextType {
   goalArchiveOpen: boolean;
   earningsTrackerOpen: boolean;
   focusOpen: boolean;
+  timeTrackerOpen: boolean; // Added missing property
   setSettingsOpen: (open: boolean) => void;
   setTasksOpen: (open: boolean) => void;
   setGoalArchiveOpen: (open: boolean) => void;
   setEarningsTrackerOpen: (open: boolean) => void;
   setFocusOpen: (open: boolean) => void;
+  setTimeTrackerOpen: (open: boolean) => void; // Added missing property
   handleDragStart: (id: string) => void;
   handleDragOver: (e: React.DragEvent, id: string) => void;
   handleDragEnd: () => void;
@@ -43,6 +46,7 @@ export const TaskToggleProvider: React.FC<TaskToggleProviderProps> = ({ children
   const [goalArchiveOpen, setGoalArchiveOpen] = useState(false);
   const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
   const [focusOpen, setFocusOpen] = useState(false);
+  const [timeTrackerOpen, setTimeTrackerOpen] = useState(false); // Added missing state
 
   const [draggedButton, setDraggedButton] = useState<string | null>(null);
 
@@ -159,11 +163,13 @@ export const TaskToggleProvider: React.FC<TaskToggleProviderProps> = ({ children
     goalArchiveOpen,
     earningsTrackerOpen,
     focusOpen,
+    timeTrackerOpen, // Added missing property
     setSettingsOpen,
     setTasksOpen,
     setGoalArchiveOpen,
     setEarningsTrackerOpen,
     setFocusOpen,
+    setTimeTrackerOpen, // Added missing property
     handleDragStart,
     handleDragOver,
     handleDragEnd,
