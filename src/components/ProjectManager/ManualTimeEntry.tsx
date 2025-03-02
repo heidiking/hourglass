@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Plus, DollarSign, Save, X } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -188,8 +189,10 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
           
           <div className="space-y-2">
             <Label htmlFor="activity-earnings" className="text-sm text-gray-700 dark:text-gray-300">Earnings</Label>
-            <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2">
-              <DollarSign size={16} className="text-green-500" />
+            <div className="flex items-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded">
+              <div className="flex items-center px-2">
+                <DollarSign size={16} className="text-green-500" />
+              </div>
               <Input
                 id="activity-earnings"
                 type="number"
@@ -197,7 +200,7 @@ const ManualTimeEntry: React.FC<ManualTimeEntryProps> = ({
                 min="0"
                 value={newActivityEarnings}
                 onChange={(e) => setNewActivityEarnings(e.target.value)}
-                className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-full"
+                className="border-0 bg-transparent h-10 p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-black w-24"
                 placeholder="Amount"
               />
             </div>
