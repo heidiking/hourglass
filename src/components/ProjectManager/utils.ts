@@ -25,26 +25,6 @@ export const getProjectTotalTime = (project: Project, activities: ActivitySessio
   return total;
 };
 
-export const getProjectHourlyEarnings = (project: Project, activities: ActivitySession[]): string => {
-  const totalTimeHours = getProjectTotalTime(project, activities) / (1000 * 60 * 60);
-  
-  if (totalTimeHours <= 0 || project.earnings <= 0) {
-    return "N/A";
-  }
-  
-  const hourlyEarnings = project.earnings / totalTimeHours;
-  return formatCurrency(hourlyEarnings) + "/hr";
-};
-
-export const getProjectWordRate = (project: Project): string => {
-  if (!project.totalEarnings || !project.wordCount || project.wordCount <= 0) {
-    return "N/A";
-  }
-  
-  const perWordRate = project.totalEarnings / project.wordCount;
-  return `$${perWordRate.toFixed(4)}/word`;
-};
-
 export const getAppIcon = (appName: string) => {
   if (appName.toLowerCase().includes("word") || 
       appName.toLowerCase().includes("doc") || 

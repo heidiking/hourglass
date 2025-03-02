@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatFocusTime } from '@/utils/timeTracking';
 import { Project } from './types';
-import { formatCurrency, getProjectHourlyEarnings, getProjectWordRate, getProjectTotalTime } from './utils';
+import { formatCurrency, getProjectTotalTime } from './utils';
 import { ActivitySession } from '@/utils/timeTracking';
 
 interface ProjectFinancialsProps {
@@ -59,6 +59,32 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
     
     onUpdateProject(updatedProject);
     toast.success("Project financials updated");
+  };
+
+  // Calculate actual hourly rate: current earnings divided by hourly rate target
+  const calculateActualHourlyRate = (): string => {
+    const earnings = parseFloat(currentEarnings) || 0;
+    const hourlyRateTarget = editingProject.hourlyRate || 0;
+    
+    if (hourlyRateTarget <= 0) {
+      return "N/A";
+    }
+    
+    const actualRate = earnings / hourlyRateTarget;
+    return formatCurrency(actualRate) + "/hr";
+  };
+
+  // Calculate per-word rate: current earnings divided by word count
+  const calculateWordRate = (): string => {
+    const earnings = parseFloat(currentEarnings) || 0;
+    const wordCount = editingProject.wordCount || 0;
+    
+    if (wordCount <= 0 || earnings <= 0) {
+      return "N/A";
+    }
+    
+    const perWordRate = earnings / wordCount;
+    return `$${perWordRate.toFixed(4)}/word`;
   };
 
   return (
@@ -148,7 +174,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
           </div>
           <div>
             <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Actual Hourly Rate</label>
-            <div className="font-medium text-green-600 dark:text-green-400">{getProjectHourlyEarnings(editingProject, activities)}</div>
+            <div className="font-medium text-green-600 dark:text-green-400">{calculateActualHourlyRate()}</div>
           </div>
           {editingProject.wordCount > 0 && (
             <>
@@ -158,7 +184,7 @@ const ProjectFinancials: React.FC<ProjectFinancialsProps> = ({
               </div>
               <div>
                 <label className="text-xs font-medium text-gray-600 dark:text-gray-400">Per-Word Rate</label>
-                <div className="font-medium text-green-600 dark:text-green-400">{getProjectWordRate(editingProject)}</div>
+                <div className="font-medium text-green-600 dark:text-green-400">{calculateWordRate()}</div>
               </div>
             </>
           )}
