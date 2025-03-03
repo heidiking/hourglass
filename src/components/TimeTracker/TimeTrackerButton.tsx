@@ -2,6 +2,7 @@
 import React, { memo } from 'react';
 import { Clock } from 'lucide-react';
 import { useTimeTracker } from './TimeTrackerContext';
+import { DialogTrigger } from "@/components/ui/dialog";
 
 interface TimeTrackerButtonProps {
   className?: string;
@@ -22,22 +23,20 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
     floating: ""
   };
 
-  const handleClick = () => {
-    handleOpenChange(!dialogOpen);
-  };
-
   return (
-    <button
-      className={`p-2 bg-white 
-                ${isTracking ? 'ring-2 ring-green-500' : ''}
-                rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
-                ${className} flex items-center justify-center shadow-md`}
-      aria-label="Time Tracker"
-      data-testid="time-tracker-trigger"
-      onClick={handleClick}
-    >
-      <Clock size={20} className="text-black" />
-    </button>
+    <DialogTrigger asChild>
+      <button
+        className={`p-2 bg-white 
+                  ${isTracking ? 'ring-2 ring-green-500' : ''}
+                  rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
+                  ${className} flex items-center justify-center shadow-md`}
+        aria-label="Time Tracker"
+        data-testid="time-tracker-trigger"
+        onClick={() => handleOpenChange(!dialogOpen)}
+      >
+        <Clock size={20} className="text-black" />
+      </button>
+    </DialogTrigger>
   );
 };
 
