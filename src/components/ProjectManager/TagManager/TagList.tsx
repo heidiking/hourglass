@@ -19,12 +19,12 @@ const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
       {tags.map(tag => (
         <Badge 
           key={tag.id}
-          className={`${tag.color} text-white flex items-center gap-1 px-2 py-1`}
+          className={`${tag.color} flex items-center gap-1 px-2 py-1`}
         >
-          {tag.name}
+          <span className="text-white">{tag.name}</span>
           <X 
             size={12} 
-            className="ml-1 cursor-pointer" 
+            className="ml-1 cursor-pointer text-white" 
             onClick={() => onRemoveTag(tag.id)}
           />
         </Badge>

@@ -30,12 +30,12 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
           className={`p-2 bg-white 
             ${isTracking ? 'ring-2 ring-green-500 shadow-lg shadow-green-100' : ''}
             rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
-            ${className} flex items-center justify-center shadow-md`}
+            ${className} flex items-center justify-center gap-1 shadow-md`}
           aria-label={`Time Tracker ${isTracking ? '(Active)' : ''}`}
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-black" />
-          <span className="text-black">Tracker</span>
+          <span className="text-black font-medium">Tracker</span>
         </button>
       </DialogTrigger>
     </Dialog>
