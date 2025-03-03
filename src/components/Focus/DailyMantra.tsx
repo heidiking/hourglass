@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const DAILY_MANTRAS = [
@@ -22,7 +21,6 @@ const DAILY_MANTRAS = [
 
 const DailyMantra = () => {
   const [mantra, setMantra] = useState<string>('');
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const loadMantra = () => {
@@ -57,37 +55,12 @@ const DailyMantra = () => {
     loadMantra();
   }, []);
 
-  const cycleMantra = () => {
-    setIsAnimating(true);
-    
-    // Just pick a random mantra
-    const randomIndex = Math.floor(Math.random() * DAILY_MANTRAS.length);
-    
-    setTimeout(() => {
-      setMantra(DAILY_MANTRAS[randomIndex]);
-      setIsAnimating(false);
-    }, 300);
-  };
-
   return (
     <div className="mb-4 text-center">
-      <div 
-        className={`relative animate-fade-in transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}
-      >
+      <div className="relative animate-fade-in">
         <p className="text-white/90 text-sm md:text-base font-medium italic">
           "{mantra}"
         </p>
-        
-        <div className="flex justify-center mt-2 space-x-2">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={cycleMantra}
-            className="bg-white hover:bg-white/90 text-xs h-8 px-3"
-          >
-            <span className="text-black">New Mantra</span>
-          </Button>
-        </div>
       </div>
     </div>
   );

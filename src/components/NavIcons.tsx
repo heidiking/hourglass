@@ -1,7 +1,6 @@
 
 import React from 'react';
 import TimeTracker from './TimeTracker';
-import Weather from './Weather';
 
 const NavIcons = () => {
   return (
@@ -11,4 +10,4 @@ const NavIcons = () => {
   );
 };
 
-export { NavIcons, Weather };
+export { NavIcons };

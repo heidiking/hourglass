@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
-import Weather from '@/components/Weather';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
@@ -25,7 +24,6 @@ const Index = () => {
       <div className="h-screen w-full relative flex flex-col items-center justify-center text-white p-4 overflow-hidden">
         <BackgroundManager />
         <NavIcons />
-        <Weather />
         
         {/* Position the TimeTracker at the top left with high z-index */}
         <TimeTracker position="topLeft" className="z-20" open={trackerOpen} onOpenChange={setTrackerOpen} />
