@@ -1,16 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Info, Save, X } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 import Documentation from '../Documentation';
-import MantraSettings from './Settings/MantraSettings';
-import QuoteSettings from './Settings/QuoteSettings';
-import TimeTrackingSettings from './Settings/TimeTrackingSettings';
 import { toast } from "sonner";
 import MantraArchive from './Settings/MantraArchive';
 import QuoteArchive from './Settings/QuoteArchive';
+import SettingsHeader from './Settings/SettingsHeader';
+import SettingsContent from './Settings/SettingsContent';
 
 interface SettingsDialogProps {
   onClose?: () => void;
@@ -177,58 +174,18 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <DialogHeader className="flex flex-col space-y-3 pb-4 border-b">
-        <DialogTitle className="text-lg text-black">Settings</DialogTitle>
-        <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-black bg-white hover:bg-white/90"
-            onClick={() => setShowDocumentation(true)}
-          >
-            <Info className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">View Documentation</span>
-          </Button>
-          <Button 
-            variant="outline"
-            size="sm"
-            onClick={saveSettings}
-            className="bg-white border border-gray-200 text-black hover:bg-white/90"
-          >
-            <Save size={18} className="mr-2 text-black" />
-            <span className="text-black">Save Settings</span>
-          </Button>
-        </div>
-      </DialogHeader>
+      <SettingsHeader 
+        onShowDocumentation={() => setShowDocumentation(true)}
+        onSaveSettings={saveSettings}
+      />
       
-      <div className="max-h-[70vh] overflow-y-auto pr-2 py-4">
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsContent value="settings" className="space-y-6">
-            {/* Custom Mantra Section */}
-            <MantraSettings 
-              mantra={settings.customMantra}
-              onChange={value => handleSettingChange('customMantra', value)}
-              onViewArchive={() => setShowMantraArchive(true)}
-            />
-
-            {/* Custom Quote Section */}
-            <QuoteSettings 
-              quote={settings.customQuote}
-              author={settings.customQuoteAuthor}
-              onQuoteChange={value => handleSettingChange('customQuote', value)}
-              onAuthorChange={value => handleSettingChange('customQuoteAuthor', value)}
-              onViewArchive={() => setShowQuoteArchive(true)}
-            />
-
-            {/* Time Tracking Section */}
-            <TimeTrackingSettings 
-              settings={settings}
-              onSettingChange={handleSettingChange}
-              hasValidTimes={settings.hasValidTimes}
-            />
-          </TabsContent>
-        </Tabs>
-      </div>
+      <SettingsContent 
+        activeTab={activeTab}
+        settings={settings}
+        handleSettingChange={handleSettingChange}
+        onViewMantraArchive={() => setShowMantraArchive(true)}
+        onViewQuoteArchive={() => setShowQuoteArchive(true)}
+      />
     </div>
   );
 };
