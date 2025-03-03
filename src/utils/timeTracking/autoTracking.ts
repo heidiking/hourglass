@@ -39,6 +39,12 @@ export const isWithinTrackingWindow = (settings: TimeTrackerSettings): boolean =
     const startTimeMinutes = startHours * 60 + startMinutes;
     const endTimeMinutes = endHours * 60 + endMinutes;
 
+    // Additional validation: ensure start time is before end time
+    if (startTimeMinutes >= endTimeMinutes) {
+      console.warn('Invalid time window: start time must be before end time');
+      return false;
+    }
+
     return currentTimeMinutes >= startTimeMinutes && currentTimeMinutes <= endTimeMinutes;
   } catch (error) {
     console.error('Error checking tracking window:', error);
@@ -111,6 +117,22 @@ export const setupAutoTracking = (): void => {
         clearInterval(autoTrackingInterval);
         autoTrackingInterval = null;
         console.info('Auto-tracking disabled by user settings');
+      }
+      return;
+    }
+
+    // Validate time settings
+    const [startHours, startMinutes] = settings.startTime.split(':').map(Number);
+    const [endHours, endMinutes] = settings.endTime.split(':').map(Number);
+    
+    const startTimeMinutes = startHours * 60 + startMinutes;
+    const endTimeMinutes = endHours * 60 + endMinutes;
+    
+    if (startTimeMinutes >= endTimeMinutes) {
+      console.warn('Auto-tracking not enabled: invalid time window (start time must be before end time)');
+      if (autoTrackingInterval) {
+        clearInterval(autoTrackingInterval);
+        autoTrackingInterval = null;
       }
       return;
     }

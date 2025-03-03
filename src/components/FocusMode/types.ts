@@ -10,6 +10,7 @@ export type TimeTrackerSettings = {
   startTime: string;
   endTime: string;
   customMantra?: string;
+  hasValidTimes?: boolean;
 };
 
 export const defaultSettings: TimeTrackerSettings = {
@@ -18,6 +19,7 @@ export const defaultSettings: TimeTrackerSettings = {
   startTime: '09:00',
   endTime: '17:00',
   customMantra: '',
+  hasValidTimes: true,
 };
 
 export interface SettingsContentProps {

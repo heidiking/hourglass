@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Clock, AlertCircle } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { TimeTrackerSettings } from './types';
@@ -14,6 +14,32 @@ const WorkingHoursSettings: React.FC<WorkingHoursSettingsProps> = ({
   settings,
   handleSettingChange
 }) => {
+  const [timeError, setTimeError] = useState<string | null>(null);
+  
+  // Validate times whenever they change
+  useEffect(() => {
+    validateTimes(settings.startTime, settings.endTime);
+  }, [settings.startTime, settings.endTime]);
+  
+  const validateTimes = (startTime: string, endTime: string) => {
+    // Convert times to minutes since midnight for comparison
+    const [startHours, startMinutes] = startTime.split(':').map(Number);
+    const [endHours, endMinutes] = endTime.split(':').map(Number);
+    
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+    
+    if (startTotalMinutes >= endTotalMinutes) {
+      setTimeError('Start time must be before end time');
+    } else {
+      setTimeError(null);
+    }
+  };
+  
+  const handleTimeChange = (key: 'startTime' | 'endTime', value: string) => {
+    handleSettingChange(key, value);
+  };
+  
   if (!settings.autoTrackEnabled) {
     return null;
   }
@@ -29,8 +55,8 @@ const WorkingHoursSettings: React.FC<WorkingHoursSettingsProps> = ({
           id="start-time" 
           type="time" 
           value={settings.startTime}
-          onChange={(e) => handleSettingChange('startTime', e.target.value)}
-          className="bg-black/30 border-gray-700 text-white"
+          onChange={(e) => handleTimeChange('startTime', e.target.value)}
+          className={`bg-black/30 border-gray-700 text-white ${timeError ? 'border-red-500' : ''}`}
         />
       </div>
       
@@ -43,10 +69,17 @@ const WorkingHoursSettings: React.FC<WorkingHoursSettingsProps> = ({
           id="end-time" 
           type="time" 
           value={settings.endTime}
-          onChange={(e) => handleSettingChange('endTime', e.target.value)}
-          className="bg-black/30 border-gray-700 text-white"
+          onChange={(e) => handleTimeChange('endTime', e.target.value)}
+          className={`bg-black/30 border-gray-700 text-white ${timeError ? 'border-red-500' : ''}`}
         />
       </div>
+      
+      {timeError && (
+        <div className="col-span-2 flex items-center gap-2 text-red-400 text-sm mt-1">
+          <AlertCircle size={16} className="text-red-400" />
+          <span>{timeError}</span>
+        </div>
+      )}
     </div>
   );
 };

@@ -36,9 +36,44 @@ const FocusSettings: React.FC<FocusSettingsProps> = ({
       ...prev,
       [key]: value
     }));
+    
+    // When time settings change, validate them
+    if (key === 'startTime' || key === 'endTime') {
+      validateTimeSettings(key === 'startTime' ? value : currentSettings.startTime, 
+                          key === 'endTime' ? value : currentSettings.endTime,
+                          setCurrentSettings);
+    }
+  };
+  
+  const validateTimeSettings = (startTime: string, endTime: string, setSettings: React.Dispatch<React.SetStateAction<TimeTrackerSettings>>) => {
+    // Convert times to minutes since midnight for comparison
+    const [startHours, startMinutes] = startTime.split(':').map(Number);
+    const [endHours, endMinutes] = endTime.split(':').map(Number);
+    
+    const startTotalMinutes = startHours * 60 + startMinutes;
+    const endTotalMinutes = endHours * 60 + endMinutes;
+    
+    setSettings(prev => ({
+      ...prev,
+      hasValidTimes: startTotalMinutes < endTotalMinutes
+    }));
   };
   
   const saveSettings = () => {
+    // Prevent saving if times are invalid
+    if (currentSettings.startTime && currentSettings.endTime) {
+      const [startHours, startMinutes] = currentSettings.startTime.split(':').map(Number);
+      const [endHours, endMinutes] = currentSettings.endTime.split(':').map(Number);
+      
+      const startTotalMinutes = startHours * 60 + startMinutes;
+      const endTotalMinutes = endHours * 60 + endMinutes;
+      
+      if (startTotalMinutes >= endTotalMinutes) {
+        toast.error("Start time must be before end time");
+        return;
+      }
+    }
+    
     localStorage.setItem('timeTrackerSettings', JSON.stringify(currentSettings));
     toast.success("Settings saved successfully");
     
