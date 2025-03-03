@@ -28,16 +28,16 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
 
   return (
     <button
-      className={`p-3 bg-white 
+      className={`p-2 bg-white 
                 ${isTracking ? 'ring-2 ring-green-500' : ''}
                 rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
-                ${className} flex items-center justify-center w-12 h-12 shadow-md`}
+                ${className} flex items-center gap-2 shadow-md`}
       aria-label="Time Tracker"
       data-testid="time-tracker-trigger"
       onClick={handleClick}
     >
       <Clock size={20} className="text-black" />
-      <span className="text-black">Time Tracker</span>
+      <span className="text-black font-medium">Tracker</span>
     </button>
   );
 };
