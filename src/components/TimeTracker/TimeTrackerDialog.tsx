@@ -2,9 +2,8 @@
 import React, { memo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  DialogContent,
-  DialogDescription,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CircleOff, Clock, FileText, BarChart } from 'lucide-react';
@@ -28,7 +27,7 @@ const TimeTrackerDialog = () => {
 
   if (!dialogOpen) return null;
 
-  const dialogContent = (
+  return (
     <>
       <DialogHeader>
         <DialogTitle className="flex items-center text-lg text-black">
@@ -87,8 +86,6 @@ const TimeTrackerDialog = () => {
       </div>
     </>
   );
-
-  return dialogContent;
 };
 
 // Memoize the component to prevent unnecessary re-renders

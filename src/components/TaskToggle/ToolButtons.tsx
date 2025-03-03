@@ -6,7 +6,7 @@ import SettingsDialog from './SettingsDialog';
 import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import FocusModeManager from './FocusModeManager';
-import { useTimeTracker } from '../TimeTracker';
+import { useTimeTracker } from '../TimeTracker/TimeTrackerContext';
 import TimeTrackerDialog from '../TimeTracker/TimeTrackerDialog';
 
 interface ToolButtonsProps {
