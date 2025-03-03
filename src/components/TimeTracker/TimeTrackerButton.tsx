@@ -13,7 +13,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
   className = "",
   position = "floating" 
 }) => {
-  const { dialogOpen, handleOpenChange } = useTimeTracker();
+  const { dialogOpen, handleOpenChange, isTracking } = useTimeTracker();
 
   const positionStyles = {
     topLeft: "fixed top-4 left-4",
@@ -26,7 +26,10 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
   return (
     <DialogTrigger asChild>
       <button
-        className={`p-3 ${dialogOpen ? 'bg-white' : 'bg-white/80'} rounded-full hover:bg-white transition-colors ${positionStyles[position]} ${className} flex items-center justify-center w-12 h-12 shadow-md`}
+        className={`p-3 ${dialogOpen ? 'bg-white' : 'bg-white/80'} 
+                  ${isTracking ? 'ring-2 ring-green-500' : ''}
+                  rounded-full hover:bg-white transition-colors ${positionStyles[position]} 
+                  ${className} flex items-center justify-center w-12 h-12 shadow-md`}
         aria-label="Time Tracker"
         data-testid="time-tracker-trigger"
         onClick={() => handleOpenChange(!dialogOpen)}

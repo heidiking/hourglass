@@ -6,6 +6,7 @@ import SettingsDialog from './SettingsDialog';
 import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import FocusModeManager from './FocusModeManager';
+import { useTimeTracker } from '../TimeTracker';
 
 interface ToolButtonsProps {
   isButtonActive: (buttonId: string) => boolean;
@@ -18,14 +19,26 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
     tasksOpen, 
     goalArchiveOpen,
     focusModeOpen,
+    timeTrackerOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
     setFocusModeOpen,
+    setTimeTrackerOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
   } = useTaskToggle();
+
+  // Get the current tracking state from the TimeTracker context
+  let isTracking = false;
+  try {
+    const { currentActivity } = useTimeTracker();
+    isTracking = !!currentActivity;
+  } catch (error) {
+    // If TimeTrackerContext isn't available, fallback to false
+    console.log("TimeTracker context not available");
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -44,11 +57,14 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
             if (button.id === 'tasks') setTasksOpen(open);
             if (button.id === 'archive') setGoalArchiveOpen(open);
             if (button.id === 'focus') setFocusModeOpen(open);
+            if (button.id === 'tracker') setTimeTrackerOpen(open);
           }}>
             <DialogTrigger asChild>
               <button
                 onClick={button.onClick}
-                className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
+                className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} 
+                  ${button.id === 'tracker' && isTracking ? 'ring-2 ring-green-500' : ''}
+                  rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
                 aria-label={button.label}
               >
                 <div className="text-black">
