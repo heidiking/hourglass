@@ -23,7 +23,7 @@ const Documentation = () => {
       </DialogHeader>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-        <TabsList className="grid grid-cols-6 mb-4 sticky top-0 bg-white z-10">
+        <TabsList className="grid grid-cols-3 mb-4 sticky top-0 bg-white z-10">
           <TabsTrigger value="getting-started" className="flex items-center justify-center">
             <Bookmark className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Getting Started</span>
@@ -36,6 +36,8 @@ const Documentation = () => {
             <Shield className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Focus Mode</span>
           </TabsTrigger>
+        </TabsList>
+        <TabsList className="grid grid-cols-3 mb-4 sticky top-10 bg-white z-10">
           <TabsTrigger value="projects" className="flex items-center justify-center">
             <FileText className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Projects</span>

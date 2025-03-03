@@ -36,7 +36,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
           aria-label={`Time Tracker ${isTracking ? '(Active)' : ''}`}
           data-testid="time-tracker-trigger"
         >
-          <Clock size={20} className={`${isTracking ? 'text-green-600' : 'text-black'}`} />
+          <Clock size={20} className="text-black" />
           {showLabel && <span className="text-black font-medium">Tracker</span>}
           {isTracking && (
             <>

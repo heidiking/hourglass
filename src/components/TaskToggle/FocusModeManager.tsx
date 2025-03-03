@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import FocusDialog from '../FocusMode/FocusDialog';
-import FocusSettings from '../FocusMode/FocusSettings';
 import { BlockedSite, TimeTrackerSettings, defaultSettings } from '../FocusMode/types';
 import { startActivity, endActivity } from "@/utils/timeTracking";
 
@@ -21,7 +20,6 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
   const [focusStartTime, setFocusStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [settings, setSettings] = useState<TimeTrackerSettings>(defaultSettings);
-  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   // Load saved state on component mount
   useEffect(() => {
@@ -92,11 +90,7 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
   }, []);
 
   const openSettings = useCallback(() => {
-    setShowSettings(true);
-  }, []);
-
-  const closeSettings = useCallback(() => {
-    setShowSettings(false);
+    // Now integrated directly in the focus dialog
   }, []);
 
   return (
@@ -112,13 +106,6 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
           openSettings={openSettings}
         />
       )}
-      
-      <FocusSettings 
-        open={showSettings}
-        onOpenChange={setShowSettings}
-        settings={settings}
-        setSettings={setSettings}
-      />
     </>
   );
 };
