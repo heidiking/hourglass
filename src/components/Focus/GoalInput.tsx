@@ -5,20 +5,26 @@ import { saveGoal, saveGoalToArchive, getSavedGoal, clearGoal } from './goalUtil
 
 const GoalInput = () => {
   const [goal, setGoal] = useState<string>('');
+  const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [placeholder, setPlaceholder] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGoal(e.target.value);
+    if (!isInputDisabled) {
+      setGoal(e.target.value);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && goal.trim()) {
+    if (e.key === 'Enter' && goal.trim() && !isInputDisabled) {
       // Save goal to local storage
       saveGoal(goal);
       
       // Archive the goal
       saveGoalToArchive(goal);
+      
+      // Disable the input after submission
+      setIsInputDisabled(true);
       
       toast.success('Goal archived successfully!', {
         duration: 3000,
@@ -33,6 +39,9 @@ const GoalInput = () => {
     const savedGoal = getSavedGoal();
     if (savedGoal) {
       setGoal(savedGoal);
+      setIsInputDisabled(true); // Disable input if goal exists
+    } else {
+      setIsInputDisabled(false); // Enable input if no goal exists
     }
     
     // Reset goal at midnight
@@ -52,6 +61,7 @@ const GoalInput = () => {
       
       // Clear the current goal
       setGoal('');
+      setIsInputDisabled(false); // Re-enable input for the new day
       clearGoal();
       
       toast.info('New day, new goals!', {
@@ -99,8 +109,9 @@ const GoalInput = () => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder=""
-            className="w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1"
+            className={`w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1 ${isInputDisabled ? 'cursor-default' : 'cursor-text'}`}
             aria-label="Daily goal input"
+            disabled={isInputDisabled}
           />
         </div>
       </div>
