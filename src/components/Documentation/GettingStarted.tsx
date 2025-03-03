@@ -12,6 +12,49 @@ const GettingStarted = () => {
         managing projects, blocking distractions, and organizing tasks in one place.
       </p>
       
+      {/* Settings Sections */}
+      <h3 className="text-xl font-medium text-black mt-6">Application Settings</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md flex items-center text-black">
+              <span>Appearance</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700 text-sm">
+              Configure your background preferences, choose between light and dark themes, and set your clock format.
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md flex items-center text-black">
+              <span>Behavior</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700 text-sm">
+              Configure how time tracking works and adjust focus session behaviors to suit your workflow.
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-md flex items-center text-black">
+              <span>Data</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-700 text-sm">
+              Export/import your data, clear specific data categories, and manage local storage usage.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      
       <h3 className="text-xl font-medium text-black mt-4">Key Features</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
