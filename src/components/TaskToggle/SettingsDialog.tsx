@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -113,10 +113,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
             <Info className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">View Documentation</span>
           </Button>
-          <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            <span className="text-black">X</span>
-            <span className="sr-only">Close</span>
-          </DialogClose>
+          {/* Removed the duplicate DialogClose here */}
         </div>
       </DialogHeader>
       
@@ -227,19 +224,19 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
                 </div>
               )}
             </div>
-
-            {/* Save Button */}
-            <div className="pt-2 sticky bottom-0 bg-white z-10 pb-4">
-              <Button 
-                onClick={saveSettings}
-                className="w-full bg-white border border-gray-200 text-black hover:bg-white/90"
-              >
-                <Save size={18} className="mr-2 text-black" />
-                <span className="text-black">Save Settings</span>
-              </Button>
-            </div>
           </TabsContent>
         </Tabs>
+      </div>
+      
+      {/* Save Button - Fixed position at the bottom */}
+      <div className="pt-2 sticky bottom-0 bg-white z-10 pb-4">
+        <Button 
+          onClick={saveSettings}
+          className="w-full bg-white border border-gray-200 text-black hover:bg-white/90"
+        >
+          <Save size={18} className="mr-2 text-black" />
+          <span className="text-black">Save Settings</span>
+        </Button>
       </div>
     </div>
   );
