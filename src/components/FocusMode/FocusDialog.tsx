@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { Settings, Shield, Clock, Save } from 'lucide-react';
+import { Settings, Shield, Clock, Save, Bell } from 'lucide-react';
 import { 
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -165,6 +166,7 @@ const FocusDialog = ({
                 </div>
               )}
 
+              {/* Moved Focus Notifications Section here */}
               <div className="flex items-center space-x-2 mt-4">
                 <Switch 
                   id="focus-notifications" 
@@ -172,6 +174,13 @@ const FocusDialog = ({
                   onCheckedChange={(checked) => handleSettingChange('focusNotifications', checked)}
                 />
                 <Label htmlFor="focus-notifications" className="text-black">Focus session reminders</Label>
+              </div>
+              
+              <div className="bg-gray-50 p-3 rounded text-sm text-black/70 mt-2">
+                <div className="flex items-start gap-2">
+                  <Bell size={16} className="mt-0.5 flex-shrink-0 text-black" />
+                  <p>Focus reminders will notify you when you've been focused for significant periods and suggest short breaks.</p>
+                </div>
               </div>
 
               <Button 

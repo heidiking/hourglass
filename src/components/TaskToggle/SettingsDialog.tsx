@@ -7,14 +7,14 @@ import { DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { TextQuote, Bell, Save } from "lucide-react";
+import { TextQuote, Save } from "lucide-react";
 import Documentation from '../Documentation';
 
 interface SettingsDialogProps {
-  // No props required
+  onClose?: () => void;
 }
 
-const SettingsDialog: React.FC<SettingsDialogProps> = () => {
+const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('settings');
   const [showDocumentation, setShowDocumentation] = useState(false);
   
@@ -77,7 +77,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = () => {
   
   const saveSettings = () => {
     localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
-    // Show saved confirmation
+    // Close the dialog after saving
+    if (onClose) {
+      onClose();
+    }
   };
   
   if (showDocumentation) {
@@ -104,7 +107,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = () => {
           <Button 
             variant="outline" 
             size="sm" 
-            className="text-black bg-white hover:bg-white/90"
+            className="text-black bg-white hover:bg-white/90 mr-2"
             onClick={() => setShowDocumentation(true)}
           >
             <Info className="mr-2 h-4 w-4 text-black" />
@@ -223,27 +226,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = () => {
                   )}
                 </div>
               )}
-            </div>
-
-            {/* Notifications Section */}
-            <div className="space-y-3 border-b pb-4">
-              <h3 className="text-md font-medium text-black">Notifications</h3>
-              
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="focus-notifications" 
-                  checked={settings.focusNotifications !== false}
-                  onCheckedChange={(checked) => handleSettingChange('focusNotifications', checked)}
-                />
-                <Label htmlFor="focus-notifications" className="text-black">Focus session reminders</Label>
-              </div>
-              
-              <div className="bg-gray-50 p-3 rounded text-sm text-black/70">
-                <div className="flex items-start gap-2">
-                  <Bell size={16} className="mt-0.5 flex-shrink-0 text-black" />
-                  <p>Focus reminders will notify you when you've been focused for significant periods and suggest short breaks.</p>
-                </div>
-              </div>
             </div>
 
             {/* Save Button */}
