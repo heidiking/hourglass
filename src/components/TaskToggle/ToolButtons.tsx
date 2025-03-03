@@ -18,10 +18,12 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
     tasksOpen, 
     goalArchiveOpen,
     focusModeOpen,
+    timeTrackerOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
     setFocusModeOpen,
+    setTimeTrackerOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
