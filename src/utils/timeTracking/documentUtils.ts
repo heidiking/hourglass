@@ -40,6 +40,23 @@ export const extractDocumentName = (appName: string): string => {
     // PDF viewers
     { regex: /^(.*?)(?:\.pdf)?\s*-\s*(?:Adobe|PDF)/i, group: 1, app: 'PDF' },
     
+    // Email clients
+    { regex: /^(.*?)\s*-\s*(?:Mail|Gmail|Outlook)/i, group: 1, app: 'Email' },
+    { regex: /^(?:(?:Mail|Gmail|Outlook)\s*-\s*)(.*?)$/i, group: 1, app: 'Email' },
+    
+    // Calendar
+    { regex: /^(.*?)\s*-\s*(?:Calendar|iCal)/i, group: 1, app: 'Calendar' },
+    { regex: /^(?:Calendar|iCal)\s*-\s*(.*?)$/i, group: 1, app: 'Calendar' },
+    
+    // Design apps
+    { regex: /^(.*?)\s*-\s*(?:Photoshop|Illustrator|Figma|Sketch)/i, group: 1, app: 'Design' },
+    
+    // Development environments
+    { regex: /^(.*?)\s*-\s*(?:VSCode|Visual Studio|IntelliJ|Xcode)/i, group: 1, app: 'Development' },
+    
+    // Project management
+    { regex: /^(.*?)\s*-\s*(?:Jira|Asana|Trello|Monday|Notion)/i, group: 1, app: 'Project Management' },
+    
     // Generic pattern (last resort)
     { regex: /^(.*?)\s*-\s*.*/, group: 1, app: 'Generic' }
   ];
@@ -59,4 +76,95 @@ export const extractDocumentName = (appName: string): string => {
   
   // Return original if no patterns matched
   return appName;
+};
+
+/**
+ * Maps an application name to a category for better organization
+ * 
+ * @param {string} appName - The application name
+ * @returns {string} - Category name
+ */
+export const getApplicationCategory = (appName: string): string => {
+  const name = appName.toLowerCase();
+  
+  // Document applications
+  if (name.includes("word") || name.includes("doc") || name.includes(".doc") || name.includes("pages")) {
+    return "Word Processing";
+  }
+  
+  if (name.includes("excel") || name.includes("sheet") || name.includes(".xls") || name.includes("numbers")) {
+    return "Spreadsheets";
+  }
+  
+  if (name.includes("powerpoint") || name.includes("presentation") || name.includes(".ppt") || name.includes("keynote")) {
+    return "Presentations";
+  }
+  
+  if (name.includes("pdf") || name.includes(".pdf")) {
+    return "PDF Documents";
+  }
+  
+  // Email applications
+  if (name.includes("mail") || name.includes("outlook") || name.includes("gmail")) {
+    return "Email";
+  }
+  
+  // Calendar applications
+  if (name.includes("calendar") || name.includes("schedule") || name.includes("appointment")) {
+    return "Calendar";
+  }
+  
+  // Design applications
+  if (name.includes("photoshop") || name.includes("illustrator") || name.includes("figma") || 
+      name.includes("sketch") || name.includes("canva") || name.includes("design")) {
+    return "Design";
+  }
+  
+  // Development environments
+  if (name.includes("vscode") || name.includes("visual studio") || name.includes("intellij") || 
+      name.includes("xcode") || name.includes("code editor")) {
+    return "Development";
+  }
+  
+  // Project management tools
+  if (name.includes("jira") || name.includes("asana") || name.includes("trello") || 
+      name.includes("monday") || name.includes("notion") || name.includes("project")) {
+    return "Project Management";
+  }
+  
+  return "Other Applications";
+};
+
+/**
+ * Returns a suggested icon name based on the application category
+ * For use with Lucide icons
+ * 
+ * @param {string} appName - The application name
+ * @returns {string} - Icon name
+ */
+export const getSuggestedIcon = (appName: string): string => {
+  const category = getApplicationCategory(appName);
+  
+  switch(category) {
+    case "Word Processing":
+      return "file-text";
+    case "Spreadsheets":
+      return "table";
+    case "Presentations":
+      return "presentation";
+    case "PDF Documents":
+      return "file";
+    case "Email":
+      return "mail";
+    case "Calendar":
+      return "calendar";
+    case "Design":
+      return "palette";
+    case "Development":
+      return "code";
+    case "Project Management":
+      return "kanban";
+    default:
+      return "app-window";
+  }
 };

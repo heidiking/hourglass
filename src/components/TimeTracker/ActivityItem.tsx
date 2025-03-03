@@ -1,89 +1,73 @@
 
-import React, { useState, useEffect } from 'react';
-import { Plus, Link } from 'lucide-react';
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { ActivitySession } from '@/utils/timeTracking/types';
-import ActivityIcon from './ActivityIcon';
+import React from 'react';
 import { formatTimeDuration } from './utils';
-import { useProjects } from './useProjects';
+import { ActivitySession } from '@/utils/timeTracking/types';
+import { 
+  FileText, 
+  Mail, 
+  Calendar, 
+  Code, 
+  Palette, 
+  KanbanSquare,
+  Table,
+  Presentation,
+  File
+} from 'lucide-react';
+import { getApplicationCategory, getSuggestedIcon } from '@/utils/timeTracking/documentUtils';
 
 interface ActivityItemProps {
   activity: ActivitySession;
 }
 
 const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
-  const { projects, addActivityToProject, getProjectsForActivity } = useProjects();
-  const assignedProjects = getProjectsForActivity(activity.id);
+  const formattedDuration = formatTimeDuration(activity.duration);
+  const category = getApplicationCategory(activity.appName);
+  const iconName = getSuggestedIcon(activity.appName);
   
+  const getIconComponent = () => {
+    switch(iconName) {
+      case 'file-text':
+        return <FileText size={16} className="mr-2 text-blue-500" />;
+      case 'table':
+        return <Table size={16} className="mr-2 text-green-500" />;
+      case 'presentation':
+        return <Presentation size={16} className="mr-2 text-orange-500" />;
+      case 'file':
+        return <File size={16} className="mr-2 text-red-500" />;
+      case 'mail':
+        return <Mail size={16} className="mr-2 text-blue-600" />;
+      case 'calendar':
+        return <Calendar size={16} className="mr-2 text-purple-600" />;
+      case 'palette':
+        return <Palette size={16} className="mr-2 text-pink-600" />;
+      case 'code':
+        return <Code size={16} className="mr-2 text-gray-600" />;
+      case 'kanban':
+        return <KanbanSquare size={16} className="mr-2 text-green-600" />;
+      default:
+        return <FileText size={16} className="mr-2 text-gray-500" />;
+    }
+  };
+
   return (
-    <div className="p-3 bg-black/10 rounded-md mb-2">
-      <div className="flex items-center">
-        <ActivityIcon appName={activity.appName} />
-        <div className="flex-1 min-w-0">
-          <div className="truncate font-medium">{activity.appName}</div>
-          <div className="text-xs text-gray-600">
-            {new Date(activity.startTime).toLocaleString()} • {formatTimeDuration(activity.duration)}
-          </div>
+    <div className="flex p-2 rounded-md bg-white/10 hover:bg-white/15 items-center">
+      {getIconComponent()}
+      
+      <div className="flex-1 min-w-0">
+        <div className="font-medium truncate">
+          {activity.appName}
+        </div>
+        
+        <div className="text-xs text-white/60 flex items-center">
+          <span className="hidden sm:inline">{category} • </span>
+          <span>{new Date(activity.startTime).toLocaleTimeString()}</span>
+          <span className="mx-1">-</span>
+          <span>{activity.endTime ? new Date(activity.endTime).toLocaleTimeString() : 'Ongoing'}</span>
         </div>
       </div>
       
-      {assignedProjects.length > 0 && (
-        <div className="ml-6 mt-2">
-          <div className="text-xs text-gray-600 flex items-center">
-            <Link size={12} className="mr-1" /> 
-            Assigned to project{assignedProjects.length > 1 ? 's' : ''}:
-          </div>
-          <div className="flex flex-wrap gap-1 mt-1">
-            {assignedProjects.map(project => (
-              <div key={project.id} className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
-                {project.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      <div className="mt-2 flex items-center">
-        <span className="text-xs mr-2">Add to project:</span>
-        <select 
-          className="bg-gray-100 border border-gray-300 text-gray-800 text-sm rounded px-2 py-1 flex-1"
-          onChange={(e) => {
-            if (e.target.value) {
-              addActivityToProject(e.target.value, activity.id);
-              e.target.value = ""; // Reset after selection
-            }
-          }}
-          defaultValue=""
-        >
-          <option value="" disabled>Select...</option>
-          {projects.map(project => (
-            <option 
-              key={project.id} 
-              value={project.id}
-              disabled={project.activities.includes(activity.id)}
-            >
-              {project.name}
-              {project.activities.includes(activity.id) ? ' (already added)' : ''}
-            </option>
-          ))}
-        </select>
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="ml-2 border-gray-300 whitespace-nowrap bg-white hover:bg-white/90"
-          onClick={() => {
-            if (projects.length > 0 && !projects[0].activities.includes(activity.id)) {
-              addActivityToProject(projects[0].id, activity.id);
-            } else if (projects.length === 0) {
-              toast.error("Create a project first");
-            } else {
-              toast.info("Activity already added to this project");
-            }
-          }}
-        >
-          <Plus size={14} className="mr-1" /> <span className="text-black">ADD</span>
-        </Button>
+      <div className="text-right whitespace-nowrap">
+        <div className="font-medium">{formattedDuration}</div>
       </div>
     </div>
   );
