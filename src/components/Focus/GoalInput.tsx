@@ -2,37 +2,57 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { toast } from 'sonner';
 import { saveGoal, saveGoalToArchive, getSavedGoal, clearGoal } from './goalUtils';
+import { Pencil } from 'lucide-react';
 
 const GoalInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Memoize handlers for better performance
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isInputDisabled) {
+    if (!isInputDisabled || isEditing) {
       setGoal(e.target.value);
     }
-  }, [isInputDisabled]);
+  }, [isInputDisabled, isEditing]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && goal.trim() && !isInputDisabled) {
+    if (e.key === 'Enter' && goal.trim() && (!isInputDisabled || isEditing)) {
       // Save goal to local storage
       saveGoal(goal);
       
-      // Archive the goal
-      saveGoalToArchive(goal);
+      // Archive the goal if we're saving a new goal, not just editing
+      if (isEditing) {
+        toast.success('Goal updated successfully!', {
+          duration: 3000,
+        });
+      } else {
+        // Archive the goal
+        saveGoalToArchive(goal);
+        toast.success('Goal archived successfully!', {
+          duration: 3000,
+        });
+      }
       
       // Disable the input after submission
       setIsInputDisabled(true);
-      
-      toast.success('Goal archived successfully!', {
-        duration: 3000,
-      });
-      
+      setIsEditing(false);
       setIsFocused(false);
     }
-  }, [goal, isInputDisabled]);
+  }, [goal, isInputDisabled, isEditing]);
+
+  const handleEditGoal = useCallback(() => {
+    setIsEditing(true);
+    setIsInputDisabled(false);
+    // Focus the input element
+    setTimeout(() => {
+      const inputElement = document.getElementById('goal-input');
+      if (inputElement) {
+        inputElement.focus();
+      }
+    }, 0);
+  }, []);
 
   // This effect handles the case when a goal is already set and the user revisits the page
   useEffect(() => {
@@ -63,6 +83,7 @@ const GoalInput = () => {
         // Clear the current goal
         setGoal('');
         setIsInputDisabled(false); // Re-enable input for the new day
+        setIsEditing(false);
         clearGoal();
         
         toast.info('New day, new goals!', {
@@ -84,21 +105,34 @@ const GoalInput = () => {
         <label className="text-white text-xl md:text-2xl font-light mb-2 text-center">
           Today, success means that I:
         </label>
-        <div 
-          className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
-        >
-          <input
-            type="text"
-            value={goal}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            placeholder=""
-            className={`w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1 ${isInputDisabled ? 'cursor-default' : 'cursor-text'}`}
-            aria-label="Daily goal input"
-            disabled={isInputDisabled}
-          />
+        <div className="relative w-full">
+          <div 
+            className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
+          >
+            <input
+              id="goal-input"
+              type="text"
+              value={goal}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              placeholder=""
+              className={`w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1 ${isInputDisabled && !isEditing ? 'cursor-default' : 'cursor-text'}`}
+              aria-label="Daily goal input"
+              disabled={isInputDisabled && !isEditing}
+            />
+          </div>
+          {isInputDisabled && !isEditing && goal && (
+            <button 
+              onClick={handleEditGoal}
+              className="absolute right-2 -top-8 p-1.5 bg-white rounded-full text-black hover:bg-white/90 transition-colors"
+              aria-label="Edit goal"
+            >
+              <Pencil size={16} className="text-black" />
+              <span className="text-black text-xs font-medium ml-1">Edit</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

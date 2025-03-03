@@ -23,7 +23,7 @@ const Documentation = () => {
       </DialogHeader>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-        <TabsList className="grid grid-cols-6 mb-4">
+        <TabsList className="grid grid-cols-6 mb-4 sticky top-0 bg-white z-10">
           <TabsTrigger value="getting-started" className="flex items-center justify-center text-black">
             <Bookmark className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Getting Started</span>
@@ -50,29 +50,31 @@ const Documentation = () => {
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="getting-started">
-          <GettingStarted />
-        </TabsContent>
-        
-        <TabsContent value="time-tracker">
-          <TimeTrackerDocs />
-        </TabsContent>
-        
-        <TabsContent value="focus-mode">
-          <FocusModeDocs />
-        </TabsContent>
-        
-        <TabsContent value="projects">
-          <ProjectsDocs />
-        </TabsContent>
-        
-        <TabsContent value="tasks">
-          <TasksDocs />
-        </TabsContent>
-        
-        <TabsContent value="settings">
-          <SettingsDocs />
-        </TabsContent>
+        <div className="max-h-[65vh] overflow-y-auto pr-2">
+          <TabsContent value="getting-started">
+            <GettingStarted />
+          </TabsContent>
+          
+          <TabsContent value="time-tracker">
+            <TimeTrackerDocs />
+          </TabsContent>
+          
+          <TabsContent value="focus-mode">
+            <FocusModeDocs />
+          </TabsContent>
+          
+          <TabsContent value="projects">
+            <ProjectsDocs />
+          </TabsContent>
+          
+          <TabsContent value="tasks">
+            <TasksDocs />
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <SettingsDocs />
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );
