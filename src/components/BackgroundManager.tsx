@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { getBackgroundForToday, type Background } from '../utils/backgrounds';
 
@@ -90,24 +91,33 @@ const BackgroundManager = () => {
       
       <div className="fixed inset-0 bg-black/20 z-[-1]" aria-hidden="true" />
       
-      {/* Image credit display */}
-      {backgroundData && (
-        <div className="fixed bottom-2 left-2 text-xs text-white/70 z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
+      {/* Image credit display - Now the entire section is clickable */}
+      {backgroundData && backgroundData.sourceUrl && (
+        <a 
+          href={backgroundData.sourceUrl}
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block"
+        >
           {backgroundData.author ? (
-            <a 
-              href={backgroundData.sourceUrl || "#"} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-white hover:text-white/90 transition-colors"
-            >
+            <span className="text-white">
               Photo: {backgroundData.author}
               {backgroundData.location && ` - ${backgroundData.location}`}
-            </a>
+            </span>
           ) : (
             <span className="text-white">
               {backgroundData.location || 'Background image'}
             </span>
           )}
+        </a>
+      )}
+      
+      {/* Fallback for when sourceUrl is not available */}
+      {backgroundData && !backgroundData.sourceUrl && (
+        <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
+          <span className="text-white">
+            {backgroundData.location || 'Background image'}
+          </span>
         </div>
       )}
     </>
