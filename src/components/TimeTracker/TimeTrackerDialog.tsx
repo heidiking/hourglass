@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogDescription,
   DialogTitle,
+  DialogContent,
 } from "@/components/ui/dialog";
 import { CircleOff, Clock, FileText, BarChart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,6 @@ import TestingPlan from './TestingPlan';
 
 const TimeTrackerDialog = () => {
   const { 
-    dialogOpen,
     currentActivity,
     documentActivities,
     isTracking,
@@ -25,10 +25,8 @@ const TimeTrackerDialog = () => {
     handleClearHistory
   } = useTimeTracker();
 
-  if (!dialogOpen) return null;
-
   return (
-    <>
+    <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle className="flex items-center text-lg text-black">
           <Clock className="mr-2 h-5 w-5" />
@@ -84,7 +82,7 @@ const TimeTrackerDialog = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </DialogContent>
   );
 };
 

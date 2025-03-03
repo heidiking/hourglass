@@ -45,7 +45,7 @@ export const TimeTrackerProvider: React.FC<{
   }, [onOpenChange]);
   
   useEffect(() => {
-    // Optimize activity data updates to reduce unnecessary re-renders
+    // Update activity data
     const updateActivityData = () => {
       const current = getCurrentActivity();
       const history = getActivityHistory();
@@ -61,9 +61,13 @@ export const TimeTrackerProvider: React.FC<{
       }
     };
     
+    // Initial fetch
     updateActivityData();
     
+    // Set interval for periodic updates
     const interval = setInterval(updateActivityData, 1000);
+    
+    // Cleanup on unmount
     return () => clearInterval(interval);
   }, [currentActivity, activityHistory]);
 
