@@ -44,6 +44,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
             if (button.id === 'tasks') setTasksOpen(open);
             if (button.id === 'archive') setGoalArchiveOpen(open);
             if (button.id === 'focus') setFocusModeOpen(open);
+            if (button.id === 'tracker') setTimeTrackerOpen(open);
           }}>
             <DialogTrigger asChild>
               <button
