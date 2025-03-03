@@ -102,9 +102,20 @@ const GoalInput = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full items-center">
-        <label className="text-white text-xl md:text-2xl font-light mb-2 text-center">
-          Today, success means that I:
-        </label>
+        <div className="flex items-center justify-center mb-2">
+          <label className="text-white text-xl md:text-2xl font-light text-center">
+            Today, success means that I:
+          </label>
+          {isInputDisabled && !isEditing && goal && (
+            <button 
+              onClick={handleEditGoal}
+              className="ml-1 p-1 bg-white rounded-full flex items-center text-black hover:bg-white/90 transition-colors"
+              aria-label="Edit goal"
+            >
+              <Pencil size={16} className="text-black" />
+            </button>
+          )}
+        </div>
         <div className="relative w-full">
           <div 
             className={`w-full border-b-2 ${goal ? 'border-white' : 'border-white/50'} transition-all duration-300 pb-1`}
@@ -123,15 +134,6 @@ const GoalInput = () => {
               disabled={isInputDisabled && !isEditing}
             />
           </div>
-          {isInputDisabled && !isEditing && goal && (
-            <button 
-              onClick={handleEditGoal}
-              className="absolute right-2 -top-8 p-1.5 bg-white rounded-full flex items-center text-black hover:bg-white/90 transition-colors"
-              aria-label="Edit goal"
-            >
-              <Pencil size={16} className="text-black" />
-            </button>
-          )}
         </div>
       </div>
     </div>
