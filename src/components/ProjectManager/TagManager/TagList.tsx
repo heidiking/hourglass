@@ -11,7 +11,7 @@ interface TagListProps {
 
 const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
   if (tags.length === 0) {
-    return <p className="text-sm text-white/60">No tags yet</p>;
+    return <p className="text-sm text-gray-500">No tags yet</p>;
   }
 
   return (
@@ -24,7 +24,7 @@ const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
           {tag.name}
           <X 
             size={12} 
-            className="ml-1 cursor-pointer text-black" 
+            className="ml-1 cursor-pointer" 
             onClick={() => onRemoveTag(tag.id)}
           />
         </Badge>

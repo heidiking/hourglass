@@ -158,10 +158,14 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
           <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">Projects</TabsTrigger>
-            <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">Timeline</TabsTrigger>
+            <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
+              <span className="text-black">Projects</span>
+            </TabsTrigger>
+            <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
+              <span className="text-black">Timeline</span>
+            </TabsTrigger>
             <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
-              {editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}
+              <span className="text-black">{editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}</span>
             </TabsTrigger>
           </TabsList>
           

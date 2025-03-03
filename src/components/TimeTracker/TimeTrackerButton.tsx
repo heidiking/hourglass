@@ -35,7 +35,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-black" />
-          <span className="text-black sr-only md:not-sr-only md:ml-2">Tracker</span>
+          <span className="text-black">Tracker</span>
         </button>
       </DialogTrigger>
     </Dialog>

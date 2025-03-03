@@ -31,20 +31,20 @@ const TagForm: React.FC<TagFormProps> = ({
           value={newTagName}
           onChange={(e) => setNewTagName(e.target.value)}
           placeholder="New tag"
-          className="bg-black/30 border-gray-700 text-white flex-1"
+          className="bg-white border-gray-300 text-black flex-1"
         />
         <Button 
           variant="outline" 
-          className={`h-10 w-10 ${selectedColor} border-gray-700`}
+          className={`h-10 w-10 ${selectedColor} border-gray-300`}
           onClick={() => setColorPickerVisible(!colorPickerVisible)}
         />
         <Button 
           onClick={onAddTag} 
           variant="outline" 
-          className="border-gray-700 whitespace-nowrap bg-white text-black hover:bg-white/90 hover:text-black"
+          className="border-gray-300 whitespace-nowrap bg-white text-black hover:bg-white/90 hover:text-black"
         >
           <Tag size={14} className="mr-1 text-black" />
-          Add Tag
+          <span className="text-black">Add Tag</span>
         </Button>
       </div>
       

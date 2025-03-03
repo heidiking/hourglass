@@ -47,7 +47,7 @@ const TagManager: React.FC<TagManagerProps> = ({
 
   return (
     <div className="space-y-2">
-      <label className="text-sm text-white/70">Tags</label>
+      <label className="text-sm text-gray-700">Tags</label>
       <TagForm
         newTagName={newTagName}
         setNewTagName={setNewTagName}
