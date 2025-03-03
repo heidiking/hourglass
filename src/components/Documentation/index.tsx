@@ -24,27 +24,27 @@ const Documentation = () => {
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
         <TabsList className="grid grid-cols-6 mb-4 sticky top-0 bg-white z-10">
-          <TabsTrigger value="getting-started" className="flex items-center justify-center text-black">
+          <TabsTrigger value="getting-started" className="flex items-center justify-center">
             <Bookmark className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Getting Started</span>
           </TabsTrigger>
-          <TabsTrigger value="time-tracker" className="flex items-center justify-center text-black">
+          <TabsTrigger value="time-tracker" className="flex items-center justify-center">
             <Clock className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Time Tracker</span>
           </TabsTrigger>
-          <TabsTrigger value="focus-mode" className="flex items-center justify-center text-black">
+          <TabsTrigger value="focus-mode" className="flex items-center justify-center">
             <Shield className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Focus Mode</span>
           </TabsTrigger>
-          <TabsTrigger value="projects" className="flex items-center justify-center text-black">
+          <TabsTrigger value="projects" className="flex items-center justify-center">
             <FileText className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Projects</span>
           </TabsTrigger>
-          <TabsTrigger value="tasks" className="flex items-center justify-center text-black">
+          <TabsTrigger value="tasks" className="flex items-center justify-center">
             <FileText className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Tasks</span>
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center justify-center text-black">
+          <TabsTrigger value="settings" className="flex items-center justify-center">
             <Settings className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">Settings</span>
           </TabsTrigger>

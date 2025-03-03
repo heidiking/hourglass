@@ -126,7 +126,7 @@ const GoalInput = () => {
           {isInputDisabled && !isEditing && goal && (
             <button 
               onClick={handleEditGoal}
-              className="absolute right-2 -top-8 p-1.5 bg-white rounded-full text-black hover:bg-white/90 transition-colors"
+              className="absolute right-2 -top-8 p-1.5 bg-white rounded-full flex items-center text-black hover:bg-white/90 transition-colors"
               aria-label="Edit goal"
             >
               <Pencil size={16} className="text-black" />
