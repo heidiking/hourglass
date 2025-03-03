@@ -1,6 +1,6 @@
 
 import React from 'react';
-import TimeTracker from './TimeTracker';
+import TimeTracker from './TimeTracker/TimeTracker';
 
 const NavIcons = () => {
   return (
