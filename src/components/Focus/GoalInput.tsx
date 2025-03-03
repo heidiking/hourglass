@@ -118,7 +118,7 @@ const GoalInput = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               placeholder=""
-              className={`w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none pl-1 ${isInputDisabled && !isEditing ? 'cursor-default' : 'cursor-text'}`}
+              className={`w-full bg-transparent text-white text-xl md:text-2xl font-light outline-none text-center ${isInputDisabled && !isEditing ? 'cursor-default' : 'cursor-text'}`}
               aria-label="Daily goal input"
               disabled={isInputDisabled && !isEditing}
             />
