@@ -2,7 +2,6 @@
 import React from 'react';
 import { TaskToggleProvider } from './TaskToggleContext';
 import TaskToggleContainer from './TaskToggleContainer';
-import ProjectManager from '../ProjectManager';
 import { TimeTrackerProvider } from '../TimeTracker/TimeTrackerContext';
 
 // Main wrapper component that now wraps everything with the TimeTrackerProvider

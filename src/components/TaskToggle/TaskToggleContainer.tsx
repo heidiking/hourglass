@@ -10,7 +10,8 @@ const TaskToggleContainer = () => {
     tasksOpen, 
     goalArchiveOpen,
     focusModeOpen,
-    timeTrackerOpen
+    timeTrackerOpen,
+    projectsOpen
   } = useTaskToggle();
 
   // Get active state for a button
@@ -19,7 +20,8 @@ const TaskToggleContainer = () => {
       (buttonId === 'tasks' && tasksOpen) ||
       (buttonId === 'archive' && goalArchiveOpen) ||
       (buttonId === 'focus' && focusModeOpen) ||
-      (buttonId === 'tracker' && timeTrackerOpen);
+      (buttonId === 'tracker' && timeTrackerOpen) ||
+      (buttonId === 'projects' && projectsOpen);
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Shield, Clock } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Shield, Clock, Folder } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -17,6 +17,8 @@ interface TaskToggleContextType {
   setEarningsTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   focusModeOpen: boolean;
   setFocusModeOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  projectsOpen: boolean;
+  setProjectsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   draggedItem: string | null;
   setDraggedItem: React.Dispatch<React.SetStateAction<string | null>>;
   handleDragStart: (id: string) => void;
@@ -33,6 +35,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
   const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
   const [focusModeOpen, setFocusModeOpen] = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
@@ -66,8 +69,14 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       icon: <Clock size={24} className="text-black" />,
       label: 'Time Tracker',
       onClick: () => setTimeTrackerOpen(true),
+    },
+    {
+      id: 'projects',
+      icon: <Folder size={24} className="text-black" />,
+      label: 'Projects',
+      onClick: () => setProjectsOpen(true),
     }
-  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen, setTimeTrackerOpen]);
+  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen, setTimeTrackerOpen, setProjectsOpen]);
 
   useEffect(() => {
     const initialButtons = initialButtonsCreator();
@@ -141,6 +150,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setEarningsTrackerOpen,
     focusModeOpen,
     setFocusModeOpen,
+    projectsOpen,
+    setProjectsOpen,
     draggedItem,
     setDraggedItem,
     handleDragStart,
@@ -154,6 +165,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     timeTrackerOpen,
     earningsTrackerOpen,
     focusModeOpen,
+    projectsOpen,
     draggedItem,
     handleDragStart,
     handleDragOver,

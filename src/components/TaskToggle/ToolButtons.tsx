@@ -8,6 +8,7 @@ import GoalArchiveDialog from './GoalArchiveDialog';
 import FocusModeManager from './FocusModeManager';
 import { useTimeTracker } from '../TimeTracker/TimeTrackerContext';
 import TimeTrackerDialog from '../TimeTracker/TimeTrackerDialog';
+import ProjectManager from '../ProjectManager';
 
 interface ToolButtonsProps {
   isButtonActive: (buttonId: string) => boolean;
@@ -21,11 +22,13 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
     goalArchiveOpen,
     focusModeOpen,
     timeTrackerOpen,
+    projectsOpen,
     setSettingsOpen, 
     setTasksOpen, 
     setGoalArchiveOpen,
     setFocusModeOpen,
     setTimeTrackerOpen,
+    setProjectsOpen,
     handleDragStart,
     handleDragOver,
     handleDragEnd
@@ -48,6 +51,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
       case 'archive': setGoalArchiveOpen(open); break;
       case 'focus': setFocusModeOpen(open); break;
       case 'tracker': setTimeTrackerOpen(open); break;
+      case 'projects': setProjectsOpen(open); break;
     }
   };
 
@@ -105,6 +109,11 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
             {button.id === 'tracker' && timeTrackerOpen && (
               <DialogContent className="dialog-content sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto bg-white text-black">
                 <TimeTrackerDialog />
+              </DialogContent>
+            )}
+            {button.id === 'projects' && projectsOpen && (
+              <DialogContent className="dialog-content sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-black border-gray-200">
+                <ProjectManager open={projectsOpen} onOpenChange={setProjectsOpen} />
               </DialogContent>
             )}
           </Dialog>
