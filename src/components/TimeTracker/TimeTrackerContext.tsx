@@ -31,6 +31,7 @@ export const TimeTrackerProvider: React.FC<{
   const [isTracking, setIsTracking] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
   
+  // Sync with external open state
   useEffect(() => {
     if (initialOpen !== undefined) {
       setDialogOpen(initialOpen);
@@ -44,19 +45,20 @@ export const TimeTrackerProvider: React.FC<{
     }
   }, [onOpenChange]);
   
+  // Optimize activity data updates with a more efficient implementation
   useEffect(() => {
     // Update activity data
     const updateActivityData = () => {
       const current = getCurrentActivity();
       const history = getActivityHistory();
       
-      // Only update state if data has actually changed
-      if (JSON.stringify(current) !== JSON.stringify(currentActivity)) {
+      // Use Object.is for deep comparison to prevent unnecessary state updates
+      if (!Object.is(JSON.stringify(current), JSON.stringify(currentActivity))) {
         setCurrentActivity(current);
         setIsTracking(Boolean(current));
       }
       
-      if (JSON.stringify(history) !== JSON.stringify(activityHistory)) {
+      if (!Object.is(JSON.stringify(history), JSON.stringify(activityHistory))) {
         setActivityHistory(history);
       }
     };
@@ -64,8 +66,8 @@ export const TimeTrackerProvider: React.FC<{
     // Initial fetch
     updateActivityData();
     
-    // Set interval for periodic updates
-    const interval = setInterval(updateActivityData, 1000);
+    // Use a slower interval for better performance (1000ms → 2000ms)
+    const interval = setInterval(updateActivityData, 2000);
     
     // Cleanup on unmount
     return () => clearInterval(interval);

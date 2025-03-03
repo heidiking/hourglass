@@ -26,10 +26,10 @@ const TimeTrackerDialog = () => {
   } = useTimeTracker();
 
   return (
-    <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+    <>
       <DialogHeader>
         <DialogTitle className="flex items-center text-lg text-black">
-          <Clock className="mr-2 h-5 w-5" />
+          <Clock className="mr-2 h-5 w-5 text-black" />
           Document Time Tracker
         </DialogTitle>
         <DialogDescription className="text-gray-700">
@@ -45,26 +45,26 @@ const TimeTrackerDialog = () => {
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="documents" className="flex items-center justify-center text-black">
-              <FileText className="mr-2 h-4 w-4" />
-              <span>Recent Documents</span>
+              <FileText className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Recent Documents</span>
             </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center justify-center text-black">
-              <BarChart className="mr-2 h-4 w-4" />
-              <span>Insights & Metrics</span>
+              <BarChart className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Insights & Metrics</span>
             </TabsTrigger>
             <TabsTrigger value="testing" className="flex items-center justify-center text-black">
-              <Clock className="mr-2 h-4 w-4" />
-              <span>Testing Plan</span>
+              <Clock className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Testing Plan</span>
             </TabsTrigger>
             {!isTracking && (
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="inline-flex ml-auto text-black"
+                className="inline-flex ml-auto bg-white text-black"
                 onClick={handleClearHistory}
               >
-                <CircleOff className="mr-2 h-4 w-4" />
-                <span>Clear History</span>
+                <CircleOff className="mr-2 h-4 w-4 text-black" />
+                <span className="text-black">Clear History</span>
               </Button>
             )}
           </TabsList>
@@ -82,7 +82,7 @@ const TimeTrackerDialog = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </DialogContent>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Clock } from 'lucide-react';
 import { ActivitySession } from '@/utils/timeTracking/types';
 import ActivityIcon from './ActivityIcon';
@@ -21,15 +21,15 @@ const CurrentActivitySection: React.FC<CurrentActivitySectionProps> = ({ current
 
   return (
     <div className="mb-4">
-      <h3 className="text-lg font-medium flex items-center">
-        <Clock size={16} className="mr-2" />
+      <h3 className="text-lg font-medium flex items-center text-black">
+        <Clock size={16} className="mr-2 text-black" />
         Activity for {formattedDate}
       </h3>
       {currentActivity ? (
         <div className="flex items-center p-3 bg-black/10 rounded-md mt-2">
           <ActivityIcon appName={currentActivity.appName} />
-          <span className="truncate font-medium">{currentActivity.appName}</span>
-          <span className="ml-auto text-sm whitespace-nowrap">
+          <span className="truncate font-medium text-black ml-2">{currentActivity.appName}</span>
+          <span className="ml-auto text-sm whitespace-nowrap text-black">
             {new Date(currentActivity.startTime).toLocaleTimeString()} • {formatTimeDuration(currentActivity.duration)}
           </span>
         </div>
@@ -42,4 +42,4 @@ const CurrentActivitySection: React.FC<CurrentActivitySectionProps> = ({ current
   );
 };
 
-export default CurrentActivitySection;
+export default memo(CurrentActivitySection);
