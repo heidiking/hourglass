@@ -29,7 +29,7 @@ const TimeTrackerDialog = () => {
   if (!dialogOpen) return null;
 
   return (
-    <DialogContent className="sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto bg-white text-black">
+    <>
       <DialogHeader>
         <DialogTitle className="flex items-center text-lg text-black">
           <Clock className="mr-2 h-5 w-5" />
@@ -85,7 +85,7 @@ const TimeTrackerDialog = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </DialogContent>
+    </>
   );
 };
 

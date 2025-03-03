@@ -7,6 +7,7 @@ import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import FocusModeManager from './FocusModeManager';
 import { useTimeTracker } from '../TimeTracker';
+import TimeTrackerDialog from '../TimeTracker/TimeTrackerDialog';
 
 interface ToolButtonsProps {
   isButtonActive: (buttonId: string) => boolean;
@@ -99,6 +100,11 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                   focusModeOpen={focusModeOpen}
                   setFocusModeOpen={setFocusModeOpen}
                 />
+              </DialogContent>
+            )}
+            {button.id === 'tracker' && timeTrackerOpen && (
+              <DialogContent className="dialog-content sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto bg-white text-black">
+                <TimeTrackerDialog />
               </DialogContent>
             )}
           </Dialog>

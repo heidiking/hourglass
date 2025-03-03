@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Shield } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Shield, Clock } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -60,8 +60,14 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       icon: <Shield size={24} className="text-black" />,
       label: 'Focus',
       onClick: () => setFocusModeOpen(true),
+    },
+    {
+      id: 'tracker',
+      icon: <Clock size={24} className="text-black" />,
+      label: 'Time Tracker',
+      onClick: () => setTimeTrackerOpen(true),
     }
-  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen]);
+  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen, setTimeTrackerOpen]);
 
   useEffect(() => {
     const initialButtons = initialButtonsCreator();
