@@ -1,9 +1,8 @@
-
 import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
 import { getCurrentActivity, getActivityHistory, clearActivityHistory } from '@/utils/timeTracking';
 import { ActivitySession } from '@/utils/timeTracking/types';
 import { toast } from "sonner";
-import { isDocumentActivity } from './TimeTracker';
+import { isDocumentActivity } from './DocumentActivityDetector';
 
 interface TimeTrackerContextType {
   dialogOpen: boolean;
