@@ -46,7 +46,10 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
       const startTime = new Date(startTimeStr);
       setFocusStartTime(startTime);
       setIsActive(true);
-      startActivity('Focus Mode');
+      
+      // Get current document or app name
+      const documentTitle = document.title || window.location.href;
+      startActivity(documentTitle || 'Focus Mode');
     }
   }, []);
 
@@ -74,7 +77,11 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
     setIsActive(true);
     localStorage.setItem('focusActive', 'true');
     localStorage.setItem('focusStartTime', now.toString());
-    startActivity('Focus Mode');
+    
+    // Get current document or app name
+    const documentTitle = document.title || window.location.href;
+    startActivity(documentTitle || 'Focus Mode');
+    
     toast.success("Focus mode activated!");
     setFocusModeOpen(false);
   }, [setFocusModeOpen]);

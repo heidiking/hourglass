@@ -45,7 +45,6 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
                     title="Currently tracking activity">
               </span>
               <span className="sr-only">Currently tracking activity</span>
-              {/* Add a more visible indicator */}
               <span className="absolute inset-0 rounded-full border-2 border-green-500 animate-ping opacity-75" 
                     aria-hidden="true"></span>
             </>

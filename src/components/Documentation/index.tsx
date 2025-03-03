@@ -23,34 +23,37 @@ const Documentation = () => {
       </DialogHeader>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-        <TabsList className="grid grid-cols-3 mb-4 sticky top-0 bg-white z-10">
-          <TabsTrigger value="getting-started" className="flex items-center justify-center">
-            <Bookmark className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Getting Started</span>
-          </TabsTrigger>
-          <TabsTrigger value="time-tracker" className="flex items-center justify-center">
-            <Clock className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Time Tracker</span>
-          </TabsTrigger>
-          <TabsTrigger value="focus-mode" className="flex items-center justify-center">
-            <Shield className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Focus Mode</span>
-          </TabsTrigger>
-        </TabsList>
-        <TabsList className="grid grid-cols-3 mb-4 sticky top-10 bg-white z-10">
-          <TabsTrigger value="projects" className="flex items-center justify-center">
-            <FileText className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Projects</span>
-          </TabsTrigger>
-          <TabsTrigger value="tasks" className="flex items-center justify-center">
-            <FileText className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Tasks</span>
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center justify-center">
-            <Settings className="mr-2 h-4 w-4 text-black" />
-            <span className="text-black">Settings</span>
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col space-y-2">
+          <TabsList className="grid grid-cols-3 mb-2 sticky top-0 bg-white z-10">
+            <TabsTrigger value="getting-started" className="flex items-center justify-center">
+              <Bookmark className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Getting Started</span>
+            </TabsTrigger>
+            <TabsTrigger value="time-tracker" className="flex items-center justify-center">
+              <Clock className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Time Tracker</span>
+            </TabsTrigger>
+            <TabsTrigger value="focus-mode" className="flex items-center justify-center">
+              <Shield className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Focus Mode</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsList className="grid grid-cols-3 mb-4 sticky top-12 bg-white z-10">
+            <TabsTrigger value="projects" className="flex items-center justify-center">
+              <FileText className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Projects</span>
+            </TabsTrigger>
+            <TabsTrigger value="tasks" className="flex items-center justify-center">
+              <FileText className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Tasks</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center justify-center">
+              <Settings className="mr-2 h-4 w-4 text-black" />
+              <span className="text-black">Settings</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
         <div className="max-h-[65vh] overflow-y-auto pr-2">
           <TabsContent value="getting-started" className="text-black">
