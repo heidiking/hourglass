@@ -29,13 +29,13 @@ const TimeTrackerDialog = () => {
   if (!dialogOpen) return null;
 
   return (
-    <DialogContent className="sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto">
+    <DialogContent className="sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto bg-white text-black">
       <DialogHeader>
-        <DialogTitle className="flex items-center text-lg">
+        <DialogTitle className="flex items-center text-lg text-black">
           <Clock className="mr-2 h-5 w-5" />
           Document Time Tracker
         </DialogTitle>
-        <DialogDescription>
+        <DialogDescription className="text-gray-700">
           Track time spent on documents and applications
         </DialogDescription>
       </DialogHeader>
@@ -47,15 +47,15 @@ const TimeTrackerDialog = () => {
       <div className="mt-4">
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-4 mb-4">
-            <TabsTrigger value="documents" className="flex items-center justify-center">
+            <TabsTrigger value="documents" className="flex items-center justify-center text-black">
               <FileText className="mr-2 h-4 w-4" />
               <span>Recent Documents</span>
             </TabsTrigger>
-            <TabsTrigger value="insights" className="flex items-center justify-center">
+            <TabsTrigger value="insights" className="flex items-center justify-center text-black">
               <BarChart className="mr-2 h-4 w-4" />
               <span>Insights & Metrics</span>
             </TabsTrigger>
-            <TabsTrigger value="testing" className="flex items-center justify-center">
+            <TabsTrigger value="testing" className="flex items-center justify-center text-black">
               <Clock className="mr-2 h-4 w-4" />
               <span>Testing Plan</span>
             </TabsTrigger>
@@ -63,7 +63,7 @@ const TimeTrackerDialog = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="inline-flex ml-auto"
+                className="inline-flex ml-auto text-black"
                 onClick={handleClearHistory}
               >
                 <CircleOff className="mr-2 h-4 w-4" />
