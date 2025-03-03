@@ -7,7 +7,7 @@ import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import TimeTracker from '@/components/TimeTracker';
-import { initializeTimeTracking } from '@/utils/timeTracking';
+import { initializeTimeTracking, startActivity, detectCurrentApp } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 import { TaskToggleProvider } from '@/components/TaskToggle/TaskToggleContext';
 import { toast } from "sonner";
@@ -20,6 +20,10 @@ const Index = () => {
     try {
       initializeTimeTracking();
       console.log("Time tracking initialized successfully");
+      
+      // Start automatic tracking on page load
+      const currentApp = detectCurrentApp();
+      startActivity(currentApp);
     } catch (error) {
       console.error("Error initializing time tracking:", error);
       toast.error("Could not initialize time tracking");

@@ -40,31 +40,31 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const initialButtons: ToolButton[] = [
       {
         id: 'settings',
-        icon: <Settings size={24} className="text-white" />,
+        icon: <Settings size={24} className="text-black" />,
         label: 'Settings',
         onClick: () => setSettingsOpen(true),
       },
       {
         id: 'tasks',
-        icon: <CheckSquare size={24} className="text-white" />,
+        icon: <CheckSquare size={24} className="text-black" />,
         label: 'Tasks',
         onClick: () => setTasksOpen(true),
       },
       {
         id: 'archive',
-        icon: <Scroll size={24} className="text-white" />,
+        icon: <Scroll size={24} className="text-black" />,
         label: 'Archive',
         onClick: () => setGoalArchiveOpen(true),
       },
       {
         id: 'tracker',
-        icon: <Clock size={24} className="text-white" />,
+        icon: <Clock size={24} className="text-black" />,
         label: 'Tracker',
         onClick: () => setTimeTrackerOpen(true),
       },
       {
         id: 'focus',
-        icon: <Shield size={24} className="text-white" />,
+        icon: <Shield size={24} className="text-black" />,
         label: 'Focus',
         onClick: () => setFocusModeOpen(true),
       }
