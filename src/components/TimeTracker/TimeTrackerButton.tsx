@@ -32,7 +32,6 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
         onClick={() => handleOpenChange(!dialogOpen)}
       >
         <Clock size={20} className="text-black" />
-        <span className="text-black">Time Tracker</span>
       </button>
     </DialogTrigger>
   );
