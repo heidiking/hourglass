@@ -36,13 +36,19 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
           aria-label={`Time Tracker ${isTracking ? '(Active)' : ''}`}
           data-testid="time-tracker-trigger"
         >
-          <Clock size={20} className="text-black" />
+          <Clock size={20} className={`${isTracking ? 'text-green-600' : 'text-black'}`} />
           {showLabel && <span className="text-black font-medium">Tracker</span>}
           {isTracking && (
-            <span className="absolute w-3 h-3 bg-green-500 rounded-full -top-1 -right-1 animate-pulse-soft" 
-                  aria-hidden="true" 
-                  title="Currently tracking activity">
-            </span>
+            <>
+              <span className="absolute w-3 h-3 bg-green-500 rounded-full -top-1 -right-1 animate-pulse" 
+                    aria-hidden="true" 
+                    title="Currently tracking activity">
+              </span>
+              <span className="sr-only">Currently tracking activity</span>
+              {/* Add a more visible indicator */}
+              <span className="absolute inset-0 rounded-full border-2 border-green-500 animate-ping opacity-75" 
+                    aria-hidden="true"></span>
+            </>
           )}
         </button>
       </DialogTrigger>

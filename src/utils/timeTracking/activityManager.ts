@@ -63,7 +63,7 @@ export const startActivity = (appName: string): ActivitySession => {
 
     // Process the app name to extract document name
     // Ensuring activity is titled by document or app name
-    const processedAppName = appName;
+    const processedAppName = extractDocumentName(appName);
     console.info('Started tracking activity:', processedAppName);
 
     // Create new activity session
