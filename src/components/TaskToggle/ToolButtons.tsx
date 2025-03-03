@@ -74,7 +74,6 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                 <div className="text-black">
                   {button.icon}
                 </div>
-                <span className="text-black">{button.label}</span>
               </button>
             </DialogTrigger>
             
