@@ -51,27 +51,27 @@ const Documentation = () => {
         </TabsList>
         
         <div className="max-h-[65vh] overflow-y-auto pr-2">
-          <TabsContent value="getting-started">
+          <TabsContent value="getting-started" className="text-black">
             <GettingStarted />
           </TabsContent>
           
-          <TabsContent value="time-tracker">
+          <TabsContent value="time-tracker" className="text-black">
             <TimeTrackerDocs />
           </TabsContent>
           
-          <TabsContent value="focus-mode">
+          <TabsContent value="focus-mode" className="text-black">
             <FocusModeDocs />
           </TabsContent>
           
-          <TabsContent value="projects">
+          <TabsContent value="projects" className="text-black">
             <ProjectsDocs />
           </TabsContent>
           
-          <TabsContent value="tasks">
+          <TabsContent value="tasks" className="text-black">
             <TasksDocs />
           </TabsContent>
           
-          <TabsContent value="settings">
+          <TabsContent value="settings" className="text-black">
             <SettingsDocs />
           </TabsContent>
         </div>

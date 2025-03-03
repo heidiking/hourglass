@@ -21,7 +21,7 @@ const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
           key={tag.id}
           className={`${tag.color} flex items-center gap-1 px-2 py-1`}
         >
-          <span className="text-white">{tag.name}</span>
+          <span className="text-black">{tag.name}</span>
           <button
             type="button"
             onClick={(e) => {
@@ -31,7 +31,7 @@ const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
             className="ml-1 cursor-pointer"
             aria-label={`Remove ${tag.name} tag`}
           >
-            <X size={12} className="text-white" />
+            <X size={12} className="text-black" />
           </button>
         </Badge>
       ))}

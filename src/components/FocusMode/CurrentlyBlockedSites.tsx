@@ -27,9 +27,9 @@ const CurrentlyBlockedSites: React.FC<CurrentlyBlockedSitesProps> = ({
 
   if (blockedSites.length === 0 && showEmptyMessage && !quickAddExpanded) {
     return (
-      <div className="flex items-center gap-2 text-amber-300 text-sm mb-4">
-        <AlertCircle size={16} />
-        <span>Add at least one site to block before starting focus mode</span>
+      <div className="flex items-center gap-2 text-amber-600 text-sm mb-4">
+        <AlertCircle size={16} className="text-amber-600" />
+        <span className="text-amber-600">Add at least one site to block before starting focus mode</span>
       </div>
     );
   }
@@ -40,19 +40,19 @@ const CurrentlyBlockedSites: React.FC<CurrentlyBlockedSitesProps> = ({
 
   return (
     <div className="mt-4 space-y-2">
-      <h3 className="text-sm font-medium text-white">Currently Blocked</h3>
+      <h3 className="text-sm font-medium text-black">Currently Blocked</h3>
       <div className="space-y-2 max-h-[200px] overflow-y-auto">
         {blockedSites.map(site => (
-          <div key={site.id} className="flex items-center justify-between bg-black/30 p-2 rounded">
+          <div key={site.id} className="flex items-center justify-between bg-gray-100 p-2 rounded">
             <div className="flex items-center gap-2 overflow-hidden">
-              <ExternalLink size={16} className="text-white/70" />
-              <span className="truncate text-sm">{site.url.replace('https://', '')}</span>
+              <ExternalLink size={16} className="text-gray-600" />
+              <span className="truncate text-sm text-black">{site.url.replace('https://', '')}</span>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => removeSite(site.id)}
-              className="h-7 w-7 p-0 text-red-400 hover:text-red-300 hover:bg-black/40"
+              className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-gray-200"
               aria-label={`Remove ${site.url}`}
             >
               <Trash2 size={16} />

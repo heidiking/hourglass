@@ -7,7 +7,7 @@ import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import { Toaster } from '@/components/ui/toaster';
-import { Plus, Folder } from 'lucide-react';
+import { Folder } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTaskToggle } from '@/components/TaskToggle/TaskToggleContext';
 

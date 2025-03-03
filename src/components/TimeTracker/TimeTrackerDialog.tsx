@@ -63,7 +63,7 @@ const TimeTrackerDialog = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="inline-flex ml-auto bg-white text-black"
+                className="inline-flex ml-auto bg-white hover:bg-white/90"
                 onClick={handleClearHistory}
               >
                 <CircleOff className="mr-2 h-4 w-4 text-black" />
