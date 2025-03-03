@@ -40,6 +40,13 @@ const Weather = () => {
           weatherIcon: getWeatherIcon(data.weather[0].main)
         });
 
+        // Store weather data for other components to access
+        localStorage.setItem('currentWeatherData', JSON.stringify({
+          city: data.name,
+          temperature: Math.round(data.main.temp),
+          weatherIcon: getWeatherIcon(data.weather[0].main)
+        }));
+
         // Also store the background weather data if it's available
         const currentBgData = localStorage.getItem('currentBackgroundData');
         if (currentBgData) {
@@ -151,7 +158,7 @@ const Weather = () => {
   let content;
   if (weatherData.loading) {
     content = (
-      <div className="flex items-center text-white/70">
+      <div className="flex items-center text-white">
         <span className="text-lg animate-pulse">Loading weather...</span>
       </div>
     );
