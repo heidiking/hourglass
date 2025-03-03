@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
 import QuoteDisplay from '@/components/QuoteDisplay';

@@ -6,6 +6,7 @@ import SettingsDialog from './SettingsDialog';
 import TasksDialog from './TasksDialog';
 import GoalArchiveDialog from './GoalArchiveDialog';
 import FocusModeManager from './FocusModeManager';
+import TimeTracker from '../TimeTracker';
 
 interface ToolButtonsProps {
   isButtonActive: (buttonId: string) => boolean;
@@ -49,7 +50,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
               <div className="text-black">
                 {button.icon}
               </div>
-              <span className="sr-only text-black">{button.label}</span>
+              <span className="text-black">{button.label}</span>
             </button>
           ) : (
             <Dialog open={isButtonActive(button.id)} 
@@ -68,7 +69,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                   <div className="text-black">
                     {button.icon}
                   </div>
-                  <span className="sr-only text-black">{button.label}</span>
+                  <span className="text-black">{button.label}</span>
                 </button>
               </DialogTrigger>
               
