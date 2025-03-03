@@ -67,15 +67,19 @@ const BackgroundManager = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black z-[-2] animate-pulse-soft" />
       )}
+      
       {bgImage && (
-        <img
-          src={bgImage}
-          alt="Daily background"
-          className="fixed inset-0 w-full h-full object-cover z-[-2] transition-opacity duration-500 opacity-100"
-          onLoad={() => setIsLoading(false)}
-          style={{ opacity: isLoading ? 0 : 1 }}
-        />
+        <div className="fixed inset-0 w-full h-full z-[-2] overflow-hidden">
+          <img
+            src={bgImage}
+            alt="Daily background"
+            className="w-full h-full object-cover transition-opacity duration-500"
+            onLoad={() => setIsLoading(false)}
+            style={{ opacity: isLoading ? 0 : 1 }}
+          />
+        </div>
       )}
+      
       <div className="fixed inset-0 bg-black/20 z-[-1]" aria-hidden="true" />
       
       {/* Image credit display */}
