@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Shield, Clock, Folder } from 'lucide-react';
@@ -41,6 +42,12 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const initialButtonsCreator = useCallback(() => [
     {
+      id: 'projects',
+      icon: <Folder size={24} className="text-black" />,
+      label: 'Projects',
+      onClick: () => setProjectsOpen(true),
+    },
+    {
       id: 'settings',
       icon: <Settings size={24} className="text-black" />,
       label: 'Settings',
@@ -70,12 +77,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       label: 'Time Tracker',
       onClick: () => setTimeTrackerOpen(true),
     },
-    {
-      id: 'projects',
-      icon: <Folder size={24} className="text-black" />,
-      label: 'Projects',
-      onClick: () => setProjectsOpen(true),
-    }
   ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen, setTimeTrackerOpen, setProjectsOpen]);
 
   useEffect(() => {
