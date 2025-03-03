@@ -1,7 +1,6 @@
-
 import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Shield, Clock } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -57,18 +56,12 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       onClick: () => setGoalArchiveOpen(true),
     },
     {
-      id: 'tracker',
-      icon: <Clock size={24} className="text-black" />,
-      label: 'Tracker',
-      onClick: () => setTimeTrackerOpen(true),
-    },
-    {
       id: 'focus',
       icon: <Shield size={24} className="text-black" />,
       label: 'Focus',
       onClick: () => setFocusModeOpen(true),
     }
-  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setTimeTrackerOpen, setFocusModeOpen]);
+  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setFocusModeOpen]);
 
   useEffect(() => {
     const initialButtons = initialButtonsCreator();
@@ -127,7 +120,6 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setDraggedItem(null);
   }, []);
 
-  // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({
     toolButtons,
     setToolButtons,
