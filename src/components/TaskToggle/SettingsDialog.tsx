@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { Info, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TextQuote, Save } from "lucide-react";
 import Documentation from '../Documentation';
 import MantraSettings from './Settings/MantraSettings';
 import QuoteSettings from './Settings/QuoteSettings';
@@ -101,22 +100,31 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <DialogHeader className="flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 sticky top-0 z-10 bg-white pb-4">
-        <div className="flex items-center justify-between w-full">
-          <DialogTitle className="text-lg text-black">Settings</DialogTitle>
+      <DialogHeader className="flex flex-col space-y-3 pb-4 border-b">
+        <DialogTitle className="text-lg text-black">Settings</DialogTitle>
+        <div className="flex items-center space-x-2">
           <Button 
             variant="outline" 
             size="sm" 
-            className="text-black bg-white hover:bg-white/90 mr-8"
+            className="text-black bg-white hover:bg-white/90"
             onClick={() => setShowDocumentation(true)}
           >
             <Info className="mr-2 h-4 w-4 text-black" />
             <span className="text-black">View Documentation</span>
           </Button>
+          <Button 
+            variant="outline"
+            size="sm"
+            onClick={saveSettings}
+            className="bg-white border border-gray-200 text-black hover:bg-white/90"
+          >
+            <Save size={18} className="mr-2 text-black" />
+            <span className="text-black">Save Settings</span>
+          </Button>
         </div>
       </DialogHeader>
       
-      <div className="max-h-[70vh] overflow-y-auto pr-2 pb-4">
+      <div className="max-h-[70vh] overflow-y-auto pr-2 py-4">
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsContent value="settings" className="space-y-6">
             {/* Custom Mantra Section */}
@@ -141,17 +149,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
             />
           </TabsContent>
         </Tabs>
-      </div>
-      
-      {/* Save Button - Fixed position at the bottom */}
-      <div className="pt-2 sticky bottom-0 bg-white z-10 pb-4">
-        <Button 
-          onClick={saveSettings}
-          className="w-full bg-white border border-gray-200 text-black hover:bg-white/90"
-        >
-          <Save size={18} className="mr-2 text-black" />
-          <span className="text-black">Save Settings</span>
-        </Button>
       </div>
     </div>
   );
