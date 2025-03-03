@@ -24,6 +24,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState("projects");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Sync with external open state
   useEffect(() => {
@@ -70,8 +71,10 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         // Load activities
         const loadedActivities = getActivityHistory();
         setActivities(loadedActivities || []);
+        setError(null);
       } catch (error) {
         console.error('Error loading data:', error);
+        setError('Failed to load project data');
         toast.error('Error loading project data');
       } finally {
         setIsLoading(false);
@@ -186,7 +189,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       <DialogTrigger asChild>
         <button
           id="project-manager-trigger"
-          className="p-3 bg-white rounded-full text-black hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12 border border-gray-300"
+          className="p-3 bg-white rounded-full hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12 border border-gray-300"
           aria-label="Projects"
         >
           <Folder size={24} className="text-black" />
@@ -197,31 +200,38 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
           <DialogTitle className="text-xl font-light mb-4 text-black">Projects & Time Tracking</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid grid-cols-3 mb-4">
-            <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
-              <span className="text-black">Projects</span>
-            </TabsTrigger>
-            <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
-              <span className="text-black">Timeline</span>
-            </TabsTrigger>
-            <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
-              <span className="text-black">{editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="projects">
-            {tabsContent.projects}
-          </TabsContent>
-          
-          <TabsContent value="timeline">
-            {tabsContent.timeline}
-          </TabsContent>
-          
-          <TabsContent value="edit">
-            {tabsContent.edit}
-          </TabsContent>
-        </Tabs>
+        {error ? (
+          <div className="p-4 bg-red-50 text-red-800 rounded-md">
+            <p className="text-black">{error}</p>
+            <p className="text-sm mt-1 text-gray-700">Try refreshing the page or clearing browser data.</p>
+          </div>
+        ) : (
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <TabsList className="grid grid-cols-3 mb-4">
+              <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
+                <span className="text-black">Projects</span>
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
+                <span className="text-black">Timeline</span>
+              </TabsTrigger>
+              <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
+                <span className="text-black">{editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="projects">
+              {tabsContent.projects}
+            </TabsContent>
+            
+            <TabsContent value="timeline">
+              {tabsContent.timeline}
+            </TabsContent>
+            
+            <TabsContent value="edit">
+              {tabsContent.edit}
+            </TabsContent>
+          </Tabs>
+        )}
       </DialogContent>
     </Dialog>
   );

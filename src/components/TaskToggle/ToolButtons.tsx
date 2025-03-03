@@ -34,11 +34,11 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
     handleDragEnd
   } = useTaskToggle();
 
-  // Get the current tracking state from the TimeTracker context
+  // Get the current tracking state from the TimeTracker context with error handling
   let isTracking = false;
   try {
-    const { isTracking: tracking } = useTimeTracker();
-    isTracking = tracking;
+    const timeTrackerContext = useTimeTracker();
+    isTracking = timeTrackerContext ? timeTrackerContext.isTracking : false;
   } catch (error) {
     // If TimeTrackerContext isn't available, fallback to false
     console.log("TimeTracker context not available");

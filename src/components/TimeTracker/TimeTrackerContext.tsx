@@ -30,6 +30,8 @@ export const TimeTrackerProvider: React.FC<{
   const [activityHistory, setActivityHistory] = useState<ActivitySession[]>([]);
   const [isTracking, setIsTracking] = useState(false);
   const [activeTab, setActiveTab] = useState("documents");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   // Sync with external open state
   useEffect(() => {
@@ -48,27 +50,64 @@ export const TimeTrackerProvider: React.FC<{
   // Update activity data using a safer approach that avoids cyclic references
   useEffect(() => {
     let isMounted = true;
+    setIsLoading(true);
     
     // Update activity data
     const updateActivityData = () => {
       try {
-        const current = getCurrentActivity();
-        const history = getActivityHistory();
+        if (!isMounted) return;
+        
+        // Get current activity safely
+        let current = null;
+        try {
+          current = getCurrentActivity();
+        } catch (error) {
+          console.error('Error getting current activity:', error);
+        }
+        
+        // Get history safely
+        let history: ActivitySession[] = [];
+        try {
+          history = getActivityHistory() || [];
+        } catch (error) {
+          console.error('Error getting activity history:', error);
+          // Continue with empty history rather than failing
+        }
         
         if (!isMounted) return;
         
-        // Use a deep comparison approach rather than JSON.stringify which can fail with cyclic objects
-        if (current !== currentActivity) {
-          setCurrentActivity(current);
-          setIsTracking(Boolean(current));
-        }
+        // Safe updates that avoid reference comparison issues
+        setCurrentActivity(prevActivity => {
+          // Only update if different to avoid unnecessary re-renders
+          if (!prevActivity && !current) return prevActivity;
+          if (!prevActivity || !current) return current;
+          if (prevActivity.id !== current.id) return current;
+          if (prevActivity.duration !== current.duration) return current;
+          return prevActivity;
+        });
         
-        // Safe update of activity history
-        if (history?.length !== activityHistory?.length) {
-          setActivityHistory(history || []);
+        setIsTracking(Boolean(current));
+        
+        // Safe update of activity history - only update if length changed
+        // or if first/last items differ to avoid unnecessary re-renders
+        setActivityHistory(prevHistory => {
+          if (!prevHistory || !prevHistory.length) return history;
+          if (prevHistory.length !== history.length) return history;
+          if (prevHistory[0]?.id !== history[0]?.id) return history;
+          if (prevHistory[prevHistory.length-1]?.id !== history[history.length-1]?.id) return history;
+          return prevHistory;
+        });
+        
+        if (isMounted) {
+          setIsLoading(false);
+          setError(null);
         }
       } catch (error) {
         console.error('Error updating activity data:', error);
+        if (isMounted) {
+          setError('Failed to update activity data');
+          setIsLoading(false);
+        }
       }
     };
     
@@ -86,9 +125,14 @@ export const TimeTrackerProvider: React.FC<{
   }, []);
 
   const handleClearHistory = useCallback(() => {
-    clearActivityHistory();
-    setActivityHistory([]);
-    toast.success("Document history has been cleared");
+    try {
+      clearActivityHistory();
+      setActivityHistory([]);
+      toast.success("Document history has been cleared");
+    } catch (error) {
+      console.error('Error clearing activity history:', error);
+      toast.error("Failed to clear document history");
+    }
   }, []);
 
   // Safely compute filtered document activities
@@ -97,9 +141,14 @@ export const TimeTrackerProvider: React.FC<{
       return [];
     }
     
-    return activityHistory.filter(activity => 
-      activity && activity.appName && isDocumentActivity(activity.appName)
-    );
+    try {
+      return activityHistory.filter(activity => 
+        activity && activity.appName && isDocumentActivity(activity.appName)
+      );
+    } catch (error) {
+      console.error('Error filtering document activities:', error);
+      return [];
+    }
   }, [activityHistory]);
 
   // Memoize the context value to prevent unnecessary re-renders
@@ -124,6 +173,11 @@ export const TimeTrackerProvider: React.FC<{
     handleOpenChange, 
     handleClearHistory
   ]);
+
+  // Add error handling in the rendered content
+  if (error) {
+    console.error('TimeTracker error:', error);
+  }
 
   return (
     <TimeTrackerContext.Provider value={contextValue}>

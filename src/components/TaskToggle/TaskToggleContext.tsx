@@ -37,6 +37,12 @@ export const useTaskToggle = () => {
   return context;
 };
 
+// Type for storing button order in localStorage - just IDs and order
+type StoredButtonOrder = {
+  id: string;
+  order: number;
+}[];
+
 export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toggled, setToggled] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -92,13 +98,59 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   
   // State for tool buttons that can be reordered
   const [toolButtons, setToolButtons] = useState<ToolButton[]>(() => {
-    const saved = localStorage.getItem('toolButtonsOrder');
-    return saved ? JSON.parse(saved) : defaultButtons;
+    try {
+      const savedOrder = localStorage.getItem('toolButtonsOrder');
+      if (!savedOrder) {
+        console.info('No tool buttons order found, using defaults');
+        return defaultButtons;
+      }
+      
+      // Parse saved order (just IDs)
+      const parsedOrder = JSON.parse(savedOrder) as StoredButtonOrder;
+      if (!Array.isArray(parsedOrder)) {
+        console.warn('Invalid tool buttons order format, using defaults');
+        return defaultButtons;
+      }
+      
+      // Create a map of ids to their order
+      const orderMap = new Map(parsedOrder.map(item => [item.id, item.order]));
+      
+      // Sort default buttons according to saved order
+      return [...defaultButtons].sort((a, b) => {
+        const orderA = orderMap.get(a.id);
+        const orderB = orderMap.get(b.id);
+        
+        // If we have order for both buttons, sort by that
+        if (orderA !== undefined && orderB !== undefined) {
+          return orderA - orderB;
+        }
+        
+        // If we only have order for one button, prioritize the one with order
+        if (orderA !== undefined) return -1;
+        if (orderB !== undefined) return 1;
+        
+        // Fall back to default order
+        return 0;
+      });
+    } catch (error) {
+      console.error('Error loading tool buttons order:', error);
+      return defaultButtons;
+    }
   });
   
-  // Save button order to localStorage when it changes
+  // Save button order to localStorage when it changes - save just the IDs and order
   useEffect(() => {
-    localStorage.setItem('toolButtonsOrder', JSON.stringify(toolButtons));
+    try {
+      // Only save the ID and order - no React elements or functions
+      const orderToSave: StoredButtonOrder = toolButtons.map((button, index) => ({
+        id: button.id,
+        order: index
+      }));
+      
+      localStorage.setItem('toolButtonsOrder', JSON.stringify(orderToSave));
+    } catch (error) {
+      console.error('Error saving tool buttons order:', error);
+    }
   }, [toolButtons]);
   
   const handleButtonsOrder = (buttons: ToolButton[]) => {

@@ -11,7 +11,7 @@ interface TagListProps {
 
 const TagList: React.FC<TagListProps> = ({ tags, onRemoveTag }) => {
   if (!tags || tags.length === 0) {
-    return <p className="text-sm text-gray-500">No tags yet</p>;
+    return <p className="text-sm text-black">No tags yet</p>;
   }
 
   return (
