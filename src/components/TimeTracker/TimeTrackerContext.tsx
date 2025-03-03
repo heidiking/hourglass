@@ -47,23 +47,18 @@ export const TimeTrackerProvider: React.FC<{
   
   // Optimize activity data updates with a more efficient implementation
   useEffect(() => {
-    let isMounted = true;
-    
     // Update activity data
     const updateActivityData = () => {
       const current = getCurrentActivity();
       const history = getActivityHistory();
       
-      if (!isMounted) return;
-      
-      // Only update state if data has changed (optimize renders)
-      if (JSON.stringify(current) !== JSON.stringify(currentActivity)) {
+      // Use Object.is for deep comparison to prevent unnecessary state updates
+      if (!Object.is(JSON.stringify(current), JSON.stringify(currentActivity))) {
         setCurrentActivity(current);
         setIsTracking(Boolean(current));
       }
       
-      // Only update history if it has changed
-      if (JSON.stringify(history) !== JSON.stringify(activityHistory)) {
+      if (!Object.is(JSON.stringify(history), JSON.stringify(activityHistory))) {
         setActivityHistory(history);
       }
     };
@@ -71,15 +66,12 @@ export const TimeTrackerProvider: React.FC<{
     // Initial fetch
     updateActivityData();
     
-    // Use a reasonable interval for updates
-    const interval = setInterval(updateActivityData, 3000);
+    // Use a slower interval for better performance (1000ms → 2000ms)
+    const interval = setInterval(updateActivityData, 2000);
     
     // Cleanup on unmount
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
+    return () => clearInterval(interval);
+  }, [currentActivity, activityHistory]);
 
   const handleClearHistory = useCallback(() => {
     clearActivityHistory();

@@ -1,9 +1,17 @@
-
-import React, { useState, useCallback, memo } from 'react';
-import { formatCurrency, getProjectTotalTime } from './utils';
+import React, { useState } from 'react';
+import { formatCurrency, getProjectTotalTime, getAppIcon } from './utils';
 import { Button } from "@/components/ui/button";
-import { Plus, Edit } from "lucide-react";
+import { CalendarIcon, Copy, Edit, Plus, Trash } from "lucide-react";
 import { ActivitySession } from '@/utils/timeTracking';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Project } from './types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +21,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner";
-import { Project } from './types';
 
 interface ProjectListProps {
   projects: Project[];
@@ -26,7 +34,7 @@ interface ProjectListProps {
   openProjectForEditing?: (project: Project) => void;
 }
 
-const ProjectList: React.FC<ProjectListProps> = memo(({ 
+const ProjectList: React.FC<ProjectListProps> = ({ 
   projects, 
   setProjects, 
   activities,
@@ -36,29 +44,40 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
 }) => {
   const [projectIdToDelete, setProjectIdToDelete] = useState<string | null>(null);
 
-  const handleEditProject = useCallback((project: Project) => {
+  const handleEditProject = (project: Project) => {
     if (openProjectForEditing) {
       openProjectForEditing(project);
     } else if (setEditingProject) {
       setEditingProject(project);
     }
-  }, [openProjectForEditing, setEditingProject]);
+  };
 
-  const handleDeleteProject = useCallback((projectId: string) => {
+  const handleDeleteProject = (projectId: string) => {
     setProjectIdToDelete(projectId);
-  }, []);
+  };
 
-  const confirmDeleteProject = useCallback(() => {
+  const confirmDeleteProject = () => {
     if (!projectIdToDelete) return;
 
-    setProjects(prevProjects => prevProjects.filter(project => project.id !== projectIdToDelete));
+    const updatedProjects = projects.filter(project => project.id !== projectIdToDelete);
+    setProjects(updatedProjects);
     setProjectIdToDelete(null);
     toast.success("Project deleted");
-  }, [projectIdToDelete, setProjects]);
+  };
 
-  const cancelDeleteProject = useCallback(() => {
+  const cancelDeleteProject = () => {
     setProjectIdToDelete(null);
-  }, []);
+  };
+
+  const handleDuplicateProject = (projectToDuplicate: Project) => {
+    const newProject = {
+      ...projectToDuplicate,
+      id: Date.now().toString(),
+      name: `${projectToDuplicate.name} (Copy)`,
+    };
+    setProjects([...projects, newProject]);
+    toast.success("Project duplicated");
+  };
 
   return (
     <div className="space-y-4">
@@ -82,15 +101,6 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
             >
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-md font-semibold text-gray-700 dark:text-gray-300">{project.name}</h3>
-                <button 
-                  className="text-gray-500 hover:text-gray-700 bg-white"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleEditProject(project);
-                  }}
-                >
-                  <Edit size={16} className="text-black" />
-                </button>
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
                 Total Time: { (getProjectTotalTime(project, activities) / (60 * 60 * 1000)).toFixed(1) } hours
@@ -99,12 +109,9 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
                 Earnings: {formatCurrency(project.earnings || 0)}
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
-                {project.tags && project.tags.slice(0, 3).map((tag, index) => (
+                {project.tags && project.tags.map((tag, index) => (
                   <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full px-2 py-1 text-xs">{tag.name}</span>
                 ))}
-                {project.tags && project.tags.length > 3 && (
-                  <span className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full px-2 py-1 text-xs">+{project.tags.length - 3} more</span>
-                )}
               </div>
             </div>
           ))}
@@ -127,8 +134,6 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
       </AlertDialog>
     </div>
   );
-});
-
-ProjectList.displayName = 'ProjectList';
+};
 
 export default ProjectList;
