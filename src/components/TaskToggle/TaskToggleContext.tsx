@@ -19,6 +19,8 @@ interface TaskToggleContextType {
   setTimeTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   projectsOpen: boolean;
   setProjectsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  earningsTrackerOpen: boolean;
+  setEarningsTrackerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleButtonsOrder: (buttons: ToolButton[]) => void;
   handleDragStart: (id: string) => void;
   handleDragOver: (e: React.DragEvent, targetId: string) => void;
@@ -43,6 +45,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [focusModeOpen, setFocusModeOpen] = useState(false);
   const [timeTrackerOpen, setTimeTrackerOpen] = useState(false);
   const [projectsOpen, setProjectsOpen] = useState(false);
+  const [earningsTrackerOpen, setEarningsTrackerOpen] = useState(false);
   
   // For drag and drop reordering
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
@@ -143,6 +146,8 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       setTimeTrackerOpen,
       projectsOpen,
       setProjectsOpen,
+      earningsTrackerOpen,
+      setEarningsTrackerOpen,
       handleButtonsOrder,
       handleDragStart,
       handleDragOver,
