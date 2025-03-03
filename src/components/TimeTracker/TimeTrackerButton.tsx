@@ -1,7 +1,6 @@
 
 import React, { memo } from 'react';
 import { Clock } from 'lucide-react';
-import { DialogTrigger } from "@/components/ui/dialog";
 import { useTimeTracker } from './TimeTrackerContext';
 
 interface TimeTrackerButtonProps {
@@ -38,7 +37,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
       onClick={handleClick}
     >
       <Clock size={20} className="text-black" />
-      <span className="text-black">Time Tracker</span>
+      <span className="sr-only">Time Tracker</span>
     </button>
   );
 };

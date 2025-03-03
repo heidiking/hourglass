@@ -47,15 +47,15 @@ const TimeTrackerDialog = () => {
       <div className="mt-4">
         <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-4 mb-4">
-            <TabsTrigger value="documents" className="flex items-center justify-center text-black">
+            <TabsTrigger value="documents" className="flex items-center justify-center">
               <FileText className="mr-2 h-4 w-4" />
               <span className="text-black">Recent Documents</span>
             </TabsTrigger>
-            <TabsTrigger value="insights" className="flex items-center justify-center text-black">
+            <TabsTrigger value="insights" className="flex items-center justify-center">
               <BarChart className="mr-2 h-4 w-4" />
               <span className="text-black">Insights & Metrics</span>
             </TabsTrigger>
-            <TabsTrigger value="testing" className="flex items-center justify-center text-black">
+            <TabsTrigger value="testing" className="flex items-center justify-center">
               <Clock className="mr-2 h-4 w-4" />
               <span className="text-black">Testing Plan</span>
             </TabsTrigger>
