@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
@@ -6,25 +7,16 @@ import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import TimeTracker from '@/components/TimeTracker';
-import { initializeTimeTracking, startActivity, detectCurrentApp } from '@/utils/timeTracking';
+import { initializeTimeTracking } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 import { TaskToggleProvider } from '@/components/TaskToggle/TaskToggleContext';
-import { toast } from "sonner";
 
 const Index = () => {
+  const [trackerOpen, setTrackerOpen] = useState(false);
+
   useEffect(() => {
     // Initialize time tracking on page load
-    try {
-      initializeTimeTracking();
-      console.log("Time tracking initialized successfully");
-      
-      // Start automatic tracking on page load
-      const currentApp = detectCurrentApp();
-      startActivity(currentApp);
-    } catch (error) {
-      console.error("Error initializing time tracking:", error);
-      toast.error("Could not initialize time tracking");
-    }
+    initializeTimeTracking();
   }, []);
 
   return (
@@ -33,8 +25,8 @@ const Index = () => {
         <BackgroundManager />
         <NavIcons />
         
-        {/* Keeping only the TimeTracker in the top left corner */}
-        <TimeTracker position="topLeft" className="z-20" />
+        {/* Position the TimeTracker at the top left with high z-index */}
+        <TimeTracker position="topLeft" className="z-20" open={trackerOpen} onOpenChange={setTrackerOpen} />
         
         <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">
           <Clock />

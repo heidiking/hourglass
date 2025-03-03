@@ -33,47 +33,29 @@ export const extractDocumentName = (appName: string): string => {
     
     // Microsoft Excel patterns
     { regex: /^(.*?)(?:\s*\.xlsx?)?\s*-\s*(?:Microsoft\s*)?Excel/i, group: 1, app: 'Excel' },
-    { regex: /^Excel - (.*?)$/i, group: 1, app: 'Excel' },
     
     // Microsoft PowerPoint patterns
     { regex: /^(.*?)(?:\s*\.pptx?)?\s*-\s*(?:Microsoft\s*)?PowerPoint/i, group: 1, app: 'PowerPoint' },
-    { regex: /^PowerPoint - (.*?)$/i, group: 1, app: 'PowerPoint' },
     
     // PDF viewers
-    { regex: /^(.*?)(?:\.pdf)?\s*-\s*(?:Adobe|PDF|Acrobat|Reader)/i, group: 1, app: 'PDF' },
-    { regex: /^(?:Adobe|PDF|Acrobat) - (.*?)(?:\.pdf)?$/i, group: 1, app: 'PDF' },
+    { regex: /^(.*?)(?:\.pdf)?\s*-\s*(?:Adobe|PDF)/i, group: 1, app: 'PDF' },
     
     // Email clients
-    { regex: /^(.*?)\s*-\s*(?:Mail|Gmail|Outlook|Thunderbird)/i, group: 1, app: 'Email' },
-    { regex: /^(?:(?:Mail|Gmail|Outlook|Thunderbird)\s*-\s*)(.*?)$/i, group: 1, app: 'Email' },
-    { regex: /^Inbox - (.*?)$/i, group: 1, app: 'Email' },
+    { regex: /^(.*?)\s*-\s*(?:Mail|Gmail|Outlook)/i, group: 1, app: 'Email' },
+    { regex: /^(?:(?:Mail|Gmail|Outlook)\s*-\s*)(.*?)$/i, group: 1, app: 'Email' },
     
     // Calendar
-    { regex: /^(.*?)\s*-\s*(?:Calendar|iCal|Google Calendar)/i, group: 1, app: 'Calendar' },
-    { regex: /^(?:Calendar|iCal|Google Calendar)\s*-\s*(.*?)$/i, group: 1, app: 'Calendar' },
+    { regex: /^(.*?)\s*-\s*(?:Calendar|iCal)/i, group: 1, app: 'Calendar' },
+    { regex: /^(?:Calendar|iCal)\s*-\s*(.*?)$/i, group: 1, app: 'Calendar' },
     
     // Design apps
-    { regex: /^(.*?)\s*-\s*(?:Photoshop|Illustrator|Figma|Sketch|Canva)/i, group: 1, app: 'Design' },
-    { regex: /^(?:Photoshop|Illustrator|Figma|Sketch|Canva)\s*-\s*(.*?)$/i, group: 1, app: 'Design' },
+    { regex: /^(.*?)\s*-\s*(?:Photoshop|Illustrator|Figma|Sketch)/i, group: 1, app: 'Design' },
     
     // Development environments
-    { regex: /^(.*?)\s*-\s*(?:VSCode|Visual Studio|IntelliJ|Xcode|Android Studio|Sublime)/i, group: 1, app: 'Development' },
-    { regex: /^(?:VSCode|Visual Studio|IntelliJ|Xcode|Android Studio|Sublime)\s*-\s*(.*?)$/i, group: 1, app: 'Development' },
+    { regex: /^(.*?)\s*-\s*(?:VSCode|Visual Studio|IntelliJ|Xcode)/i, group: 1, app: 'Development' },
     
     // Project management
-    { regex: /^(.*?)\s*-\s*(?:Jira|Asana|Trello|Monday|Notion|ClickUp|Todoist)/i, group: 1, app: 'Project Management' },
-    { regex: /^(?:Jira|Asana|Trello|Monday|Notion|ClickUp|Todoist)\s*-\s*(.*?)$/i, group: 1, app: 'Project Management' },
-    
-    // Browser patterns for specific sites
-    { regex: /^(.*?) \| GitHub$/i, group: 1, app: 'Development' },
-    { regex: /^(.*?) \| LinkedIn$/i, group: 1, app: 'Social' },
-    { regex: /^(.*?) - Google Search$/i, group: 1, app: 'Search' },
-    { regex: /^(.*?) - YouTube$/i, group: 1, app: 'Media' },
-    
-    // Apple iWork suite
-    { regex: /^(.*?) - Pages$/i, group: 1, app: 'Pages' },
-    { regex: /^(.*?) - Numbers$/i, group: 1, app: 'Numbers' },
-    { regex: /^(.*?) - Keynote$/i, group: 1, app: 'Keynote' },
+    { regex: /^(.*?)\s*-\s*(?:Jira|Asana|Trello|Monday|Notion)/i, group: 1, app: 'Project Management' },
     
     // Generic pattern (last resort)
     { regex: /^(.*?)\s*-\s*.*/, group: 1, app: 'Generic' }
@@ -118,57 +100,36 @@ export const getApplicationCategory = (appName: string): string => {
     return "Presentations";
   }
   
-  if (name.includes("pdf") || name.includes(".pdf") || name.includes("acrobat") || name.includes("reader")) {
+  if (name.includes("pdf") || name.includes(".pdf")) {
     return "PDF Documents";
   }
   
   // Email applications
-  if (name.includes("mail") || name.includes("outlook") || name.includes("gmail") || name.includes("thunderbird") || name.includes("inbox")) {
+  if (name.includes("mail") || name.includes("outlook") || name.includes("gmail")) {
     return "Email";
   }
   
   // Calendar applications
-  if (name.includes("calendar") || name.includes("schedule") || name.includes("appointment") || name.includes("ical")) {
+  if (name.includes("calendar") || name.includes("schedule") || name.includes("appointment")) {
     return "Calendar";
   }
   
   // Design applications
   if (name.includes("photoshop") || name.includes("illustrator") || name.includes("figma") || 
-      name.includes("sketch") || name.includes("canva") || name.includes("design") || 
-      name.includes("affinity") || name.includes("indesign")) {
+      name.includes("sketch") || name.includes("canva") || name.includes("design")) {
     return "Design";
   }
   
   // Development environments
   if (name.includes("vscode") || name.includes("visual studio") || name.includes("intellij") || 
-      name.includes("xcode") || name.includes("android studio") || name.includes("sublime") || 
-      name.includes("code editor") || name.includes("github") || name.includes("gitlab")) {
+      name.includes("xcode") || name.includes("code editor")) {
     return "Development";
   }
   
   // Project management tools
   if (name.includes("jira") || name.includes("asana") || name.includes("trello") || 
-      name.includes("monday") || name.includes("notion") || name.includes("project") || 
-      name.includes("task") || name.includes("clickup") || name.includes("todoist")) {
+      name.includes("monday") || name.includes("notion") || name.includes("project")) {
     return "Project Management";
-  }
-  
-  // Browser-specific sites
-  if (name.includes("chrome") || name.includes("firefox") || name.includes("safari") || 
-      name.includes("edge") || name.includes("browser")) {
-    return "Web Browsing";
-  }
-  
-  // Social media and communication
-  if (name.includes("slack") || name.includes("teams") || name.includes("discord") || 
-      name.includes("zoom") || name.includes("meet") || name.includes("chat")) {
-    return "Communication";
-  }
-  
-  // Media and entertainment
-  if (name.includes("youtube") || name.includes("spotify") || name.includes("netflix") || 
-      name.includes("music") || name.includes("video") || name.includes("player")) {
-    return "Media";
   }
   
   return "Other Applications";
@@ -203,12 +164,6 @@ export const getSuggestedIcon = (appName: string): string => {
       return "code";
     case "Project Management":
       return "kanban";
-    case "Web Browsing":
-      return "browser";
-    case "Communication":
-      return "message-circle";
-    case "Media":
-      return "play";
     default:
       return "app-window";
   }

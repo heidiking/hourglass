@@ -11,8 +11,7 @@ import {
   KanbanSquare,
   Table,
   Presentation,
-  File,
-  Globe
+  File
 } from 'lucide-react';
 import { getApplicationCategory, getSuggestedIcon } from '@/utils/timeTracking/documentUtils';
 
@@ -45,8 +44,6 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
         return <Code size={16} className="mr-2 text-gray-600" />;
       case 'kanban':
         return <KanbanSquare size={16} className="mr-2 text-green-600" />;
-      case 'browser':
-        return <Globe size={16} className="mr-2 text-blue-400" />;
       default:
         return <FileText size={16} className="mr-2 text-gray-500" />;
     }

@@ -11,7 +11,6 @@ import { ActivitySession } from './types';
 import { saveActivityState, loadActivityState } from './activityStorage'; 
 import { extractDocumentName } from './documentUtils';
 import { setGetCurrentActivityFunction } from './autoTracking';
-import { setupAutoTracking } from './autoTracking';
 
 // In-memory state
 let currentActivity: ActivitySession | null = null;
@@ -32,6 +31,7 @@ export const initializeTimeTracking = (): void => {
     setGetCurrentActivityFunction(getCurrentActivity);
     
     // Initialize automatic tracking based on user settings
+    const { setupAutoTracking } = require('./autoTracking');
     setupAutoTracking();
     
     console.info('Time tracking successfully initialized');
