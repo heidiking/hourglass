@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { toast } from 'sonner';
 import { saveGoal, saveGoalToArchive, getSavedGoal, clearGoal } from './goalUtils';
 
@@ -7,15 +7,15 @@ const GoalInput = () => {
   const [goal, setGoal] = useState<string>('');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [placeholder, setPlaceholder] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Memoize handlers for better performance
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isInputDisabled) {
       setGoal(e.target.value);
     }
-  };
+  }, [isInputDisabled]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && goal.trim() && !isInputDisabled) {
       // Save goal to local storage
       saveGoal(goal);
@@ -32,7 +32,7 @@ const GoalInput = () => {
       
       setIsFocused(false);
     }
-  };
+  }, [goal, isInputDisabled]);
 
   // This effect handles the case when a goal is already set and the user revisits the page
   useEffect(() => {
@@ -45,51 +45,37 @@ const GoalInput = () => {
     }
     
     // Reset goal at midnight
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    const timeUntilMidnight = tomorrow.getTime() - now.getTime();
+    const scheduleResetAtMidnight = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      const timeUntilMidnight = tomorrow.getTime() - now.getTime();
 
-    const midnightTimer = setTimeout(() => {
-      const currentGoal = getSavedGoal();
-      
-      // Archive the current goal before clearing it
-      if (currentGoal) {
-        saveGoalToArchive(currentGoal);
-      }
-      
-      // Clear the current goal
-      setGoal('');
-      setIsInputDisabled(false); // Re-enable input for the new day
-      clearGoal();
-      
-      toast.info('New day, new goals!', {
-        duration: 4000,
-      });
-    }, timeUntilMidnight);
-
-    return () => clearTimeout(midnightTimer);
-  }, []);
-
-  // Adjust placeholder text based on screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setPlaceholder('');
-      } else {
-        setPlaceholder('');
-      }
+      return setTimeout(() => {
+        const currentGoal = getSavedGoal();
+        
+        // Archive the current goal before clearing it
+        if (currentGoal) {
+          saveGoalToArchive(currentGoal);
+        }
+        
+        // Clear the current goal
+        setGoal('');
+        setIsInputDisabled(false); // Re-enable input for the new day
+        clearGoal();
+        
+        toast.info('New day, new goals!', {
+          duration: 4000,
+        });
+        
+        // Schedule next midnight reset
+        scheduleResetAtMidnight();
+      }, timeUntilMidnight);
     };
-    
-    // Set initial value
-    handleResize();
-    
-    // Add event listener
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
+
+    const midnightTimer = scheduleResetAtMidnight();
+    return () => clearTimeout(midnightTimer);
   }, []);
 
   return (
@@ -119,4 +105,4 @@ const GoalInput = () => {
   );
 };
 
-export default GoalInput;
+export default memo(GoalInput);

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Folder } from 'lucide-react';
 import { 
   Dialog,
@@ -24,6 +24,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState("projects");
 
+  // Sync with external open state
   useEffect(() => {
     if (open !== undefined) {
       setDialogOpen(open);
@@ -37,50 +38,62 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     }
   }, [onOpenChange]);
 
+  // Load projects and activities
   useEffect(() => {
     const storedProjects = localStorage.getItem('projects');
     if (storedProjects) {
-      setProjects(JSON.parse(storedProjects));
+      try {
+        setProjects(JSON.parse(storedProjects));
+      } catch (e) {
+        console.error('Error parsing projects:', e);
+        // Handle corrupted data
+        setProjects([]);
+      }
     }
 
     const loadedActivities = getActivityHistory();
     setActivities(loadedActivities);
   }, []);
 
+  // Save projects when they change
   useEffect(() => {
-    localStorage.setItem('projects', JSON.stringify(projects));
+    if (projects.length > 0) {
+      localStorage.setItem('projects', JSON.stringify(projects));
+    }
   }, [projects]);
 
-  const openProjectForEditing = (project: Project) => {
+  const openProjectForEditing = useCallback((project: Project) => {
     setEditingProject(project);
     setSelectedActivities(project.activities);
     setCurrentTab("edit");
-  };
+  }, []);
 
-  const addActivityToProject = (projectId: string, activityId: string) => {
-    const projectToUpdate = projects.find(p => p.id === projectId);
-    
-    if (!projectToUpdate) return;
-    
-    if (projectToUpdate.activities.includes(activityId)) {
-      toast.info("This activity is already added to the project");
-      return;
-    }
-    
-    const updatedProject = {
-      ...projectToUpdate,
-      activities: [...projectToUpdate.activities, activityId],
-    };
-    
-    const updatedProjects = projects.map(project => 
-      project.id === projectId ? updatedProject : project
-    );
-    
-    setProjects(updatedProjects);
-    toast.success("Activity added to project");
-  };
+  const addActivityToProject = useCallback((projectId: string, activityId: string) => {
+    setProjects(currentProjects => {
+      const projectToUpdate = currentProjects.find(p => p.id === projectId);
+      
+      if (!projectToUpdate) return currentProjects;
+      
+      if (projectToUpdate.activities.includes(activityId)) {
+        toast.info("This activity is already added to the project");
+        return currentProjects;
+      }
+      
+      const updatedProject = {
+        ...projectToUpdate,
+        activities: [...projectToUpdate.activities, activityId],
+      };
+      
+      const updatedProjects = currentProjects.map(project => 
+        project.id === projectId ? updatedProject : project
+      );
+      
+      toast.success("Activity added to project");
+      return updatedProjects;
+    });
+  }, []);
 
-  const handleStartNewProject = () => {
+  const handleStartNewProject = useCallback(() => {
     const newProject: Project = {
       id: Date.now().toString(),
       name: "New Project",
@@ -92,7 +105,40 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     
     setEditingProject(newProject);
     setCurrentTab("edit");
-  };
+  }, []);
+
+  // Memoize tabsContent for better performance
+  const tabsContent = useMemo(() => ({
+    projects: (
+      <ProjectList 
+        projects={projects}
+        setProjects={setProjects}
+        activities={activities}
+        openProjectForEditing={openProjectForEditing}
+        onStartNewProject={handleStartNewProject}
+      />
+    ),
+    timeline: (
+      <ActivityTimeline 
+        activities={activities}
+        projects={projects}
+        addActivityToProject={addActivityToProject}
+      />
+    ),
+    edit: editingProject ? (
+      <EditProject 
+        editingProject={editingProject}
+        setEditingProject={setEditingProject}
+        activities={activities}
+        projects={projects}
+        setProjects={setProjects}
+        onBackToProjects={() => {
+          setEditingProject(null);
+          setCurrentTab("projects");
+        }}
+      />
+    ) : null
+  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
@@ -119,38 +165,16 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="projects" className="space-y-4">
-            <ProjectList 
-              projects={projects}
-              setProjects={setProjects}
-              activities={activities}
-              openProjectForEditing={openProjectForEditing}
-              onStartNewProject={handleStartNewProject}
-            />
+          <TabsContent value="projects">
+            {tabsContent.projects}
           </TabsContent>
           
-          <TabsContent value="timeline" className="space-y-4">
-            <ActivityTimeline 
-              activities={activities}
-              projects={projects}
-              addActivityToProject={addActivityToProject}
-            />
+          <TabsContent value="timeline">
+            {tabsContent.timeline}
           </TabsContent>
           
-          <TabsContent value="edit" className="space-y-4">
-            {editingProject && (
-              <EditProject 
-                editingProject={editingProject}
-                setEditingProject={setEditingProject}
-                activities={activities}
-                projects={projects}
-                setProjects={setProjects}
-                onBackToProjects={() => {
-                  setEditingProject(null);
-                  setCurrentTab("projects");
-                }}
-              />
-            )}
+          <TabsContent value="edit">
+            {tabsContent.edit}
           </TabsContent>
         </Tabs>
       </DialogContent>
