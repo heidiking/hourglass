@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
@@ -13,8 +12,6 @@ import { TaskToggleProvider } from '@/components/TaskToggle/TaskToggleContext';
 import { toast } from "sonner";
 
 const Index = () => {
-  const [trackerOpen, setTrackerOpen] = useState(false);
-
   useEffect(() => {
     // Initialize time tracking on page load
     try {
@@ -36,8 +33,8 @@ const Index = () => {
         <BackgroundManager />
         <NavIcons />
         
-        {/* Time tracker positioned in top left corner */}
-        <TimeTracker position="topLeft" className="z-20" open={trackerOpen} onOpenChange={setTrackerOpen} />
+        {/* Keeping only the TimeTracker in the top left corner */}
+        <TimeTracker position="topLeft" className="z-20" />
         
         <div className="flex-1 flex flex-col items-center justify-center z-10 max-w-5xl w-full">
           <Clock />
