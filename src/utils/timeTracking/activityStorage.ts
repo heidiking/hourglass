@@ -1,3 +1,4 @@
+
 /**
  * activityStorage.ts
  * 
@@ -55,7 +56,6 @@ export const saveActivityState = (
     localStorage.setItem('currentActivity', currentActivity ? JSON.stringify(currentActivity) : '');
   } catch (error) {
     console.error('Error saving time tracking state:', error);
-    // Consider implementing retry logic or notifying user for critical errors
   }
 };
 

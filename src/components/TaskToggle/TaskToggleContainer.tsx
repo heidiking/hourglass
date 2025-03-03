@@ -1,7 +1,6 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { useTaskToggle } from './TaskToggleContext';
-import ProjectManager from '../ProjectManager';
 import ToolButtons from './ToolButtons';
 import EarningsTrackerManager from './EarningsTrackerManager';
 
@@ -10,7 +9,8 @@ const TaskToggleContainer = () => {
     settingsOpen, 
     tasksOpen, 
     goalArchiveOpen,
-    focusModeOpen
+    focusModeOpen,
+    timeTrackerOpen
   } = useTaskToggle();
 
   // Get active state for a button
@@ -18,16 +18,17 @@ const TaskToggleContainer = () => {
     return (buttonId === 'settings' && settingsOpen) || 
       (buttonId === 'tasks' && tasksOpen) ||
       (buttonId === 'archive' && goalArchiveOpen) ||
-      (buttonId === 'focus' && focusModeOpen);
+      (buttonId === 'focus' && focusModeOpen) ||
+      (buttonId === 'tracker' && timeTrackerOpen);
   };
 
   return (
     <div className="fixed bottom-10 right-10 flex flex-col gap-4 z-10">
       <ToolButtons isButtonActive={isButtonActive} />
       <EarningsTrackerManager />
-      <ProjectManager />
     </div>
   );
 };
 
-export default TaskToggleContainer;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(TaskToggleContainer);

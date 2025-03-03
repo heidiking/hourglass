@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Clock } from 'lucide-react';
 import { DialogTrigger } from "@/components/ui/dialog";
 import { useTimeTracker } from './TimeTrackerContext';
@@ -26,19 +26,20 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
   return (
     <DialogTrigger asChild>
       <button
-        className={`p-3 ${dialogOpen ? 'bg-white' : 'bg-white/80'} 
+        className={`p-3 bg-white 
                   ${isTracking ? 'ring-2 ring-green-500' : ''}
-                  rounded-full hover:bg-white transition-colors ${positionStyles[position]} 
+                  rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
                   ${className} flex items-center justify-center w-12 h-12 shadow-md`}
         aria-label="Time Tracker"
         data-testid="time-tracker-trigger"
         onClick={() => handleOpenChange(!dialogOpen)}
       >
         <Clock size={20} className="text-black" />
-        <span className="text-black sr-only">Time Tracker</span>
+        <span className="text-black">Time Tracker</span>
       </button>
     </DialogTrigger>
   );
 };
 
-export default TimeTrackerButton;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(TimeTrackerButton);

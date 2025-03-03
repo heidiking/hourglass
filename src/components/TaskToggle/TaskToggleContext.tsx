@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback, useMemo } from 'react';
 import { type ToolButton } from './types';
 import { Settings, CheckSquare, Scroll, Shield, Clock } from 'lucide-react';
 
@@ -37,39 +37,41 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [toolButtons, setToolButtons] = useState<ToolButton[]>([]);
 
+  const initialButtonsCreator = useCallback(() => [
+    {
+      id: 'settings',
+      icon: <Settings size={24} className="text-black" />,
+      label: 'Settings',
+      onClick: () => setSettingsOpen(true),
+    },
+    {
+      id: 'tasks',
+      icon: <CheckSquare size={24} className="text-black" />,
+      label: 'Tasks',
+      onClick: () => setTasksOpen(true),
+    },
+    {
+      id: 'archive',
+      icon: <Scroll size={24} className="text-black" />,
+      label: 'Archive',
+      onClick: () => setGoalArchiveOpen(true),
+    },
+    {
+      id: 'tracker',
+      icon: <Clock size={24} className="text-black" />,
+      label: 'Tracker',
+      onClick: () => setTimeTrackerOpen(true),
+    },
+    {
+      id: 'focus',
+      icon: <Shield size={24} className="text-black" />,
+      label: 'Focus',
+      onClick: () => setFocusModeOpen(true),
+    }
+  ], [setSettingsOpen, setTasksOpen, setGoalArchiveOpen, setTimeTrackerOpen, setFocusModeOpen]);
+
   useEffect(() => {
-    const initialButtons: ToolButton[] = [
-      {
-        id: 'settings',
-        icon: <Settings size={24} className="text-black" />,
-        label: 'Settings',
-        onClick: () => setSettingsOpen(true),
-      },
-      {
-        id: 'tasks',
-        icon: <CheckSquare size={24} className="text-black" />,
-        label: 'Tasks',
-        onClick: () => setTasksOpen(true),
-      },
-      {
-        id: 'archive',
-        icon: <Scroll size={24} className="text-black" />,
-        label: 'Archive',
-        onClick: () => setGoalArchiveOpen(true),
-      },
-      {
-        id: 'tracker',
-        icon: <Clock size={24} className="text-black" />,
-        label: 'Tracker',
-        onClick: () => setTimeTrackerOpen(true),
-      },
-      {
-        id: 'focus',
-        icon: <Shield size={24} className="text-black" />,
-        label: 'Focus',
-        onClick: () => setFocusModeOpen(true),
-      }
-    ];
+    const initialButtons = initialButtonsCreator();
     
     const storedOrder = localStorage.getItem('taskToggleOrder');
     if (storedOrder) {
@@ -94,18 +96,18 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     } else {
       setToolButtons(initialButtons);
     }
-  }, []);
+  }, [initialButtonsCreator]);
 
   useEffect(() => {
     const orderIds = toolButtons.map(button => button.id);
     localStorage.setItem('taskToggleOrder', JSON.stringify(orderIds));
   }, [toolButtons]);
 
-  const handleDragStart = (id: string) => {
+  const handleDragStart = useCallback((id: string) => {
     setDraggedItem(id);
-  };
+  }, []);
 
-  const handleDragOver = (e: React.DragEvent, id: string) => {
+  const handleDragOver = useCallback((e: React.DragEvent, id: string) => {
     e.preventDefault();
     if (draggedItem && draggedItem !== id) {
       const draggedIndex = toolButtons.findIndex(button => button.id === draggedItem);
@@ -119,36 +121,49 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setToolButtons(newButtons);
       }
     }
-  };
+  }, [draggedItem, toolButtons]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setDraggedItem(null);
-  };
+  }, []);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    toolButtons,
+    setToolButtons,
+    settingsOpen,
+    setSettingsOpen,
+    tasksOpen,
+    setTasksOpen,
+    goalArchiveOpen,
+    setGoalArchiveOpen,
+    timeTrackerOpen,
+    setTimeTrackerOpen,
+    earningsTrackerOpen,
+    setEarningsTrackerOpen,
+    focusModeOpen,
+    setFocusModeOpen,
+    draggedItem,
+    setDraggedItem,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd
+  }), [
+    toolButtons,
+    settingsOpen,
+    tasksOpen,
+    goalArchiveOpen,
+    timeTrackerOpen,
+    earningsTrackerOpen,
+    focusModeOpen,
+    draggedItem,
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd
+  ]);
 
   return (
-    <TaskToggleContext.Provider
-      value={{
-        toolButtons,
-        setToolButtons,
-        settingsOpen,
-        setSettingsOpen,
-        tasksOpen,
-        setTasksOpen,
-        goalArchiveOpen,
-        setGoalArchiveOpen,
-        timeTrackerOpen,
-        setTimeTrackerOpen,
-        earningsTrackerOpen,
-        setEarningsTrackerOpen,
-        focusModeOpen,
-        setFocusModeOpen,
-        draggedItem,
-        setDraggedItem,
-        handleDragStart,
-        handleDragOver,
-        handleDragEnd
-      }}
-    >
+    <TaskToggleContext.Provider value={contextValue}>
       {children}
     </TaskToggleContext.Provider>
   );

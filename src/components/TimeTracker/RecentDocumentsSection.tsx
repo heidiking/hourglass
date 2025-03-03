@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { FileText } from 'lucide-react';
 import { ActivitySession } from '@/utils/timeTracking/types';
 import ActivityItem from './ActivityItem';
@@ -10,7 +10,7 @@ interface RecentDocumentsSectionProps {
 
 const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documentActivities }) => {
   // Group activities by date
-  const groupedActivities = React.useMemo(() => {
+  const groupedActivities = useMemo(() => {
     return documentActivities.reduce((acc, activity) => {
       const date = new Date(activity.startTime).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -27,7 +27,7 @@ const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documen
   }, [documentActivities]);
 
   // Sort dates in descending order (newest first)
-  const sortedDates = React.useMemo(() => {
+  const sortedDates = useMemo(() => {
     return Object.keys(groupedActivities).sort((a, b) => 
       new Date(b).getTime() - new Date(a).getTime()
     );
@@ -47,7 +47,7 @@ const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documen
               <h4 className="text-sm font-medium bg-black/10 p-2 rounded">{date}</h4>
               <div className="space-y-2">
                 {groupedActivities[date].map((activity, index) => 
-                  <ActivityItem key={index} activity={activity} />
+                  <ActivityItem key={`${activity.id}-${index}`} activity={activity} />
                 )}
               </div>
             </div>
@@ -62,4 +62,5 @@ const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documen
   );
 };
 
-export default RecentDocumentsSection;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(RecentDocumentsSection);

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { useTaskToggle } from './TaskToggleContext';
 import SettingsDialog from './SettingsDialog';
@@ -40,6 +40,16 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
     console.log("TimeTracker context not available");
   }
 
+  const handleDialogChange = (open: boolean, buttonId: string) => {
+    switch (buttonId) {
+      case 'settings': setSettingsOpen(open); break;
+      case 'tasks': setTasksOpen(open); break;
+      case 'archive': setGoalArchiveOpen(open); break;
+      case 'focus': setFocusModeOpen(open); break;
+      case 'tracker': setTimeTrackerOpen(open); break;
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {toolButtons.map((button) => (
@@ -52,17 +62,11 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
           className="cursor-move flex items-center justify-center"
         >
           <Dialog open={isButtonActive(button.id)} 
-          onOpenChange={(open) => {
-            if (button.id === 'settings') setSettingsOpen(open);
-            if (button.id === 'tasks') setTasksOpen(open);
-            if (button.id === 'archive') setGoalArchiveOpen(open);
-            if (button.id === 'focus') setFocusModeOpen(open);
-            if (button.id === 'tracker') setTimeTrackerOpen(open);
-          }}>
+            onOpenChange={(open) => handleDialogChange(open, button.id)}>
             <DialogTrigger asChild>
               <button
                 onClick={button.onClick}
-                className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} 
+                className={`p-3 bg-white text-black
                   ${button.id === 'tracker' && isTracking ? 'ring-2 ring-green-500' : ''}
                   rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
                 aria-label={button.label}
@@ -70,7 +74,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
                 <div className="text-black">
                   {button.icon}
                 </div>
-                <span className="sr-only text-black">{button.label}</span>
+                <span className="text-black">{button.label}</span>
               </button>
             </DialogTrigger>
             
@@ -105,4 +109,5 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
   );
 };
 
-export default ToolButtons;
+// Memoize to prevent unnecessary rerenders
+export default memo(ToolButtons);

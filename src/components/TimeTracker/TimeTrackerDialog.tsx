@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DialogContent,
@@ -18,7 +18,6 @@ import TestingPlan from './TestingPlan';
 const TimeTrackerDialog = () => {
   const { 
     dialogOpen,
-    handleOpenChange,
     currentActivity,
     documentActivities,
     isTracking,
@@ -90,4 +89,5 @@ const TimeTrackerDialog = () => {
   );
 };
 
-export default TimeTrackerDialog;
+// Memoize the component to prevent unnecessary re-renders
+export default memo(TimeTrackerDialog);

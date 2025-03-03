@@ -1,4 +1,5 @@
-import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
+
+import React, { createContext, useState, useEffect, useCallback, useContext, useMemo } from 'react';
 import { getCurrentActivity, getActivityHistory, clearActivityHistory } from '@/utils/timeTracking';
 import { ActivitySession } from '@/utils/timeTracking/types';
 import { toast } from "sonner";
@@ -44,44 +45,65 @@ export const TimeTrackerProvider: React.FC<{
   }, [onOpenChange]);
   
   useEffect(() => {
+    // Optimize activity data updates to reduce unnecessary re-renders
     const updateActivityData = () => {
       const current = getCurrentActivity();
       const history = getActivityHistory();
       
-      setCurrentActivity(current);
-      setActivityHistory(history);
-      setIsTracking(Boolean(current));
+      // Only update state if data has actually changed
+      if (JSON.stringify(current) !== JSON.stringify(currentActivity)) {
+        setCurrentActivity(current);
+        setIsTracking(Boolean(current));
+      }
+      
+      if (JSON.stringify(history) !== JSON.stringify(activityHistory)) {
+        setActivityHistory(history);
+      }
     };
     
     updateActivityData();
     
     const interval = setInterval(updateActivityData, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [currentActivity, activityHistory]);
 
-  const handleClearHistory = () => {
+  const handleClearHistory = useCallback(() => {
     clearActivityHistory();
     setActivityHistory([]);
     toast.success("Document history has been cleared");
-  };
+  }, []);
 
-  const documentActivities = activityHistory.filter(activity => 
-    isDocumentActivity(activity.appName)
+  // Memoize filtered document activities
+  const documentActivities = useMemo(() => 
+    activityHistory.filter(activity => isDocumentActivity(activity.appName)),
+    [activityHistory]
   );
 
+  // Memoize the context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    dialogOpen,
+    setDialogOpen,
+    currentActivity,
+    activityHistory,
+    documentActivities,
+    isTracking,
+    activeTab,
+    setActiveTab,
+    handleOpenChange,
+    handleClearHistory
+  }), [
+    dialogOpen, 
+    currentActivity, 
+    activityHistory, 
+    documentActivities,
+    isTracking, 
+    activeTab, 
+    handleOpenChange, 
+    handleClearHistory
+  ]);
+
   return (
-    <TimeTrackerContext.Provider value={{
-      dialogOpen,
-      setDialogOpen,
-      currentActivity,
-      activityHistory,
-      documentActivities,
-      isTracking,
-      activeTab,
-      setActiveTab,
-      handleOpenChange,
-      handleClearHistory
-    }}>
+    <TimeTrackerContext.Provider value={contextValue}>
       {children}
     </TimeTrackerContext.Provider>
   );
