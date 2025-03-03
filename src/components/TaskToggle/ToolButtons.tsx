@@ -37,8 +37,8 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
   // Get the current tracking state from the TimeTracker context
   let isTracking = false;
   try {
-    const { currentActivity } = useTimeTracker();
-    isTracking = !!currentActivity;
+    const { isTracking: tracking } = useTimeTracker();
+    isTracking = tracking;
   } catch (error) {
     // If TimeTrackerContext isn't available, fallback to false
     console.log("TimeTracker context not available");
@@ -72,7 +72,7 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
               <button
                 onClick={button.onClick}
                 className={`p-3 bg-white text-black
-                  ${button.id === 'tracker' && isTracking ? 'ring-2 ring-green-500' : ''}
+                  ${button.id === 'tracker' && isTracking ? 'ring-2 ring-green-500 shadow-lg shadow-green-100' : ''}
                   rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
                 aria-label={button.label}
               >
