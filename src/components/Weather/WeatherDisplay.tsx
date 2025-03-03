@@ -10,15 +10,15 @@ interface WeatherDisplayProps {
 const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weatherData }) => {
   if (weatherData.loading) {
     return (
-      <div className="flex items-center text-white">
-        <span className="text-sm animate-pulse">Loading weather...</span>
+      <div className="flex items-center">
+        <span className="text-sm animate-pulse text-black">Loading weather...</span>
       </div>
     );
   }
   
-  if (weatherData.error) {
+  if (weatherData.error && !weatherData.city && !weatherData.temperature) {
     return (
-      <div className="flex items-center text-white">
+      <div className="flex items-center">
         <span className="text-sm text-black">Weather unavailable</span>
       </div>
     );

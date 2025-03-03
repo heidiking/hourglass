@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { WeatherData, WeatherLocationOptions } from './types';
 import { getWeatherIcon, storeWeatherData, getFallbackWeatherData } from './utils';
+import { toast } from "sonner";
 
 export const useWeatherData = () => {
   const [weatherData, setWeatherData] = useState<WeatherData>({
@@ -63,14 +64,52 @@ export const useWeatherData = () => {
       }
     };
 
-    // Get user's location with more precise options
-    const geoOptions: WeatherLocationOptions = {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
+    const checkPermissionAndGetLocation = () => {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: 'geolocation' }).then(result => {
+          if (result.state === 'granted') {
+            getCurrentPosition();
+          } else if (result.state === 'prompt') {
+            toast.info("Please allow location access to see local weather", {
+              duration: 5000,
+            });
+            getCurrentPosition();
+          } else if (result.state === 'denied') {
+            setWeatherData(prev => ({
+              ...prev,
+              loading: false,
+              error: 'Location access denied: Please enable location access in your browser settings'
+            }));
+            tryFallbackData();
+          }
+          
+          result.addEventListener('change', () => {
+            if (result.state === 'granted') {
+              toast.success("Location access granted. Getting weather data...");
+              getCurrentPosition();
+            }
+          });
+        });
+      } else if (navigator.geolocation) {
+        getCurrentPosition();
+      } else {
+        setWeatherData(prev => ({
+          ...prev,
+          loading: false,
+          error: 'Geolocation not supported in your browser'
+        }));
+        tryFallbackData();
+      }
     };
 
-    if (navigator.geolocation) {
+    const getCurrentPosition = () => {
+      // Get user's location with more precise options
+      const geoOptions: WeatherLocationOptions = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      };
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log('Location detected:', position.coords.latitude, position.coords.longitude);
@@ -84,57 +123,35 @@ export const useWeatherData = () => {
             error: `Location access denied: ${error.message}`
           }));
           
-          // Try to get fallback data
-          const fallbackData = getFallbackWeatherData();
-          if (fallbackData) {
-            setWeatherData(prev => ({
-              ...prev,
-              city: fallbackData.city,
-              temperature: fallbackData.temperature,
-              weatherIcon: fallbackData.weatherIcon
-            }));
-          }
+          tryFallbackData();
         },
         geoOptions
       );
-    } else {
-      setWeatherData(prev => ({
-        ...prev,
-        loading: false,
-        error: 'Geolocation not supported in your browser'
-      }));
-    }
+    };
 
-    // Set up interval to refresh weather data every 30 minutes
-    const refreshInterval = setInterval(() => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            fetchWeatherData(position.coords.latitude, position.coords.longitude);
-          },
-          () => {} // Silently fail on refresh
-        );
-      }
-    }, 30 * 60 * 1000);
-
-    return () => clearInterval(refreshInterval);
-  }, []);
-
-  // Try to get weather from background data if available
-  useEffect(() => {
-    if (!weatherData.city && !weatherData.temperature) {
+    const tryFallbackData = () => {
+      // Try to get fallback data
       const fallbackData = getFallbackWeatherData();
       if (fallbackData) {
         setWeatherData(prev => ({
           ...prev,
           city: fallbackData.city,
           temperature: fallbackData.temperature,
-          weatherIcon: fallbackData.weatherIcon,
-          loading: false
+          weatherIcon: fallbackData.weatherIcon
         }));
       }
-    }
-  }, [weatherData.city, weatherData.temperature]);
+    };
+
+    // Initialize weather data
+    checkPermissionAndGetLocation();
+
+    // Set up interval to refresh weather data every 30 minutes
+    const refreshInterval = setInterval(() => {
+      checkPermissionAndGetLocation();
+    }, 30 * 60 * 1000);
+
+    return () => clearInterval(refreshInterval);
+  }, []);
 
   return weatherData;
 };
