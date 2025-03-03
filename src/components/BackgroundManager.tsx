@@ -91,7 +91,6 @@ const BackgroundManager = () => {
       
       <div className="fixed inset-0 bg-black/20 z-[-1]" aria-hidden="true" />
       
-      {/* Image credit display - Now the entire section is clickable */}
       {backgroundData && backgroundData.sourceUrl && (
         <a 
           href={backgroundData.sourceUrl}
@@ -99,20 +98,13 @@ const BackgroundManager = () => {
           rel="noopener noreferrer"
           className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block"
         >
-          {backgroundData.author ? (
-            <span className="text-white">
-              Photo: {backgroundData.author}
-              {backgroundData.location && ` - ${backgroundData.location}`}
-            </span>
-          ) : (
-            <span className="text-white">
-              {backgroundData.location || 'Background image'}
-            </span>
-          )}
+          <span className="text-white">
+            Photo: {backgroundData.author}
+            {backgroundData.location && ` - ${backgroundData.location}`}
+          </span>
         </a>
       )}
       
-      {/* Fallback for when sourceUrl is not available */}
       {backgroundData && !backgroundData.sourceUrl && (
         <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
           <span className="text-white">

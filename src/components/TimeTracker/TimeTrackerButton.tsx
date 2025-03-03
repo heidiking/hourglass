@@ -3,7 +3,6 @@ import React, { memo } from 'react';
 import { Clock } from 'lucide-react';
 import { useTimeTracker } from './TimeTrackerContext';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import TimeTrackerDialog from './TimeTrackerDialog';
 
 interface TimeTrackerButtonProps {
   className?: string;
@@ -28,7 +27,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <button
-          className={`p-2 bg-white text-black
+          className={`p-2 bg-white 
             ${isTracking ? 'ring-2 ring-green-500 shadow-lg shadow-green-100' : ''}
             rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
             ${className} flex items-center justify-center shadow-md`}

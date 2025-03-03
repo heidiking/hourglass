@@ -61,7 +61,7 @@ const backgrounds: Background[] = [
     id: 6,
     url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
     author: 'Kalen Emsley',
-    sourceUrl: 'https://unsplash.com/photos/mountain-covered-with-snow-under-blue-sky-during-daytime-Bkci_8qcdvQ',
+    sourceUrl: 'https://unsplash.com/photos/Bkci_8qcdvQ',
     location: 'Mount Assiniboine',
     temperature: 8,
     weatherIcon: '☀️'
@@ -70,7 +70,7 @@ const backgrounds: Background[] = [
     id: 7,
     url: 'https://images.unsplash.com/photo-1502786129293-79981df4e689?auto=format&fit=crop&w=1920&q=80',
     author: 'Daniel Leone',
-    sourceUrl: 'https://unsplash.com/photos/photo-of-mountain-during-daytime-g30P1zcOzXo',
+    sourceUrl: 'https://unsplash.com/photos/g30P1zcOzXo',
     location: 'Yosemite Valley',
     temperature: 22,
     weatherIcon: '🌄'
@@ -79,7 +79,7 @@ const backgrounds: Background[] = [
     id: 8,
     url: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=80',
     author: 'Joshua Earle',
-    sourceUrl: 'https://unsplash.com/photos/silhouette-mountain-ranges-YrVdS4LWxGs',
+    sourceUrl: 'https://unsplash.com/photos/YrVdS4LWxGs',
     location: 'Mountain Peak',
     temperature: 14,
     weatherIcon: '⛅'
@@ -88,7 +88,7 @@ const backgrounds: Background[] = [
     id: 9,
     url: 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80',
     author: 'Casey Horner',
-    sourceUrl: 'https://unsplash.com/photos/mountain-ranges-during-golden-hour-4rDCa5hBlCs',
+    sourceUrl: 'https://unsplash.com/photos/4rDCa5hBlCs',
     location: 'Olympic Mountains',
     temperature: 19,
     weatherIcon: '☀️'
@@ -97,7 +97,7 @@ const backgrounds: Background[] = [
     id: 10,
     url: 'https://images.unsplash.com/photo-1520962922320-2038eebab146?auto=format&fit=crop&w=1920&q=80',
     author: 'Ales Krivec',
-    sourceUrl: 'https://unsplash.com/photos/snow-covered-mountain-under-blue-sky-during-daytime-InvYrZliRnw',
+    sourceUrl: 'https://unsplash.com/photos/InvYrZliRnw',
     location: 'Julian Alps',
     temperature: 10,
     weatherIcon: '🌄'
@@ -124,6 +124,18 @@ export const getBackgroundForToday = async (): Promise<Background> => {
     const customBackgrounds = getCustomBackgrounds();
     const allBackgrounds = [...backgrounds, ...customBackgrounds];
     
+    if (allBackgrounds.length === 0) {
+      // Fallback if no backgrounds are available
+      resolve({
+        id: 999,
+        url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+        author: 'Bailey Zindel',
+        sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
+        location: 'Moraine Lake, Canada'
+      });
+      return;
+    }
+    
     // In a real app, this might fetch from an API
     // For now, we'll use the day of the month to select a background
     const today = new Date();
@@ -133,7 +145,7 @@ export const getBackgroundForToday = async (): Promise<Background> => {
     // Simulate network delay
     setTimeout(() => {
       resolve(allBackgrounds[backgroundIndex]);
-    }, 500);
+    }, 300);
   });
 };
 
@@ -174,6 +186,8 @@ export const preloadNextBackground = (): void => {
   const dayOfMonth = tomorrow.getDate();
   
   const allBackgrounds = [...backgrounds, ...getCustomBackgrounds()];
+  if (allBackgrounds.length === 0) return;
+  
   const backgroundIndex = dayOfMonth % allBackgrounds.length;
   const nextBackground = allBackgrounds[backgroundIndex];
   
