@@ -18,13 +18,14 @@ const BackgroundManager = () => {
       } catch (error) {
         console.error('Failed to load background:', error);
         // Fallback to a default landscape image
-        setBgImage('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80');
+        const fallbackImage = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80';
+        setBgImage(fallbackImage);
         setBackgroundData({
           id: 999,
-          url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
-          author: 'Vincent Guth',
-          sourceUrl: 'https://unsplash.com/photos/silhouette-photography-of-mountains-during-sunset-uEcSKKDB1pg',
-          location: 'Mountain Range'
+          url: fallbackImage,
+          author: 'Bailey Zindel',
+          sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
+          location: 'Moraine Lake, Canada'
         });
       } finally {
         setIsLoading(false);
@@ -73,11 +74,11 @@ const BackgroundManager = () => {
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-black z-[-1] animate-pulse-soft" />
+        <div className="fixed inset-0 bg-black z-[-2] animate-pulse-soft" />
       )}
       
       {bgImage && (
-        <div className="fixed inset-0 w-full h-full overflow-hidden" style={{ zIndex: -1 }}>
+        <div className="fixed inset-0 w-full h-full overflow-hidden z-[-2]">
           <img
             src={bgImage}
             alt="Daily background"
@@ -99,11 +100,6 @@ const BackgroundManager = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-white/90 transition-colors text-white"
-              onClick={(e) => {
-                if (!backgroundData.sourceUrl) {
-                  e.preventDefault();
-                }
-              }}
             >
               Photo: {backgroundData.author}
               {backgroundData.location && ` - ${backgroundData.location}`}
