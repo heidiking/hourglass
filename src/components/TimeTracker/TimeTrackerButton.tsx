@@ -37,7 +37,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
       onClick={handleClick}
     >
       <Clock size={20} className="text-black" />
-      <span className="sr-only">Time Tracker</span>
+      <span className="text-black">Time Tracker</span>
     </button>
   );
 };
