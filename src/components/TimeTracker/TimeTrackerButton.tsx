@@ -7,11 +7,13 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 interface TimeTrackerButtonProps {
   className?: string;
   position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
+  showLabel?: boolean;
 }
 
 const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({ 
   className = "",
-  position = "floating" 
+  position = "floating",
+  showLabel = true
 }) => {
   const { isTracking, setDialogOpen, dialogOpen } = useTimeTracker();
 
@@ -35,7 +37,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-black" />
-          <span className="text-black font-medium">Tracker</span>
+          {showLabel && <span className="text-black font-medium">Tracker</span>}
         </button>
       </DialogTrigger>
     </Dialog>
