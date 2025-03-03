@@ -73,11 +73,11 @@ const BackgroundManager = () => {
   return (
     <>
       {isLoading && (
-        <div className="fixed inset-0 bg-black z-[-2] animate-pulse-soft" />
+        <div className="fixed inset-0 bg-black z-[-1] animate-pulse-soft" />
       )}
       
       {bgImage && (
-        <div className="fixed inset-0 w-full h-full z-10 overflow-hidden" style={{ zIndex: -2 }}>
+        <div className="fixed inset-0 w-full h-full overflow-hidden" style={{ zIndex: -1 }}>
           <img
             src={bgImage}
             alt="Daily background"
