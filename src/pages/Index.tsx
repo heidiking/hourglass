@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
 import QuoteDisplay from '@/components/QuoteDisplay';
@@ -7,16 +7,10 @@ import FocusInput from '@/components/FocusInput';
 import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import { Toaster } from '@/components/ui/toaster';
-import { Folder } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useTaskToggle } from '@/components/TaskToggle/TaskToggleContext';
 
 const Index = () => {
   const { setProjectsOpen } = useTaskToggle();
-
-  const handleOpenProjectManager = () => {
-    setProjectsOpen(true);
-  };
 
   return (
     <div className="h-screen w-full relative flex flex-col items-center justify-center text-white p-4 overflow-hidden">
@@ -27,14 +21,6 @@ const Index = () => {
         <Clock />
         <FocusInput />
         <QuoteDisplay />
-        
-        <Button
-          onClick={handleOpenProjectManager}
-          className="absolute bottom-24 right-24 bg-white hover:bg-white/90 rounded-full shadow-lg p-3 z-20"
-        >
-          <Folder size={18} className="mr-2 text-black" />
-          <span className="text-black font-medium">New Project</span>
-        </Button>
       </div>
       
       <TaskToggle />

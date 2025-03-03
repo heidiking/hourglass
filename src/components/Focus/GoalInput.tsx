@@ -130,7 +130,6 @@ const GoalInput = () => {
               aria-label="Edit goal"
             >
               <Pencil size={16} className="text-black" />
-              <span className="text-black text-xs font-medium ml-1">Edit</span>
             </button>
           )}
         </div>

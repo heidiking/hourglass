@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Folder } from 'lucide-react';
+import { Folder, Plus } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -15,6 +15,8 @@ import { Project } from './types';
 import ProjectList from './ProjectList';
 import ActivityTimeline from './ActivityTimeline';
 import EditProject from './EditProject';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?: (open: boolean) => void }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -25,6 +27,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [currentTab, setCurrentTab] = useState("projects");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [newProjectName, setNewProjectName] = useState('');
 
   // Sync with external open state
   useEffect(() => {
@@ -136,6 +139,26 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     });
   }, []);
 
+  const handleCreateNewProject = () => {
+    if (!newProjectName.trim()) {
+      toast.error("Please enter a project name");
+      return;
+    }
+    
+    const newProject: Project = {
+      id: Date.now().toString(),
+      name: newProjectName,
+      tags: [],
+      activities: [],
+      manualActivities: [],
+      earnings: 0,
+    };
+    
+    setProjects(prev => [...prev, newProject]);
+    setNewProjectName('');
+    toast.success(`Project "${newProjectName}" created`);
+  };
+
   const handleStartNewProject = useCallback(() => {
     const newProject: Project = {
       id: Date.now().toString(),
@@ -153,14 +176,36 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   // Memoize tabsContent for better performance
   const tabsContent = useMemo(() => ({
     projects: (
-      <ProjectList 
-        projects={projects}
-        setProjects={setProjects}
-        activities={activities}
-        openProjectForEditing={openProjectForEditing}
-        onStartNewProject={handleStartNewProject}
-        isLoading={isLoading}
-      />
+      <>
+        <div className="flex items-center gap-3 mb-4">
+          <Input
+            placeholder="New project name"
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+            className="flex-1 bg-white border-gray-300 text-black"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleCreateNewProject();
+              }
+            }}
+          />
+          <Button 
+            onClick={handleCreateNewProject}
+            className="bg-white hover:bg-white/90 text-black border border-gray-300"
+          >
+            <Plus size={18} className="mr-2 text-black" />
+            <span className="text-black">Add Project</span>
+          </Button>
+        </div>
+        <ProjectList 
+          projects={projects}
+          setProjects={setProjects}
+          activities={activities}
+          openProjectForEditing={openProjectForEditing}
+          onStartNewProject={handleStartNewProject}
+          isLoading={isLoading}
+        />
+      </>
     ),
     timeline: (
       <ActivityTimeline 
@@ -182,7 +227,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         }}
       />
     ) : null
-  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject, isLoading]);
+  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject, isLoading, newProjectName]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
