@@ -18,6 +18,7 @@ import BlockedSitesList from './BlockedSitesList';
 import { BlockedSite } from './types';
 import QuickAddSites from './QuickAddSites';
 import CurrentlyBlockedSites from './CurrentlyBlockedSites';
+import { toast } from "sonner";
 
 interface FocusDialogProps {
   isActive: boolean;
@@ -96,8 +97,13 @@ const FocusDialog = ({
   };
   
   const saveSettings = () => {
-    localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
-    // Show saved confirmation
+    try {
+      localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
+      toast.success("Focus settings saved successfully");
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      toast.error("Failed to save settings");
+    }
   };
   
   return (
