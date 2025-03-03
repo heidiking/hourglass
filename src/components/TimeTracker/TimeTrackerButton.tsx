@@ -9,7 +9,7 @@ interface TimeTrackerButtonProps {
   position?: "topLeft" | "topRight" | "bottomLeft" | "bottomRight" | "floating";
 }
 
-const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({ 
+const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({ 
   className = "",
   position = "floating" 
 }) => {
@@ -35,11 +35,13 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
           data-testid="time-tracker-trigger"
         >
           <Clock size={20} className="text-black" />
+          <span className="text-black sr-only md:not-sr-only md:ml-2">Tracker</span>
         </button>
       </DialogTrigger>
     </Dialog>
   );
-};
+});
 
-// Memoize the component to prevent unnecessary re-renders
-export default memo(TimeTrackerButton);
+TimeTrackerButton.displayName = 'TimeTrackerButton';
+
+export default TimeTrackerButton;

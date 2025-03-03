@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DialogHeader,
@@ -24,6 +24,10 @@ const TimeTrackerDialog = () => {
     handleClearHistory
   } = useTimeTracker();
 
+  const handleTabChange = useCallback((value: string) => {
+    setActiveTab(value);
+  }, [setActiveTab]);
+
   return (
     <>
       <DialogHeader>
@@ -41,7 +45,7 @@ const TimeTrackerDialog = () => {
       )}
       
       <div className="mt-4">
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+        <Tabs defaultValue={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="documents" className="flex items-center justify-center">
               <FileText className="mr-2 h-4 w-4 text-black" />
@@ -85,5 +89,4 @@ const TimeTrackerDialog = () => {
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
 export default memo(TimeTrackerDialog);
