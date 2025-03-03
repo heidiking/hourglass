@@ -71,7 +71,7 @@ const BackgroundManager = () => {
         <img
           src={bgImage}
           alt="Daily background"
-          className={`bg-image ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          className={`fixed inset-0 w-full h-full object-cover z-[-2] transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
           onLoad={() => setIsLoading(false)}
         />
       )}
