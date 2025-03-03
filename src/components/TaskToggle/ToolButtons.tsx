@@ -40,52 +40,64 @@ const ToolButtons: React.FC<ToolButtonsProps> = ({ isButtonActive }) => {
           onDragEnd={handleDragEnd}
           className="cursor-move flex items-center justify-center"
         >
-          <Dialog open={isButtonActive(button.id)} 
-          onOpenChange={(open) => {
-            if (button.id === 'settings') setSettingsOpen(open);
-            if (button.id === 'tasks') setTasksOpen(open);
-            if (button.id === 'archive') setGoalArchiveOpen(open);
-            if (button.id === 'focus') setFocusModeOpen(open);
-            if (button.id === 'tracker') setTimeTrackerOpen(open);
-          }}>
-            <DialogTrigger asChild>
-              <button
-                onClick={button.onClick}
-                className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
-                aria-label={button.label}
-              >
-                <div className="text-black">
-                  {button.icon}
-                </div>
-                <span className="sr-only text-black">{button.label}</span>
-              </button>
-            </DialogTrigger>
-            
-            {/* Render appropriate dialog content based on the button */}
-            {button.id === 'settings' && settingsOpen && (
-              <DialogContent className="dialog-content bg-white text-black">
-                <SettingsDialog />
-              </DialogContent>
-            )}
-            {button.id === 'tasks' && tasksOpen && (
-              <DialogContent className="dialog-content bg-white text-black">
-                <TasksDialog />
-              </DialogContent>
-            )}
-            {button.id === 'archive' && goalArchiveOpen && (
-              <DialogContent className="dialog-content bg-white text-black">
-                <GoalArchiveDialog />
-              </DialogContent>
-            )}
-            {button.id === 'focus' && focusModeOpen && (
-              <DialogContent className="dialog-content bg-white text-black">
-                <FocusModeManager 
-                  focusModeOpen={focusModeOpen}
-                  setFocusModeOpen={setFocusModeOpen}
-                />
-              </DialogContent>
-            )}
-          </Dialog>
+          {button.id === 'tracker' ? (
+            <button
+              onClick={() => setTimeTrackerOpen(true)}
+              className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
+              aria-label={button.label}
+            >
+              <div className="text-black">
+                {button.icon}
+              </div>
+              <span className="sr-only text-black">{button.label}</span>
+            </button>
+          ) : (
+            <Dialog open={isButtonActive(button.id)} 
+            onOpenChange={(open) => {
+              if (button.id === 'settings') setSettingsOpen(open);
+              if (button.id === 'tasks') setTasksOpen(open);
+              if (button.id === 'archive') setGoalArchiveOpen(open);
+              if (button.id === 'focus') setFocusModeOpen(open);
+            }}>
+              <DialogTrigger asChild>
+                <button
+                  onClick={button.onClick}
+                  className={`p-3 ${isButtonActive(button.id) ? 'bg-white text-black' : 'bg-white text-black'} rounded-full border border-gray-300 hover:bg-white/90 transition-colors flex items-center justify-center w-12 h-12`}
+                  aria-label={button.label}
+                >
+                  <div className="text-black">
+                    {button.icon}
+                  </div>
+                  <span className="sr-only text-black">{button.label}</span>
+                </button>
+              </DialogTrigger>
+              
+              {/* Render appropriate dialog content based on the button */}
+              {button.id === 'settings' && settingsOpen && (
+                <DialogContent className="dialog-content bg-white text-black">
+                  <SettingsDialog />
+                </DialogContent>
+              )}
+              {button.id === 'tasks' && tasksOpen && (
+                <DialogContent className="dialog-content bg-white text-black">
+                  <TasksDialog />
+                </DialogContent>
+              )}
+              {button.id === 'archive' && goalArchiveOpen && (
+                <DialogContent className="dialog-content bg-white text-black">
+                  <GoalArchiveDialog />
+                </DialogContent>
+              )}
+              {button.id === 'focus' && focusModeOpen && (
+                <DialogContent className="dialog-content bg-white text-black">
+                  <FocusModeManager 
+                    focusModeOpen={focusModeOpen}
+                    setFocusModeOpen={setFocusModeOpen}
+                  />
+                </DialogContent>
+              )}
+            </Dialog>
+          )}
         </div>
       ))}
     </div>
