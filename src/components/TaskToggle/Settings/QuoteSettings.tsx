@@ -2,24 +2,38 @@
 import React from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { TextQuote } from "lucide-react";
+import { TextQuote, Archive } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface QuoteSettingsProps {
   quote: string;
   author: string;
   onQuoteChange: (value: string) => void;
   onAuthorChange: (value: string) => void;
+  onViewArchive: () => void;
 }
 
 const QuoteSettings: React.FC<QuoteSettingsProps> = ({ 
   quote, 
   author, 
   onQuoteChange, 
-  onAuthorChange 
+  onAuthorChange,
+  onViewArchive
 }) => {
   return (
     <div className="space-y-3 border-b pb-4">
-      <h3 className="text-md font-medium text-black">Custom Quote</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-md font-medium text-black">Custom Quote</h3>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={onViewArchive}
+          className="text-black bg-white hover:bg-white/90"
+        >
+          <Archive className="mr-2 h-4 w-4 text-black" />
+          <span className="text-black">View Archive</span>
+        </Button>
+      </div>
       
       <div className="space-y-2">
         <div className="flex items-center gap-2">

@@ -1,13 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Info, Save } from "lucide-react";
+import { Info, Save, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Documentation from '../Documentation';
 import MantraSettings from './Settings/MantraSettings';
 import QuoteSettings from './Settings/QuoteSettings';
 import TimeTrackingSettings from './Settings/TimeTrackingSettings';
+import { toast } from "sonner";
+import MantraArchive from './Settings/MantraArchive';
+import QuoteArchive from './Settings/QuoteArchive';
 
 interface SettingsDialogProps {
   onClose?: () => void;
@@ -16,6 +19,8 @@ interface SettingsDialogProps {
 const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('settings');
   const [showDocumentation, setShowDocumentation] = useState(false);
+  const [showMantraArchive, setShowMantraArchive] = useState(false);
+  const [showQuoteArchive, setShowQuoteArchive] = useState(false);
   
   // Load settings from localStorage
   const [settings, setSettings] = useState(() => {
@@ -32,7 +37,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
           endTime: "17:00",
           hasValidTimes: true,
           customMantra: "",
-          customQuote: ""
+          customQuote: "",
+          customQuoteAuthor: ""
         };
       }
     }
@@ -43,7 +49,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
       endTime: "17:00",
       hasValidTimes: true,
       customMantra: "",
-      customQuote: ""
+      customQuote: "",
+      customQuoteAuthor: ""
     };
   });
 
@@ -75,12 +82,81 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   };
   
   const saveSettings = () => {
-    localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
-    // Close the dialog after saving
-    if (onClose) {
-      onClose();
+    try {
+      // Archive current mantra if it exists and is not empty
+      if (settings.customMantra && settings.customMantra.trim() !== '') {
+        const mantras = JSON.parse(localStorage.getItem('archivedMantras') || '[]');
+        // Check if mantra doesn't already exist
+        if (!mantras.some((m: {text: string}) => m.text === settings.customMantra)) {
+          mantras.push({
+            text: settings.customMantra,
+            date: new Date().toLocaleDateString()
+          });
+          localStorage.setItem('archivedMantras', JSON.stringify(mantras));
+        }
+      }
+
+      // Archive current quote if it exists and is not empty
+      if (settings.customQuote && settings.customQuote.trim() !== '') {
+        const quotes = JSON.parse(localStorage.getItem('archivedQuotes') || '[]');
+        // Check if quote doesn't already exist
+        if (!quotes.some((q: {text: string}) => q.text === settings.customQuote)) {
+          quotes.push({
+            text: settings.customQuote,
+            author: settings.customQuoteAuthor || '',
+            date: new Date().toLocaleDateString()
+          });
+          localStorage.setItem('archivedQuotes', JSON.stringify(quotes));
+        }
+      }
+
+      // Save settings
+      localStorage.setItem('timeTrackerSettings', JSON.stringify(settings));
+      toast.success("Settings saved successfully");
+      
+      // Close the dialog after saving if onClose is provided
+      if (onClose) {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      toast.error("Failed to save settings");
     }
   };
+
+  if (showMantraArchive) {
+    return (
+      <div className="relative">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="absolute top-0 right-0 z-20 m-4 text-black bg-white hover:bg-white/90"
+          onClick={() => setShowMantraArchive(false)}
+        >
+          <X className="mr-2 h-4 w-4 text-black" />
+          <span className="text-black">Back to Settings</span>
+        </Button>
+        <MantraArchive />
+      </div>
+    );
+  }
+
+  if (showQuoteArchive) {
+    return (
+      <div className="relative">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="absolute top-0 right-0 z-20 m-4 text-black bg-white hover:bg-white/90"
+          onClick={() => setShowQuoteArchive(false)}
+        >
+          <X className="mr-2 h-4 w-4 text-black" />
+          <span className="text-black">Back to Settings</span>
+        </Button>
+        <QuoteArchive />
+      </div>
+    );
+  }
   
   if (showDocumentation) {
     return (
@@ -88,9 +164,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
         <Button 
           variant="outline" 
           size="sm" 
-          className="absolute top-0 right-0 z-10 m-4 text-black bg-white hover:bg-white/90"
+          className="absolute top-0 right-0 z-20 m-4 text-black bg-white hover:bg-white/90"
           onClick={() => setShowDocumentation(false)}
         >
+          <X className="mr-2 h-4 w-4 text-black" />
           <span className="text-black">Back to Settings</span>
         </Button>
         <Documentation />
@@ -131,6 +208,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
             <MantraSettings 
               mantra={settings.customMantra}
               onChange={value => handleSettingChange('customMantra', value)}
+              onViewArchive={() => setShowMantraArchive(true)}
             />
 
             {/* Custom Quote Section */}
@@ -139,6 +217,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
               author={settings.customQuoteAuthor}
               onQuoteChange={value => handleSettingChange('customQuote', value)}
               onAuthorChange={value => handleSettingChange('customQuoteAuthor', value)}
+              onViewArchive={() => setShowQuoteArchive(true)}
             />
 
             {/* Time Tracking Section */}
