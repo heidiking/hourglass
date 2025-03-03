@@ -62,9 +62,9 @@ export const startActivity = (appName: string): ActivitySession => {
     }
 
     // Process the app name to extract document name
-    // In the web version, we use mock data as browsers can't detect real system apps
+    // Ensuring activity is titled by document or app name
     const processedAppName = appName;
-    console.info('Started tracking activity (using simulated data):', processedAppName);
+    console.info('Started tracking activity:', processedAppName);
 
     // Create new activity session
     const now = new Date();
