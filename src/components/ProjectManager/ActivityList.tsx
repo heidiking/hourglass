@@ -71,7 +71,7 @@ const ActivityList: React.FC<ActivityListProps> = ({
             variant="outline" 
             className="border-gray-700 bg-white text-black hover:bg-white/90 hover:text-black"
           >
-            Save Associations
+            <span className="text-black">Save Associations</span>
           </Button>
         </div>
         
@@ -146,6 +146,7 @@ const ActivityList: React.FC<ActivityListProps> = ({
                       onClick={() => editManualActivity(activity)}
                     >
                       <Edit size={14} />
+                      <span className="sr-only">Edit activity</span>
                     </Button>
                     <Button 
                       variant="ghost" 
@@ -154,6 +155,7 @@ const ActivityList: React.FC<ActivityListProps> = ({
                       onClick={() => removeManualActivity(activity.id)}
                     >
                       <Trash2 size={14} />
+                      <span className="sr-only">Delete activity</span>
                     </Button>
                   </div>
                 </div>

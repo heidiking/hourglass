@@ -1,4 +1,3 @@
-
 /**
  * activityManager.ts
  * 
@@ -62,7 +61,8 @@ export const startActivity = (appName: string): ActivitySession => {
     }
 
     // Process the app name to extract document name
-    const processedAppName = extractDocumentName(appName);
+    // Ensure we keep the document/app name in the activity title
+    const processedAppName = appName;
 
     // Create new activity session
     const now = new Date();
