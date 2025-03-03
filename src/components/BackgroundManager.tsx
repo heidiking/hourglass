@@ -12,12 +12,20 @@ const BackgroundManager = () => {
       setIsLoading(true);
       try {
         const todayBackground = await getBackgroundForToday();
+        console.log('Loaded background:', todayBackground);
         setBgImage(todayBackground.url);
         setBackgroundData(todayBackground);
       } catch (error) {
         console.error('Failed to load background:', error);
-        // Fallback to a default image
-        setBgImage('/lovable-uploads/322fe065-12ed-4a68-933a-d89ef8bde1c0.png');
+        // Fallback to a default landscape image
+        setBgImage('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80');
+        setBackgroundData({
+          id: 999,
+          url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
+          author: 'Vincent Guth',
+          sourceUrl: 'https://unsplash.com/photos/silhouette-photography-of-mountains-during-sunset-uEcSKKDB1pg',
+          location: 'Mountain Range'
+        });
       } finally {
         setIsLoading(false);
       }
@@ -69,7 +77,7 @@ const BackgroundManager = () => {
       )}
       
       {bgImage && (
-        <div className="fixed inset-0 w-full h-full z-[-2] overflow-hidden">
+        <div className="fixed inset-0 w-full h-full z-10 overflow-hidden" style={{ zIndex: -2 }}>
           <img
             src={bgImage}
             alt="Daily background"
@@ -84,13 +92,18 @@ const BackgroundManager = () => {
       
       {/* Image credit display */}
       {backgroundData && (
-        <div className="fixed bottom-2 left-2 text-xs text-white/70 z-10 max-w-[200px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
+        <div className="fixed bottom-2 left-2 text-xs text-white/70 z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
           {backgroundData.author ? (
             <a 
               href={backgroundData.sourceUrl || '#'} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-white/90 transition-colors"
+              className="hover:text-white/90 transition-colors text-white"
+              onClick={(e) => {
+                if (!backgroundData.sourceUrl) {
+                  e.preventDefault();
+                }
+              }}
             >
               Photo: {backgroundData.author}
               {backgroundData.location && ` - ${backgroundData.location}`}

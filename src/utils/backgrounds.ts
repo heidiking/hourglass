@@ -14,14 +14,16 @@ export type Background = {
 const backgrounds: Background[] = [
   {
     id: 1,
-    url: '/lovable-uploads/322fe065-12ed-4a68-933a-d89ef8bde1c0.png',
-    location: 'Tropical Island',
-    temperature: 28,
-    weatherIcon: '☀️'
+    url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1920&q=80',
+    author: 'Robert Lukeman',
+    sourceUrl: 'https://unsplash.com/photos/silhouette-of-trees-during-golden-hour-_RBcxo9AU-U',
+    location: 'Forest Sunset',
+    temperature: 22,
+    weatherIcon: '🌄'
   },
   {
     id: 2,
-    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05',
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
     author: 'Vincent Guth',
     sourceUrl: 'https://unsplash.com/photos/silhouette-photography-of-mountains-during-sunset-uEcSKKDB1pg',
     location: 'Mountain Summit',
@@ -30,7 +32,7 @@ const backgrounds: Background[] = [
   },
   {
     id: 3,
-    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e',
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80',
     author: 'Sean O.',
     sourceUrl: 'https://unsplash.com/photos/seashore-during-golden-hour-_RBcxo9AU-U',
     location: 'Tropical Beach',
@@ -39,7 +41,7 @@ const backgrounds: Background[] = [
   },
   {
     id: 4,
-    url: 'https://images.unsplash.com/photo-1535569235968-b95ee25500e5',
+    url: 'https://images.unsplash.com/photo-1535569235968-b95ee25500e5?auto=format&fit=crop&w=1920&q=80',
     author: 'Corey Young',
     sourceUrl: 'https://unsplash.com/photos/blue-body-of-water-T9-G96sXHuM',
     location: 'Ocean Waves',
@@ -48,7 +50,7 @@ const backgrounds: Background[] = [
   },
   {
     id: 5,
-    url: 'https://images.unsplash.com/photo-1519046904884-53103b34b206',
+    url: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1920&q=80',
     author: 'Sean O.',
     sourceUrl: 'https://unsplash.com/photos/people-walking-on-beach-during-sunset-AZMmUy2qL6A',
     location: 'Beach Sunset',
@@ -57,7 +59,7 @@ const backgrounds: Background[] = [
   },
   {
     id: 6,
-    url: 'https://images.unsplash.com/photo-1484821582734-6692f7b94bf4',
+    url: 'https://images.unsplash.com/photo-1484821582734-6692f7b94bf4?auto=format&fit=crop&w=1920&q=80',
     author: 'Jeremy Bishop',
     sourceUrl: 'https://unsplash.com/photos/person-swimming-on-body-of-water-EwKXn5CapA4',
     location: 'Turquoise Ocean',
@@ -66,16 +68,16 @@ const backgrounds: Background[] = [
   },
   {
     id: 7,
-    url: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0',
-    author: 'Shashank Sahay',
-    sourceUrl: 'https://unsplash.com/photos/ocean-waves-under-blue-sky-and-white-clouds-during-daytime-yBhFlGQIX1Q',
-    location: 'Calm Sea',
-    temperature: 27,
-    weatherIcon: '🌤️'
+    url: 'https://images.unsplash.com/photo-1433477155337-9aea4e790195?auto=format&fit=crop&w=1920&q=80',
+    author: 'Ash Edmonds',
+    sourceUrl: 'https://unsplash.com/photos/green-mountain-JmR_qkX_T_8',
+    location: 'Mountain Valley',
+    temperature: 16,
+    weatherIcon: '🌄'
   },
   {
     id: 8,
-    url: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7',
+    url: 'https://images.unsplash.com/photo-1515238152791-8216bfdf89a7?auto=format&fit=crop&w=1920&q=80',
     author: 'Omer Salom',
     sourceUrl: 'https://unsplash.com/photos/ocean-waves-during-golden-hour-1eTgH9Zfocs',
     location: 'Beach Waves',
@@ -84,7 +86,7 @@ const backgrounds: Background[] = [
   },
   {
     id: 9,
-    url: 'https://images.unsplash.com/photo-1501436513145-30f24e19fcc8',
+    url: 'https://images.unsplash.com/photo-1501436513145-30f24e19fcc8?auto=format&fit=crop&w=1920&q=80',
     author: 'Ishan @seefromthesky',
     sourceUrl: 'https://unsplash.com/photos/aerial-view-photography-of-island-surrounded-by-body-of-water-hqCEQTc4gZA',
     location: 'Tropical Paradise',
@@ -93,12 +95,12 @@ const backgrounds: Background[] = [
   },
   {
     id: 10,
-    url: 'https://images.unsplash.com/photo-1566024287286-457247b70310',
-    author: 'Magicle',
-    sourceUrl: 'https://unsplash.com/photos/aerial-view-of-beach-jFnK3F0S-pQ',
-    location: 'Ocean View',
-    temperature: 23,
-    weatherIcon: '🌤️'
+    url: 'https://images.unsplash.com/photo-1518623489648-a173ef7824f3?auto=format&fit=crop&w=1920&q=80',
+    author: 'Wil Stewart',
+    sourceUrl: 'https://unsplash.com/photos/silhouette-photography-of-trees-during-golden-hour-UErWoQEoMrc',
+    location: 'Sunset Forest',
+    temperature: 18,
+    weatherIcon: '🌄'
   }
 ];
 
