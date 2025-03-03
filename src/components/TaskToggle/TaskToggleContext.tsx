@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { type ToolButton } from './types';
-import { Settings, CheckSquare, Scroll, Clock, Shield } from 'lucide-react';
+import { Settings, CheckSquare, Scroll, Shield } from 'lucide-react';
 
 interface TaskToggleContextType {
   toolButtons: ToolButton[];
@@ -40,31 +40,25 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const initialButtons: ToolButton[] = [
       {
         id: 'settings',
-        icon: <Settings size={24} className="text-white" />,
+        icon: <Settings size={24} className="text-black" />,
         label: 'Settings',
         onClick: () => setSettingsOpen(true),
       },
       {
         id: 'tasks',
-        icon: <CheckSquare size={24} className="text-white" />,
+        icon: <CheckSquare size={24} className="text-black" />,
         label: 'Tasks',
         onClick: () => setTasksOpen(true),
       },
       {
         id: 'archive',
-        icon: <Scroll size={24} className="text-white" />,
+        icon: <Scroll size={24} className="text-black" />,
         label: 'Archive',
         onClick: () => setGoalArchiveOpen(true),
       },
       {
-        id: 'tracker',
-        icon: <Clock size={24} className="text-white" />,
-        label: 'Tracker',
-        onClick: () => setTimeTrackerOpen(true),
-      },
-      {
         id: 'focus',
-        icon: <Shield size={24} className="text-white" />,
+        icon: <Shield size={24} className="text-black" />,
         label: 'Focus',
         onClick: () => setFocusModeOpen(true),
       }
@@ -74,7 +68,7 @@ export const TaskToggleProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (storedOrder) {
       try {
         const orderIds = JSON.parse(storedOrder);
-        const filteredOrderIds = orderIds.filter(id => id !== 'earnings');
+        const filteredOrderIds = orderIds.filter(id => id !== 'earnings' && id !== 'tracker');
         const orderedButtons = filteredOrderIds
           .map(id => initialButtons.find(button => button.id === id))
           .filter(Boolean);
