@@ -4,7 +4,8 @@ import {
   ArrowLeft,
   Save,
   Clock,
-  Bell
+  Bell,
+  TextQuote
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -85,6 +86,28 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
               </div>
             </div>
           )}
+        </div>
+        
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-white/80">Custom Mantra</h3>
+          
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <TextQuote size={16} className="text-white/70" />
+              <Label htmlFor="custom-mantra" className="text-white/80">Your Personal Mantra</Label>
+            </div>
+            <Input 
+              id="custom-mantra" 
+              type="text" 
+              value={settings.customMantra || ''}
+              onChange={(e) => handleSettingChange('customMantra', e.target.value)}
+              placeholder="Enter your own inspiring mantra"
+              className="bg-black/30 border-gray-700 text-white"
+            />
+            <p className="text-xs text-white/60">
+              Your personal mantra will occasionally appear in the daily rotation. Make it meaningful and inspiring!
+            </p>
+          </div>
         </div>
         
         <div className="space-y-3">
