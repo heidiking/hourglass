@@ -10,13 +10,20 @@ import TimeTracker from '@/components/TimeTracker';
 import { initializeTimeTracking } from '@/utils/timeTracking';
 import { Toaster } from '@/components/ui/toaster';
 import { TaskToggleProvider } from '@/components/TaskToggle/TaskToggleContext';
+import { toast } from "sonner";
 
 const Index = () => {
   const [trackerOpen, setTrackerOpen] = useState(false);
 
   useEffect(() => {
     // Initialize time tracking on page load
-    initializeTimeTracking();
+    try {
+      initializeTimeTracking();
+      console.log("Time tracking initialized successfully");
+    } catch (error) {
+      console.error("Error initializing time tracking:", error);
+      toast.error("Could not initialize time tracking");
+    }
   }, []);
 
   return (
