@@ -28,7 +28,7 @@ const TimeTrackerDialog = () => {
 
   if (!dialogOpen) return null;
 
-  return (
+  const dialogContent = (
     <>
       <DialogHeader>
         <DialogTitle className="flex items-center text-lg text-black">
@@ -87,6 +87,8 @@ const TimeTrackerDialog = () => {
       </div>
     </>
   );
+
+  return dialogContent;
 };
 
 // Memoize the component to prevent unnecessary re-renders

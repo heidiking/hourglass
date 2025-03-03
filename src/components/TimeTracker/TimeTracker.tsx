@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TimeTrackerProvider } from './TimeTrackerContext';
 import TimeTrackerButton from './TimeTrackerButton';
 import TimeTrackerDialog from './TimeTrackerDialog';
@@ -22,7 +22,9 @@ const TimeTracker = ({
     <TimeTrackerProvider initialOpen={open} onOpenChange={onOpenChange}>
       <Dialog>
         <TimeTrackerButton className={className} position={position} />
-        <TimeTrackerDialog />
+        <DialogContent className="sm:max-w-[700px] md:max-w-[800px] max-h-[85vh] overflow-auto bg-white text-black">
+          <TimeTrackerDialog />
+        </DialogContent>
       </Dialog>
     </TimeTrackerProvider>
   );
