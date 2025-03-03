@@ -25,7 +25,8 @@ const BackgroundManager = () => {
           url: fallbackImage,
           author: 'Bailey Zindel',
           sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
-          location: 'Moraine Lake, Canada'
+          location: 'Moraine Lake, Canada',
+          type: 'landscape'
         });
       } finally {
         setIsLoading(false);
@@ -71,6 +72,18 @@ const BackgroundManager = () => {
     }
   }, [backgroundData]);
 
+  // Determine if we need a stronger filter based on the background type
+  const getFilterClass = () => {
+    if (!backgroundData) return 'bg-black/20';
+    
+    // Paintings may need a stronger filter for better text visibility
+    if (backgroundData.type === 'painting') {
+      return 'bg-black/30 backdrop-brightness-90';
+    }
+    
+    return 'bg-black/20';
+  };
+
   return (
     <>
       {isLoading && (
@@ -89,27 +102,23 @@ const BackgroundManager = () => {
         </div>
       )}
       
-      <div className="fixed inset-0 bg-black/20 z-[-1]" aria-hidden="true" />
+      <div 
+        className={`fixed inset-0 ${getFilterClass()} z-[-1]`} 
+        aria-hidden="true" 
+      />
       
-      {backgroundData && backgroundData.sourceUrl && (
-        <a 
-          href={backgroundData.sourceUrl}
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block"
-        >
-          <span className="text-white">
-            Photo: {backgroundData.author}
-            {backgroundData.location && ` - ${backgroundData.location}`}
-          </span>
-        </a>
-      )}
-      
-      {backgroundData && !backgroundData.sourceUrl && (
-        <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
-          <span className="text-white">
-            {backgroundData.location || 'Background image'}
-          </span>
+      {backgroundData && (
+        <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block">
+          {backgroundData.type === 'painting' ? (
+            <span className="text-white">
+              "{backgroundData.title}" ({backgroundData.year}) by {backgroundData.author}
+            </span>
+          ) : (
+            <span className="text-white">
+              Photo: {backgroundData.author}
+              {backgroundData.location && ` - ${backgroundData.location}`}
+            </span>
+          )}
         </div>
       )}
     </>

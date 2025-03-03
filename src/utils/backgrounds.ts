@@ -8,10 +8,13 @@ export type Background = {
   temperature?: number; // Temperature in Celsius
   weatherIcon?: string; // Icon identifier
   isCustom?: boolean;
+  title?: string; // For artwork title
+  year?: string; // For artwork year
+  type?: 'landscape' | 'painting'; // Categorize the background
 };
 
 // A collection of beautiful background images with location and weather data
-const backgrounds: Background[] = [
+const landscapes: Background[] = [
   {
     id: 1,
     url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
@@ -19,7 +22,8 @@ const backgrounds: Background[] = [
     sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
     location: 'Moraine Lake, Canada',
     temperature: 15,
-    weatherIcon: '🌄'
+    weatherIcon: '🌄',
+    type: 'landscape'
   },
   {
     id: 2,
@@ -28,7 +32,8 @@ const backgrounds: Background[] = [
     sourceUrl: 'https://unsplash.com/photos/Kh4tUhc7sAQ',
     location: 'Mountain Lake',
     temperature: 12,
-    weatherIcon: '⛅'
+    weatherIcon: '⛅',
+    type: 'landscape'
   },
   {
     id: 3,
@@ -37,7 +42,8 @@ const backgrounds: Background[] = [
     sourceUrl: 'https://unsplash.com/photos/qH36EgNjPJY',
     location: 'Dolomites, Italy',
     temperature: 18,
-    weatherIcon: '☀️'
+    weatherIcon: '☀️',
+    type: 'landscape'
   },
   {
     id: 4,
@@ -46,7 +52,8 @@ const backgrounds: Background[] = [
     sourceUrl: 'https://unsplash.com/photos/fxm90JuNPP4',
     location: 'Mountain Range',
     temperature: 20,
-    weatherIcon: '🌤️'
+    weatherIcon: '🌤️',
+    type: 'landscape'
   },
   {
     id: 5,
@@ -55,54 +62,62 @@ const backgrounds: Background[] = [
     sourceUrl: 'https://unsplash.com/photos/gXsP4AYhpKo',
     location: 'Alpine Lake',
     temperature: 16,
-    weatherIcon: '🌅'
-  },
-  {
-    id: 6,
-    url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
-    author: 'Kalen Emsley',
-    sourceUrl: 'https://unsplash.com/photos/Bkci_8qcdvQ',
-    location: 'Mount Assiniboine',
-    temperature: 8,
-    weatherIcon: '☀️'
-  },
-  {
-    id: 7,
-    url: 'https://images.unsplash.com/photo-1502786129293-79981df4e689?auto=format&fit=crop&w=1920&q=80',
-    author: 'Daniel Leone',
-    sourceUrl: 'https://unsplash.com/photos/g30P1zcOzXo',
-    location: 'Yosemite Valley',
-    temperature: 22,
-    weatherIcon: '🌄'
-  },
-  {
-    id: 8,
-    url: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=80',
-    author: 'Joshua Earle',
-    sourceUrl: 'https://unsplash.com/photos/YrVdS4LWxGs',
-    location: 'Mountain Peak',
-    temperature: 14,
-    weatherIcon: '⛅'
-  },
-  {
-    id: 9,
-    url: 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1920&q=80',
-    author: 'Casey Horner',
-    sourceUrl: 'https://unsplash.com/photos/4rDCa5hBlCs',
-    location: 'Olympic Mountains',
-    temperature: 19,
-    weatherIcon: '☀️'
-  },
-  {
-    id: 10,
-    url: 'https://images.unsplash.com/photo-1520962922320-2038eebab146?auto=format&fit=crop&w=1920&q=80',
-    author: 'Ales Krivec',
-    sourceUrl: 'https://unsplash.com/photos/InvYrZliRnw',
-    location: 'Julian Alps',
-    temperature: 10,
-    weatherIcon: '🌄'
+    weatherIcon: '🌅',
+    type: 'landscape'
   }
 ];
+
+// Add fine art paintings that are in the public domain
+const paintings: Background[] = [
+  {
+    id: 101,
+    url: 'https://images.rawpixel.com/image_1000/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcGQxOS0wNzA3ODEuanBn.jpg',
+    author: 'Claude Monet',
+    title: 'Water Lilies',
+    year: '1906',
+    type: 'painting',
+    sourceUrl: 'https://www.rawpixel.com/image/537852/water-lilies'
+  },
+  {
+    id: 102,
+    url: 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvcGQtNS1wZDUtMjM2LXRlZGR5LWpwZy1pbWFnZS5qcGc.jpg',
+    author: 'Vincent van Gogh',
+    title: 'Starry Night',
+    year: '1889',
+    type: 'painting',
+    sourceUrl: 'https://www.rawpixel.com/image/2042503/starry-night-vincent-van-gogh'
+  },
+  {
+    id: 103,
+    url: 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcGQyMC0yMDMuanBn.jpg',
+    author: 'Katsushika Hokusai',
+    title: 'The Great Wave off Kanagawa',
+    year: '1831',
+    type: 'painting',
+    sourceUrl: 'https://www.rawpixel.com/image/511533/great-wave-kanagawa'
+  },
+  {
+    id: 104,
+    url: 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcGQxOS0wNzI0OTYtam9iNjA4LWEuanBn.jpg',
+    author: 'Gustav Klimt',
+    title: 'The Kiss',
+    year: '1908',
+    type: 'painting',
+    sourceUrl: 'https://www.rawpixel.com/image/2682447/the-kiss'
+  },
+  {
+    id: 105,
+    url: 'https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHgxMDg2MDU3LWltYWdlLWt3dnk2ZXl2LmpwZw.jpg',
+    author: 'Johannes Vermeer',
+    title: 'Girl with a Pearl Earring',
+    year: '1665',
+    type: 'painting',
+    sourceUrl: 'https://www.rawpixel.com/image/601383/girl-pearl-earring'
+  }
+];
+
+// Combine all backgrounds
+const backgrounds: Background[] = [...landscapes, ...paintings];
 
 // Function to get custom backgrounds from localStorage
 const getCustomBackgrounds = (): Background[] => {
@@ -131,7 +146,8 @@ export const getBackgroundForToday = async (): Promise<Background> => {
         url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
         author: 'Bailey Zindel',
         sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
-        location: 'Moraine Lake, Canada'
+        location: 'Moraine Lake, Canada',
+        type: 'landscape'
       });
       return;
     }
@@ -150,7 +166,7 @@ export const getBackgroundForToday = async (): Promise<Background> => {
 };
 
 // Function to add a custom background
-export const addCustomBackground = (imageUrl: string, author?: string, location?: string): void => {
+export const addCustomBackground = (imageUrl: string, author?: string, location?: string, title?: string, year?: string, type: 'landscape' | 'painting' = 'landscape'): void => {
   const customBackgrounds = getCustomBackgrounds();
   
   const newBackground: Background = {
@@ -158,6 +174,9 @@ export const addCustomBackground = (imageUrl: string, author?: string, location?
     url: imageUrl,
     author,
     location,
+    title,
+    year,
+    type,
     isCustom: true
   };
   
