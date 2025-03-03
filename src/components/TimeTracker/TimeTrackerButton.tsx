@@ -26,11 +26,11 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = ({
   return (
     <DialogTrigger asChild>
       <button
-        className={`p-3 ${dialogOpen ? 'bg-black/60' : 'bg-black/30'} rounded-full hover:bg-black/50 transition-colors ${positionStyles[position]} ${className} flex items-center justify-center w-12 h-12`}
+        className={`p-3 ${dialogOpen ? 'bg-white' : 'bg-white/80'} rounded-full hover:bg-white transition-colors ${positionStyles[position]} ${className} flex items-center justify-center w-12 h-12 shadow-md`}
         aria-label="Time Tracker"
         data-testid="time-tracker-trigger"
       >
-        <Clock size={20} className="text-white" />
+        <Clock size={20} className="text-black" />
       </button>
     </DialogTrigger>
   );

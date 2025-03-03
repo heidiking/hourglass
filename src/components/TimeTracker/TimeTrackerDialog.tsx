@@ -50,15 +50,15 @@ const TimeTrackerDialog = () => {
           <TabsList className="grid grid-cols-4 mb-4">
             <TabsTrigger value="documents" className="flex items-center justify-center text-black">
               <FileText className="mr-2 h-4 w-4" />
-              <span>Recent Documents</span>
+              <span className="text-black">Recent Documents</span>
             </TabsTrigger>
             <TabsTrigger value="insights" className="flex items-center justify-center text-black">
               <BarChart className="mr-2 h-4 w-4" />
-              <span>Insights & Metrics</span>
+              <span className="text-black">Insights & Metrics</span>
             </TabsTrigger>
             <TabsTrigger value="testing" className="flex items-center justify-center text-black">
               <Clock className="mr-2 h-4 w-4" />
-              <span>Testing Plan</span>
+              <span className="text-black">Testing Plan</span>
             </TabsTrigger>
             {!isTracking && (
               <Button 
@@ -68,7 +68,7 @@ const TimeTrackerDialog = () => {
                 onClick={handleClearHistory}
               >
                 <CircleOff className="mr-2 h-4 w-4" />
-                <span>Clear History</span>
+                <span className="text-black">Clear History</span>
               </Button>
             )}
           </TabsList>

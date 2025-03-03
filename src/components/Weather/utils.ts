@@ -1,70 +1,71 @@
 
-export const getWeatherIcon = (condition: string): string => {
-  const conditionMap: Record<string, string> = {
-    'Clear': '☀️',
-    'Clouds': '☁️',
-    'Rain': '🌧️',
-    'Drizzle': '🌦️',
-    'Thunderstorm': '⛈️',
-    'Snow': '❄️',
-    'Mist': '🌫️',
-    'Fog': '🌫️',
-    'Haze': '🌫️'
-  };
+// Weather icons mapping based on weather condition
+export const getWeatherIcon = (weatherCondition: string): string => {
+  const condition = weatherCondition.toLowerCase();
   
-  return conditionMap[condition] || '🌤️';
-};
-
-export const storeWeatherData = (
-  city: string, 
-  temperature: number, 
-  weatherIcon: string
-): void => {
-  // Store weather data for other components to access
-  localStorage.setItem('currentWeatherData', JSON.stringify({
-    city,
-    temperature,
-    weatherIcon
-  }));
-
-  // Also update background data if it's available
-  try {
-    const currentBgData = localStorage.getItem('currentBackgroundData');
-    if (currentBgData) {
-      const bgData = JSON.parse(currentBgData);
-      // Update the background data with real weather if possible
-      if (bgData && !bgData.isCustom) {
-        bgData.temperature = temperature;
-        bgData.location = city;
-        bgData.weatherIcon = weatherIcon;
-        localStorage.setItem('currentBackgroundData', JSON.stringify(bgData));
-      }
-    }
-  } catch (e) {
-    console.error('Error updating background data:', e);
+  if (condition.includes('clear') || condition.includes('sun')) {
+    return '☀️';
+  } else if (condition.includes('cloud') && condition.includes('sun')) {
+    return '⛅';
+  } else if (condition.includes('cloud')) {
+    return '☁️';
+  } else if (condition.includes('rain') || condition.includes('drizzle')) {
+    return '🌧️';
+  } else if (condition.includes('snow')) {
+    return '❄️';
+  } else if (condition.includes('thunder') || condition.includes('storm')) {
+    return '⛈️';
+  } else if (condition.includes('fog') || condition.includes('mist')) {
+    return '🌫️';
+  } else if (condition.includes('wind')) {
+    return '💨';
+  } else {
+    return '🌡️'; // Default thermometer
   }
 };
 
+// Store weather data in localStorage for other components
+export const storeWeatherData = (city: string, temperature: number, weatherIcon: string): void => {
+  try {
+    localStorage.setItem('currentWeatherData', JSON.stringify({
+      city,
+      temperature,
+      weatherIcon,
+      timestamp: Date.now()
+    }));
+  } catch (e) {
+    console.error('Error storing weather data:', e);
+  }
+};
+
+// Get fallback weather data from localStorage or background data
 export const getFallbackWeatherData = () => {
   try {
-    const currentBgData = localStorage.getItem('currentBackgroundData');
-    if (currentBgData) {
-      const bgData = JSON.parse(currentBgData);
-      if (bgData && bgData.location) {
-        return {
-          city: bgData.location,
-          temperature: bgData.temperature,
-          weatherIcon: bgData.weatherIcon
-        };
+    // First try to get from localStorage
+    const weatherData = localStorage.getItem('currentWeatherData');
+    if (weatherData) {
+      const parsedData = JSON.parse(weatherData);
+      // Only use if less than 24 hours old
+      if (Date.now() - parsedData.timestamp < 24 * 60 * 60 * 1000) {
+        return parsedData;
       }
     }
     
-    const weatherData = localStorage.getItem('currentWeatherData');
-    if (weatherData) {
-      return JSON.parse(weatherData);
+    // Then try to get from background data
+    const backgroundData = localStorage.getItem('currentBackgroundData');
+    if (backgroundData) {
+      const parsedData = JSON.parse(backgroundData);
+      if (parsedData && parsedData.location) {
+        return {
+          city: parsedData.location,
+          temperature: parsedData.temperature || null,
+          weatherIcon: null
+        };
+      }
     }
   } catch (e) {
-    console.error('Error reading stored weather data:', e);
+    console.error('Error getting fallback weather data:', e);
   }
+  
   return null;
 };

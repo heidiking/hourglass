@@ -7,7 +7,7 @@ const Weather = () => {
   const weatherData = useWeatherData();
 
   return (
-    <div className="fixed top-0 right-0 p-4 flex items-center gap-4 text-white z-10 bg-black/30 backdrop-blur-sm rounded-lg">
+    <div className="fixed top-4 right-4 p-3 flex items-center gap-2 z-10 bg-white/80 backdrop-blur-sm rounded-lg shadow-md">
       <WeatherDisplay weatherData={weatherData} />
     </div>
   );
