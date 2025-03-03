@@ -23,6 +23,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
   const [activities, setActivities] = useState<ActivitySession[]>([]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState("projects");
+  const [isLoading, setIsLoading] = useState(true);
 
   // Sync with external open state
   useEffect(() => {
@@ -40,48 +41,87 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
 
   // Load projects and activities
   useEffect(() => {
-    const storedProjects = localStorage.getItem('projects');
-    if (storedProjects) {
+    const loadData = () => {
       try {
-        setProjects(JSON.parse(storedProjects));
-      } catch (e) {
-        console.error('Error parsing projects:', e);
-        // Handle corrupted data
-        setProjects([]);
-      }
-    }
+        setIsLoading(true);
+        
+        // Load projects with validation
+        const storedProjects = localStorage.getItem('projects');
+        if (storedProjects) {
+          try {
+            const parsedProjects = JSON.parse(storedProjects);
+            // Validate that it's an array
+            if (Array.isArray(parsedProjects)) {
+              setProjects(parsedProjects);
+            } else {
+              console.error('Stored projects is not an array, resetting to empty array');
+              setProjects([]);
+            }
+          } catch (e) {
+            console.error('Error parsing projects:', e);
+            // Handle corrupted data
+            setProjects([]);
+          }
+        } else {
+          // Initialize with empty array if no data exists
+          setProjects([]);
+        }
 
-    const loadedActivities = getActivityHistory();
-    setActivities(loadedActivities);
+        // Load activities
+        const loadedActivities = getActivityHistory();
+        setActivities(loadedActivities || []);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast.error('Error loading project data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
-  // Save projects when they change
+  // Save projects when they change - ALWAYS save, not just when length > 0
   useEffect(() => {
-    if (projects.length > 0) {
+    try {
+      // Always save projects state, even when empty
       localStorage.setItem('projects', JSON.stringify(projects));
+    } catch (error) {
+      console.error('Error saving projects to localStorage:', error);
+      toast.error('Error saving project data');
     }
   }, [projects]);
 
   const openProjectForEditing = useCallback((project: Project) => {
-    setEditingProject(project);
-    setSelectedActivities(project.activities);
+    if (!project) return;
+    
+    setEditingProject({
+      ...project,
+      // Ensure project has all required properties
+      activities: project.activities || [],
+      tags: project.tags || [],
+      manualActivities: project.manualActivities || [],
+    });
+    setSelectedActivities(project.activities || []);
     setCurrentTab("edit");
   }, []);
 
   const addActivityToProject = useCallback((projectId: string, activityId: string) => {
+    if (!projectId || !activityId) return;
+    
     setProjects(currentProjects => {
       const projectToUpdate = currentProjects.find(p => p.id === projectId);
       
       if (!projectToUpdate) return currentProjects;
       
-      if (projectToUpdate.activities.includes(activityId)) {
+      if (projectToUpdate.activities && projectToUpdate.activities.includes(activityId)) {
         toast.info("This activity is already added to the project");
         return currentProjects;
       }
       
       const updatedProject = {
         ...projectToUpdate,
-        activities: [...projectToUpdate.activities, activityId],
+        activities: [...(projectToUpdate.activities || []), activityId],
       };
       
       const updatedProjects = currentProjects.map(project => 
@@ -116,6 +156,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         activities={activities}
         openProjectForEditing={openProjectForEditing}
         onStartNewProject={handleStartNewProject}
+        isLoading={isLoading}
       />
     ),
     timeline: (
@@ -138,7 +179,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         }}
       />
     ) : null
-  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject]);
+  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject, isLoading]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>

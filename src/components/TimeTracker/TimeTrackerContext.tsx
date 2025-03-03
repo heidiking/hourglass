@@ -45,26 +45,30 @@ export const TimeTrackerProvider: React.FC<{
     }
   }, [onOpenChange]);
   
-  // Optimize activity data updates with a more efficient implementation
+  // Update activity data using a safer approach that avoids cyclic references
   useEffect(() => {
     let isMounted = true;
     
     // Update activity data
     const updateActivityData = () => {
-      const current = getCurrentActivity();
-      const history = getActivityHistory();
-      
-      if (!isMounted) return;
-      
-      // Only update state if data has changed (optimize renders)
-      if (JSON.stringify(current) !== JSON.stringify(currentActivity)) {
-        setCurrentActivity(current);
-        setIsTracking(Boolean(current));
-      }
-      
-      // Only update history if it has changed
-      if (JSON.stringify(history) !== JSON.stringify(activityHistory)) {
-        setActivityHistory(history);
+      try {
+        const current = getCurrentActivity();
+        const history = getActivityHistory();
+        
+        if (!isMounted) return;
+        
+        // Use a deep comparison approach rather than JSON.stringify which can fail with cyclic objects
+        if (current !== currentActivity) {
+          setCurrentActivity(current);
+          setIsTracking(Boolean(current));
+        }
+        
+        // Safe update of activity history
+        if (history?.length !== activityHistory?.length) {
+          setActivityHistory(history || []);
+        }
+      } catch (error) {
+        console.error('Error updating activity data:', error);
       }
     };
     
@@ -87,11 +91,16 @@ export const TimeTrackerProvider: React.FC<{
     toast.success("Document history has been cleared");
   }, []);
 
-  // Memoize filtered document activities
-  const documentActivities = useMemo(() => 
-    activityHistory.filter(activity => isDocumentActivity(activity.appName)),
-    [activityHistory]
-  );
+  // Safely compute filtered document activities
+  const documentActivities = useMemo(() => {
+    if (!activityHistory || !Array.isArray(activityHistory)) {
+      return [];
+    }
+    
+    return activityHistory.filter(activity => 
+      activity && activity.appName && isDocumentActivity(activity.appName)
+    );
+  }, [activityHistory]);
 
   // Memoize the context value to prevent unnecessary re-renders
   const contextValue = useMemo(() => ({

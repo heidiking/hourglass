@@ -23,12 +23,27 @@ const TasksDialog = () => {
     // Load tasks from localStorage
     const storedTasks = localStorage.getItem('dailyTasks');
     if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
+      try {
+        const parsedTasks = JSON.parse(storedTasks);
+        if (Array.isArray(parsedTasks)) {
+          setTasks(parsedTasks);
+        } else {
+          console.error('Stored tasks is not an array');
+          setTasks([]);
+        }
+      } catch (e) {
+        console.error('Error parsing tasks:', e);
+        setTasks([]);
+      }
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('dailyTasks', JSON.stringify(tasks));
+    try {
+      localStorage.setItem('dailyTasks', JSON.stringify(tasks));
+    } catch (error) {
+      console.error('Error saving tasks to localStorage:', error);
+    }
   }, [tasks]);
 
   const handleAddTask = () => {

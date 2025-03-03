@@ -28,7 +28,6 @@ const Index = () => {
         <FocusInput />
         <QuoteDisplay />
         
-        {/* Quick Add Project Button - Updated with clearer styling */}
         <Button
           onClick={handleOpenProjectManager}
           className="absolute bottom-24 right-24 bg-white hover:bg-white/90 rounded-full shadow-lg p-3 z-20"

@@ -2,7 +2,7 @@
 import React, { useState, useCallback, memo } from 'react';
 import { formatCurrency, getProjectTotalTime } from './utils';
 import { Button } from "@/components/ui/button";
-import { Plus, Edit } from "lucide-react";
+import { Plus, Edit, Loader2 } from "lucide-react";
 import { ActivitySession } from '@/utils/timeTracking';
 import {
   AlertDialog,
@@ -24,6 +24,7 @@ interface ProjectListProps {
   setEditingProject?: React.Dispatch<React.SetStateAction<Project | null>>;
   onStartNewProject?: () => void;
   openProjectForEditing?: (project: Project) => void;
+  isLoading?: boolean;
 }
 
 const ProjectList: React.FC<ProjectListProps> = memo(({ 
@@ -33,10 +34,13 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
   setEditingProject,
   onStartNewProject,
   openProjectForEditing,
+  isLoading = false
 }) => {
   const [projectIdToDelete, setProjectIdToDelete] = useState<string | null>(null);
 
   const handleEditProject = useCallback((project: Project) => {
+    if (!project) return;
+    
     if (openProjectForEditing) {
       openProjectForEditing(project);
     } else if (setEditingProject) {
@@ -60,6 +64,15 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
     setProjectIdToDelete(null);
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-black mb-2" />
+        <p className="text-black">Loading projects...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -74,7 +87,7 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
         </Button>
       </div>
       
-      {projects.length === 0 ? (
+      {(!projects || projects.length === 0) ? (
         <div className="text-gray-500">No projects yet. Click "New Project" to get started.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -106,7 +119,7 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {project.tags && project.tags.slice(0, 3).map((tag, index) => (
-                  <span key={index} className={`${tag.color} text-white rounded-full px-2 py-1 text-xs`}>{tag.name}</span>
+                  <span key={index} className={`${tag.color} text-black rounded-full px-2 py-1 text-xs`}>{tag.name}</span>
                 ))}
                 {project.tags && project.tags.length > 3 && (
                   <span className="bg-gray-200 text-gray-700 rounded-full px-2 py-1 text-xs">+{project.tags.length - 3} more</span>
@@ -126,7 +139,7 @@ const ProjectList: React.FC<ProjectListProps> = memo(({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-white text-black hover:bg-white/90 hover:text-black">Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDeleteProject} className="bg-white text-black hover:bg-white/90 hover:text-black">Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
