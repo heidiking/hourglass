@@ -1,9 +1,9 @@
 
 import React from 'react';
+import { Dialog } from "@/components/ui/dialog";
 import { TimeTrackerProvider } from './TimeTrackerContext';
 import TimeTrackerButton from './TimeTrackerButton';
 import TimeTrackerDialog from './TimeTrackerDialog';
-import { DocumentActivityDetector } from './DocumentActivityDetector';
 
 interface TimeTrackerProps {
   open?: boolean;
@@ -20,8 +20,10 @@ const TimeTracker = ({
 }: TimeTrackerProps) => {
   return (
     <TimeTrackerProvider initialOpen={open} onOpenChange={onOpenChange}>
-      <TimeTrackerButton className={className} position={position} />
-      <TimeTrackerDialog />
+      <Dialog>
+        <TimeTrackerButton className={className} position={position} />
+        <TimeTrackerDialog />
+      </Dialog>
     </TimeTrackerProvider>
   );
 };
