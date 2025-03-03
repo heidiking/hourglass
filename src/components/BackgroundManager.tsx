@@ -95,17 +95,22 @@ const BackgroundManager = () => {
       {backgroundData && (
         <div className="fixed bottom-2 left-2 text-xs text-white/70 z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm">
           {backgroundData.author ? (
-            <a 
-              href={backgroundData.sourceUrl || '#'} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:text-white/90 transition-colors text-white"
-            >
-              Photo: {backgroundData.author}
-              {backgroundData.location && ` - ${backgroundData.location}`}
-            </a>
+            <>
+              <span className="text-white">Photo: </span>
+              <a 
+                href={backgroundData.sourceUrl || "#"} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-white/90 transition-colors text-white"
+              >
+                {backgroundData.author}
+              </a>
+              {backgroundData.location && (
+                <span className="text-white"> - {backgroundData.location}</span>
+              )}
+            </>
           ) : (
-            <span>
+            <span className="text-white">
               {backgroundData.location || 'Background image'}
             </span>
           )}
