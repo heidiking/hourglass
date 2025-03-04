@@ -49,7 +49,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return false;
       }
       
-      // Call the is_admin function
+      // Fix: Call the is_admin function with proper typing
+      // The issue was passing arguments to an RPC function that doesn't accept any
       const { data, error } = await supabase.rpc('is_admin');
       
       if (error) {
