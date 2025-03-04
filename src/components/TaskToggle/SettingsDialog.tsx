@@ -6,8 +6,10 @@ import Documentation from '../Documentation';
 import { toast } from "sonner";
 import MantraArchive from './Settings/MantraArchive';
 import QuoteArchive from './Settings/QuoteArchive';
+import ImageArchive from './Settings/ImageArchive';
 import SettingsHeader from './Settings/SettingsHeader';
 import SettingsContent from './Settings/SettingsContent';
+import { addCustomBackground } from '../../utils/backgrounds';
 
 interface SettingsDialogProps {
   onClose?: () => void;
@@ -18,6 +20,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
   const [showDocumentation, setShowDocumentation] = useState(false);
   const [showMantraArchive, setShowMantraArchive] = useState(false);
   const [showQuoteArchive, setShowQuoteArchive] = useState(false);
+  const [showImageArchive, setShowImageArchive] = useState(false);
   
   // Load settings from localStorage
   const [settings, setSettings] = useState(() => {
@@ -28,26 +31,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
       } catch (e) {
         console.error("Error parsing settings:", e);
         return {
-          trackDormantActivity: false,
-          autoTrackEnabled: false,
-          startTime: "09:00",
-          endTime: "17:00",
-          hasValidTimes: true,
           customMantra: "",
           customQuote: "",
-          customQuoteAuthor: ""
+          customQuoteAuthor: "",
+          customImageUrl: "",
+          customImageAuthor: "",
+          customImageLocation: ""
         };
       }
     }
     return {
-      trackDormantActivity: false,
-      autoTrackEnabled: false,
-      startTime: "09:00",
-      endTime: "17:00",
-      hasValidTimes: true,
       customMantra: "",
       customQuote: "",
-      customQuoteAuthor: ""
+      customQuoteAuthor: "",
+      customImageUrl: "",
+      customImageAuthor: "",
+      customImageLocation: ""
     };
   });
 
@@ -55,26 +54,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
     setSettings(prev => ({
       ...prev,
       [key]: value
-    }));
-    
-    // When time settings change, validate them
-    if (key === 'startTime' || key === 'endTime') {
-      validateTimeSettings(key === 'startTime' ? value : settings.startTime, 
-                        key === 'endTime' ? value : settings.endTime);
-    }
-  };
-  
-  const validateTimeSettings = (startTime: string, endTime: string) => {
-    // Convert times to minutes since midnight for comparison
-    const [startHours, startMinutes] = startTime.split(':').map(Number);
-    const [endHours, endMinutes] = endTime.split(':').map(Number);
-    
-    const startTotalMinutes = startHours * 60 + startMinutes;
-    const endTotalMinutes = endHours * 60 + endMinutes;
-    
-    setSettings(prev => ({
-      ...prev,
-      hasValidTimes: startTotalMinutes < endTotalMinutes
     }));
   };
   
@@ -104,6 +83,36 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
             date: new Date().toLocaleDateString()
           });
           localStorage.setItem('archivedQuotes', JSON.stringify(quotes));
+        }
+      }
+
+      // Archive current image if it exists and is not empty
+      if (settings.customImageUrl && settings.customImageUrl.trim() !== '') {
+        const images = JSON.parse(localStorage.getItem('archivedImages') || '[]');
+        
+        // Check if image doesn't already exist
+        if (!images.some((i: {url: string}) => i.url === settings.customImageUrl)) {
+          const newImageId = Date.now();
+          
+          // Add to background utility
+          addCustomBackground(
+            settings.customImageUrl,
+            settings.customImageAuthor,
+            settings.customImageLocation,
+            undefined,
+            undefined,
+            'landscape'
+          );
+          
+          // Add to archive
+          images.push({
+            id: newImageId,
+            url: settings.customImageUrl,
+            author: settings.customImageAuthor || '',
+            location: settings.customImageLocation || '',
+            date: new Date().toLocaleDateString()
+          });
+          localStorage.setItem('archivedImages', JSON.stringify(images));
         }
       }
 
@@ -155,6 +164,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
     );
   }
   
+  if (showImageArchive) {
+    return (
+      <div className="relative">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="absolute top-0 right-0 z-20 m-4 text-black bg-white hover:bg-white/90"
+          onClick={() => setShowImageArchive(false)}
+        >
+          <X className="mr-2 h-4 w-4 text-black" />
+          <span className="text-black">Back to Settings</span>
+        </Button>
+        <ImageArchive />
+      </div>
+    );
+  }
+  
   if (showDocumentation) {
     return (
       <div className="relative">
@@ -185,6 +211,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ onClose }) => {
         handleSettingChange={handleSettingChange}
         onViewMantraArchive={() => setShowMantraArchive(true)}
         onViewQuoteArchive={() => setShowQuoteArchive(true)}
+        onViewImageArchive={() => setShowImageArchive(true)}
       />
     </div>
   );

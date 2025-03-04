@@ -3,23 +3,22 @@ import React from 'react';
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import MantraSettings from './MantraSettings';
 import QuoteSettings from './QuoteSettings';
-import TimeTrackingSettings from './TimeTrackingSettings';
+import ImageSettings from './ImageSettings';
 
 interface SettingsContentProps {
   activeTab: string;
   settings: {
-    trackDormantActivity: boolean;
-    autoTrackEnabled: boolean;
-    startTime: string;
-    endTime: string;
-    hasValidTimes: boolean;
     customMantra: string;
     customQuote: string;
     customQuoteAuthor: string;
+    customImageUrl?: string;
+    customImageAuthor?: string;
+    customImageLocation?: string;
   };
   handleSettingChange: (key: string, value: any) => void;
   onViewMantraArchive: () => void;
   onViewQuoteArchive: () => void;
+  onViewImageArchive: () => void;
 }
 
 const SettingsContent: React.FC<SettingsContentProps> = ({
@@ -27,7 +26,8 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
   settings,
   handleSettingChange,
   onViewMantraArchive,
-  onViewQuoteArchive
+  onViewQuoteArchive,
+  onViewImageArchive
 }) => {
   return (
     <div className="max-h-[70vh] overflow-y-auto pr-2 py-4">
@@ -49,11 +49,15 @@ const SettingsContent: React.FC<SettingsContentProps> = ({
             onViewArchive={onViewQuoteArchive}
           />
 
-          {/* Time Tracking Section */}
-          <TimeTrackingSettings 
-            settings={settings}
-            onSettingChange={handleSettingChange}
-            hasValidTimes={settings.hasValidTimes}
+          {/* Custom Image Section */}
+          <ImageSettings
+            imageUrl={settings.customImageUrl || ''}
+            author={settings.customImageAuthor || ''}
+            location={settings.customImageLocation || ''}
+            onImageUrlChange={value => handleSettingChange('customImageUrl', value)}
+            onAuthorChange={value => handleSettingChange('customImageAuthor', value)}
+            onLocationChange={value => handleSettingChange('customImageLocation', value)}
+            onViewArchive={onViewImageArchive}
           />
         </TabsContent>
       </Tabs>
