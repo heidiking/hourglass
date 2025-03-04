@@ -22,7 +22,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       await checkAdminStatus();
     };
     
-    // Also subscribe to auth changes to update admin status
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event) => {
       if (event === 'SIGNED_IN') {
         await checkAdminStatus();
@@ -48,7 +47,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return false;
       }
       
-      // Fix: Call the is_admin function without any arguments
       const { data, error } = await supabase.rpc('is_admin');
       
       if (error) {
@@ -70,14 +68,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   
   const getUsers = async (): Promise<any[]> => {
     try {
-      // Get the current user's token
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         throw new Error('No active session');
       }
       
-      // Call the admin edge function
       const { data, error } = await supabase.functions.invoke('admin', {
         body: { action: 'getUsers' },
         headers: {
@@ -99,14 +95,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   
   const makeUserAdmin = async (userId: string): Promise<boolean> => {
     try {
-      // Get the current user's token
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         throw new Error('No active session');
       }
       
-      // Call the admin edge function
       const { data, error } = await supabase.functions.invoke('admin', {
         body: { 
           action: 'makeAdmin',
@@ -136,14 +130,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   
   const removeAdminRole = async (userId: string): Promise<boolean> => {
     try {
-      // Get the current user's token
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
         throw new Error('No active session');
       }
       
-      // Call the admin edge function
       const { data, error } = await supabase.functions.invoke('admin', {
         body: { 
           action: 'removeAdmin',
