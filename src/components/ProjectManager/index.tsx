@@ -1,33 +1,37 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Folder, Plus } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Folder } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import { getActivityHistory, ActivitySession } from '@/utils/timeTracking';
-import { Project } from './types';
-import ProjectList from './ProjectList';
+import { useProjectManagement } from './useProjectManagement';
+import ProjectManagerHeader from './ProjectManagerHeader';
+import ErrorState from './ErrorState';
+import ProjectsTabContent from './ProjectsTabContent';
 import ActivityTimeline from './ActivityTimeline';
-import EditProject from './EditProject';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?: (open: boolean) => void }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [activities, setActivities] = useState<ActivitySession[]>([]);
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState("projects");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [newProjectName, setNewProjectName] = useState('');
+  
+  const {
+    projects,
+    setProjects,
+    editingProject,
+    setEditingProject,
+    activities,
+    isLoading,
+    error,
+    newProjectName,
+    setNewProjectName,
+    openProjectForEditing,
+    addActivityToProject,
+    handleCreateNewProject,
+    handleStartNewProject
+  } = useProjectManagement();
 
   // Sync with external open state
   useEffect(() => {
@@ -42,197 +46,17 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       onOpenChange(newOpen);
     }
   }, [onOpenChange]);
-
-  // Load projects and activities
-  useEffect(() => {
-    const loadData = () => {
-      try {
-        setIsLoading(true);
-        
-        // Load projects with validation
-        const storedProjects = localStorage.getItem('projects');
-        if (storedProjects) {
-          try {
-            const parsedProjects = JSON.parse(storedProjects);
-            // Validate that it's an array
-            if (Array.isArray(parsedProjects)) {
-              setProjects(parsedProjects);
-            } else {
-              console.error('Stored projects is not an array, resetting to empty array');
-              setProjects([]);
-            }
-          } catch (e) {
-            console.error('Error parsing projects:', e);
-            // Handle corrupted data
-            setProjects([]);
-          }
-        } else {
-          // Initialize with empty array if no data exists
-          setProjects([]);
-        }
-
-        // Load activities
-        const loadedActivities = getActivityHistory();
-        setActivities(loadedActivities || []);
-        setError(null);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        setError('Failed to load project data');
-        toast.error('Error loading project data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  // Save projects when they change - ALWAYS save, not just when length > 0
-  useEffect(() => {
-    try {
-      // Always save projects state, even when empty
-      localStorage.setItem('projects', JSON.stringify(projects));
-    } catch (error) {
-      console.error('Error saving projects to localStorage:', error);
-      toast.error('Error saving project data');
-    }
-  }, [projects]);
-
-  const openProjectForEditing = useCallback((project: Project) => {
+  
+  // Modified openProjectForEditing to handle tab state
+  const handleOpenProjectForEditing = useCallback((project: React.SetStateAction<import("./types").Project | null>) => {
     if (!project) return;
     
-    setEditingProject({
-      ...project,
-      // Ensure project has all required properties
-      activities: project.activities || [],
-      tags: project.tags || [],
-      manualActivities: project.manualActivities || [],
-    });
-    setSelectedActivities(project.activities || []);
-    // Removed: setCurrentTab("edit"); since we're removing the Edit tab
+    openProjectForEditing(project as import("./types").Project, currentTab);
     
-    // Directly render the EditProject component in the projects tab
     if (currentTab !== "projects") {
       setCurrentTab("projects");
     }
-  }, [currentTab]);
-
-  const addActivityToProject = useCallback((projectId: string, activityId: string) => {
-    if (!projectId || !activityId) return;
-    
-    setProjects(currentProjects => {
-      const projectToUpdate = currentProjects.find(p => p.id === projectId);
-      
-      if (!projectToUpdate) return currentProjects;
-      
-      if (projectToUpdate.activities && projectToUpdate.activities.includes(activityId)) {
-        toast.info("This activity is already added to the project");
-        return currentProjects;
-      }
-      
-      const updatedProject = {
-        ...projectToUpdate,
-        activities: [...(projectToUpdate.activities || []), activityId],
-      };
-      
-      const updatedProjects = currentProjects.map(project => 
-        project.id === projectId ? updatedProject : project
-      );
-      
-      toast.success("Activity added to project");
-      return updatedProjects;
-    });
-  }, []);
-
-  const handleCreateNewProject = () => {
-    if (!newProjectName.trim()) {
-      toast.error("Please enter a project name");
-      return;
-    }
-    
-    const newProject: Project = {
-      id: Date.now().toString(),
-      name: newProjectName,
-      tags: [],
-      activities: [],
-      manualActivities: [],
-      earnings: 0,
-    };
-    
-    setProjects(prev => [...prev, newProject]);
-    setNewProjectName('');
-    toast.success(`Project "${newProjectName}" created`);
-  };
-
-  const handleStartNewProject = useCallback(() => {
-    const newProject: Project = {
-      id: Date.now().toString(),
-      name: "New Project",
-      tags: [],
-      activities: [],
-      manualActivities: [],
-      earnings: 0,
-    };
-    
-    setEditingProject(newProject);
-    // Removed: setCurrentTab("edit"); Since we're removing the Edit tab
-  }, []);
-
-  // Memoize tabsContent for better performance
-  const tabsContent = useMemo(() => ({
-    projects: (
-      <>
-        <div className="flex items-center gap-3 mb-4">
-          <Input
-            placeholder="New project name"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            className="flex-1 bg-white border-gray-300 text-black"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleCreateNewProject();
-              }
-            }}
-          />
-          <Button 
-            onClick={handleCreateNewProject}
-            className="bg-white hover:bg-white/90 text-black border border-gray-300"
-          >
-            <Plus size={18} className="mr-2 text-black" />
-            <span className="text-black">Add Project</span>
-          </Button>
-        </div>
-        {editingProject ? (
-          <EditProject 
-            editingProject={editingProject}
-            setEditingProject={setEditingProject}
-            activities={activities}
-            projects={projects}
-            setProjects={setProjects}
-            onBackToProjects={() => {
-              setEditingProject(null);
-            }}
-          />
-        ) : (
-          <ProjectList 
-            projects={projects}
-            setProjects={setProjects}
-            activities={activities}
-            openProjectForEditing={openProjectForEditing}
-            onStartNewProject={handleStartNewProject}
-            isLoading={isLoading}
-          />
-        )}
-      </>
-    ),
-    timeline: (
-      <ActivityTimeline 
-        activities={activities}
-        projects={projects}
-        addActivityToProject={addActivityToProject}
-      />
-    )
-  }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject, isLoading, newProjectName]);
+  }, [currentTab, openProjectForEditing]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
@@ -246,15 +70,10 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-black border-gray-200">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-light mb-4 text-black">Projects & Time Tracking</DialogTitle>
-        </DialogHeader>
+        <ProjectManagerHeader />
 
         {error ? (
-          <div className="p-4 bg-red-50 text-red-800 rounded-md">
-            <p className="text-black">{error}</p>
-            <p className="text-sm mt-1 text-gray-700">Try refreshing the page or clearing browser data.</p>
-          </div>
+          <ErrorState error={error} />
         ) : (
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
             <TabsList className="grid grid-cols-2 mb-4">
@@ -267,11 +86,27 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
             </TabsList>
             
             <TabsContent value="projects">
-              {tabsContent.projects}
+              <ProjectsTabContent 
+                editingProject={editingProject}
+                setEditingProject={setEditingProject}
+                projects={projects}
+                setProjects={setProjects}
+                activities={activities}
+                openProjectForEditing={handleOpenProjectForEditing}
+                handleStartNewProject={handleStartNewProject}
+                isLoading={isLoading}
+                newProjectName={newProjectName}
+                setNewProjectName={setNewProjectName}
+                handleCreateNewProject={handleCreateNewProject}
+              />
             </TabsContent>
             
             <TabsContent value="timeline">
-              {tabsContent.timeline}
+              <ActivityTimeline 
+                activities={activities}
+                projects={projects}
+                addActivityToProject={addActivityToProject}
+              />
             </TabsContent>
           </Tabs>
         )}
