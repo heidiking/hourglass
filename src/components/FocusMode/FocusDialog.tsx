@@ -101,7 +101,7 @@ const FocusDialog = ({
   return (
     <DialogContent className="sm:max-w-md bg-white text-black border-gray-200 max-h-[90vh] overflow-y-auto">
       <DialogHeader>
-        <DialogTitle className="text-xl font-light mb-2 text-black">Focus Settings</DialogTitle>
+        <DialogTitle className="text-xl font-light mb-2 text-black">Time Tracking Settings</DialogTitle>
         <DialogDescription className="text-black/70">
           {isActive 
             ? "You're currently in focus mode. Stay concentrated!" 
