@@ -59,7 +59,7 @@ const ImageArchive = () => {
           Background Image Archive
         </h2>
         <p className="text-sm text-black/70">
-          Your collection of custom background images
+          Custom background images
         </p>
       </div>
       

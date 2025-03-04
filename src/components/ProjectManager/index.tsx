@@ -109,8 +109,13 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
       manualActivities: project.manualActivities || [],
     });
     setSelectedActivities(project.activities || []);
-    setCurrentTab("edit");
-  }, []);
+    // Removed: setCurrentTab("edit"); since we're removing the Edit tab
+    
+    // Directly render the EditProject component in the projects tab
+    if (currentTab !== "projects") {
+      setCurrentTab("projects");
+    }
+  }, [currentTab]);
 
   const addActivityToProject = useCallback((projectId: string, activityId: string) => {
     if (!projectId || !activityId) return;
@@ -170,7 +175,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
     };
     
     setEditingProject(newProject);
-    setCurrentTab("edit");
+    // Removed: setCurrentTab("edit"); Since we're removing the Edit tab
   }, []);
 
   // Memoize tabsContent for better performance
@@ -197,14 +202,27 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
             <span className="text-black">Add Project</span>
           </Button>
         </div>
-        <ProjectList 
-          projects={projects}
-          setProjects={setProjects}
-          activities={activities}
-          openProjectForEditing={openProjectForEditing}
-          onStartNewProject={handleStartNewProject}
-          isLoading={isLoading}
-        />
+        {editingProject ? (
+          <EditProject 
+            editingProject={editingProject}
+            setEditingProject={setEditingProject}
+            activities={activities}
+            projects={projects}
+            setProjects={setProjects}
+            onBackToProjects={() => {
+              setEditingProject(null);
+            }}
+          />
+        ) : (
+          <ProjectList 
+            projects={projects}
+            setProjects={setProjects}
+            activities={activities}
+            openProjectForEditing={openProjectForEditing}
+            onStartNewProject={handleStartNewProject}
+            isLoading={isLoading}
+          />
+        )}
       </>
     ),
     timeline: (
@@ -213,20 +231,7 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
         projects={projects}
         addActivityToProject={addActivityToProject}
       />
-    ),
-    edit: editingProject ? (
-      <EditProject 
-        editingProject={editingProject}
-        setEditingProject={setEditingProject}
-        activities={activities}
-        projects={projects}
-        setProjects={setProjects}
-        onBackToProjects={() => {
-          setEditingProject(null);
-          setCurrentTab("projects");
-        }}
-      />
-    ) : null
+    )
   }), [projects, activities, editingProject, openProjectForEditing, handleStartNewProject, addActivityToProject, isLoading, newProjectName]);
 
   return (
@@ -252,15 +257,12 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
           </div>
         ) : (
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-4">
+            <TabsList className="grid grid-cols-2 mb-4">
               <TabsTrigger value="projects" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
                 <span className="text-black">Projects</span>
               </TabsTrigger>
               <TabsTrigger value="timeline" className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
                 <span className="text-black">Timeline</span>
-              </TabsTrigger>
-              <TabsTrigger value="edit" disabled={!editingProject} className="bg-white text-black data-[state=active]:bg-gray-100 data-[state=active]:text-black border border-gray-300">
-                <span className="text-black">{editingProject ? `Edit: ${editingProject.name}` : 'Edit Project'}</span>
               </TabsTrigger>
             </TabsList>
             
@@ -270,10 +272,6 @@ const ProjectManager = ({ open, onOpenChange }: { open?: boolean, onOpenChange?:
             
             <TabsContent value="timeline">
               {tabsContent.timeline}
-            </TabsContent>
-            
-            <TabsContent value="edit">
-              {tabsContent.edit}
             </TabsContent>
           </Tabs>
         )}
