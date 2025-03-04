@@ -75,10 +75,10 @@ const UserRoleManager = () => {
           onClick={fetchUsers} 
           variant="outline"
           disabled={loading}
-          className="text-black"
+          className="text-black bg-white hover:bg-white/90"
         >
-          {loading ? <Loader className="h-4 w-4 animate-spin mr-2" /> : null}
-          Refresh
+          {loading ? <Loader className="h-4 w-4 animate-spin mr-2 text-black" /> : null}
+          <span className="text-black">Refresh</span>
         </Button>
       </div>
       
@@ -130,7 +130,7 @@ const UserRoleManager = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => handleToggleAdmin(user.id, user.isAdmin)}
-                      className="bg-white text-black"
+                      className="bg-white text-black hover:bg-white/90"
                     >
                       {user.isAdmin ? (
                         <>
