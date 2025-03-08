@@ -163,11 +163,25 @@ const BackgroundManager = () => {
         <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block">
           {backgroundData.type === 'painting' ? (
             <span className="text-white">
-              "{backgroundData.title}" ({backgroundData.year}) by {backgroundData.author}
+              <a 
+                href={backgroundData.sourceUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="underline hover:text-blue-300 transition-colors"
+              >
+                "{backgroundData.title}" ({backgroundData.year}) by {backgroundData.author}
+              </a>
             </span>
           ) : (
             <span className="text-white">
-              Photo: {backgroundData.author}
+              Photo: <a 
+                href={backgroundData.sourceUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="underline hover:text-blue-300 transition-colors"
+              >
+                {backgroundData.author}
+              </a>
               {backgroundData.location && ` - ${backgroundData.location}`}
             </span>
           )}

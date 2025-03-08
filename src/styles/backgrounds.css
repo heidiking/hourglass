@@ -19,3 +19,16 @@
 .text-shadow-sm {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
+
+/* Add styles for background attribution links */
+.bg-attribution a {
+  color: white;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.bg-attribution a:hover,
+.bg-attribution a:focus {
+  color: rgba(191, 219, 254, 1); /* light blue color */
+  text-decoration: underline;
+}
