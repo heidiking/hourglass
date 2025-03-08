@@ -42,7 +42,7 @@ const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documen
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="ml-2 text-gray-500 hover:text-gray-700">
+              <button className="ml-2 text-black hover:text-gray-700">
                 <Info size={14} className="text-black" />
               </button>
             </TooltipTrigger>
@@ -67,7 +67,7 @@ const RecentDocumentsSection: React.FC<RecentDocumentsSectionProps> = ({ documen
           ))}
         </div>
       ) : (
-        <div className="p-3 bg-black/10 rounded-md text-gray-500">
+        <div className="p-3 bg-black/10 rounded-md text-black">
           No document activity recorded yet
         </div>
       )}

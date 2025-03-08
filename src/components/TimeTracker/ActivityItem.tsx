@@ -54,11 +54,11 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
       {getIconComponent()}
       
       <div className="flex-1 min-w-0">
-        <div className="font-medium truncate">
+        <div className="font-medium truncate text-black">
           {activity.appName}
         </div>
         
-        <div className="text-xs text-white/60 flex items-center">
+        <div className="text-xs text-black flex items-center">
           <span className="hidden sm:inline">{category} • </span>
           <span>{new Date(activity.startTime).toLocaleTimeString()}</span>
           <span className="mx-1">-</span>
@@ -67,7 +67,7 @@ const ActivityItem: React.FC<ActivityItemProps> = ({ activity }) => {
       </div>
       
       <div className="text-right whitespace-nowrap">
-        <div className="font-medium">{formattedDuration}</div>
+        <div className="font-medium text-black">{formattedDuration}</div>
       </div>
     </div>
   );
