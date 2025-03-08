@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { getBackgroundForToday, type Background } from '../utils/backgrounds';
-import { X } from 'lucide-react';
 
 const BackgroundManager = () => {
   const [bgImage, setBgImage] = useState<string | null>(null);
@@ -139,19 +138,7 @@ const BackgroundManager = () => {
         </div>
       )}
       
-      {/* Fallback display in case of loading error */}
-      {hasError && !isLoading && (
-        <div className="fixed top-4 right-4 bg-red-600 text-white px-3 py-2 rounded-md z-50 flex items-center">
-          <span>Background image failed to load</span>
-          <button 
-            onClick={() => setHasError(false)} 
-            className="ml-2 p-1 rounded-full hover:bg-red-700"
-            aria-label="Close error message"
-          >
-            <X size={16} className="text-white" />
-          </button>
-        </div>
-      )}
+      {/* Removed the error message display */}
       
       <div 
         className={`fixed inset-0 ${getFilterClass()} z-[-1]`} 
@@ -160,7 +147,7 @@ const BackgroundManager = () => {
       
       {/* Only display background info after the image has been successfully loaded */}
       {backgroundData && imageLoaded && (
-        <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block">
+        <div className="fixed bottom-2 left-2 text-xs text-white z-10 max-w-[300px] bg-black/30 px-2 py-1 rounded backdrop-blur-sm hover:bg-black/40 transition-colors block bg-attribution">
           {backgroundData.type === 'painting' ? (
             <span className="text-white">
               <a 
