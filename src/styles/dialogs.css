@@ -1,0 +1,83 @@
+
+/* Dialog styles */
+[role="dialog"] .dialog-content {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.dark [role="dialog"] .dialog-content {
+  background: rgba(30, 41, 59, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dialog content visibility enhancements */
+.dialog-content button span:not(.sr-only),
+[role="dialog"] button span:not(.sr-only) {
+  display: inline-block !important;
+  visibility: visible !important;
+  color: inherit !important;
+}
+
+/* Improved dialog text readability */
+.dialog-content,
+[role="dialog"] .dialog-content {
+  color: black !important;
+}
+
+[role="dialog"] input,
+[role="dialog"] textarea {
+  color: black !important;
+}
+
+/* Ensure dialog buttons have visible text */
+.dialog-content button span,
+.dialog-content button .button-text,
+[role="dialog"] button span,
+[role="dialog"] .button-text,
+.dialog button span,
+.dialog .button-text {
+  display: inline !important;
+  visibility: visible !important;
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+/* Additional optimization for dialog content */
+[role="dialog"] button.bg-white span,
+[role="dialog"] button.bg-white .button-text,
+.dialog button.bg-white span, 
+.dialog button.bg-white .button-text {
+  color: black !important;
+}
+
+/* Dialog content text color - ensure black text */
+[role="dialog"] input,
+[role="dialog"] textarea,
+[role="dialog"] .dialog-content input,
+[role="dialog"] .dialog-content textarea,
+[role="dialog"] .dialog-content p:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+[role="dialog"] .dialog-content span:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+[role="dialog"] .dialog-content div:not(.text-gray-500):not(.text-white):not(.text-white\/60) {
+  color: black !important;
+}
+
+/* Specifically target task items and project entries */
+[role="dialog"] .dialog-content label,
+[role="dialog"] label {
+  color: black !important;
+}
+
+/* Project entries and task items text color */
+[role="dialog"] p:not(.text-gray-500):not(.text-white):not(.text-white\/60),
+[role="dialog"] .flex-1,
+[role="dialog"] .text-sm:not(.text-gray-500):not(.text-white):not(.text-white\/60) {
+  color: black !important;
+}
+
+/* Optimize dialog performance */
+[role="dialog"] {
+  contain: content;
+}

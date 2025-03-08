@@ -1,0 +1,85 @@
+
+/* Button styles */
+button.bg-white, 
+button.border-gray-700 {
+  color: black !important;
+}
+
+/* Ensure all SVG icons inside white buttons are black */
+button.bg-white svg, 
+button.border-gray-700 svg,
+button.bg-white svg path,
+button.border-gray-700 svg path,
+button.white-button-with-black-content svg,
+button.white-button-with-black-content svg path {
+  color: black !important;
+  stroke: black !important;
+}
+
+/* Ensure all white buttons have black text and icons */
+button.bg-white,
+button.hover\:bg-white:hover,
+button.border-gray-700 {
+  color: black !important;
+}
+
+button.bg-white svg,
+button.hover\:bg-white:hover svg,
+button.border-gray-700 svg {
+  color: black !important;
+  stroke: black !important;
+}
+
+/* Ensure all white buttons have black text and icons everywhere */
+button.bg-white *,
+button.hover\:bg-white:hover *,
+button.bg-white svg,
+button.hover\:bg-white:hover svg,
+button.white-button-with-black-content *,
+button.white-button-with-black-content svg {
+  color: black !important;
+  stroke: black !important;
+}
+
+/* Force black text on white buttons everywhere */
+button.bg-white,
+button.bg-white:hover,
+button.bg-white:focus,
+button.hover\:bg-white:hover {
+  color: black !important;
+}
+
+/* More specific selectors for pencil/edit icons in the Project Manager dialog */
+[role="dialog"] button.bg-white svg[data-lucide="edit2"],
+[role="dialog"] button.bg-white svg[data-lucide="pencil"],
+[role="dialog"] button.bg-white svg[data-lucide="pen"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="edit2"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pencil"],
+[role="dialog"] button.white-button-with-black-content svg[data-lucide="pen"],
+button.bg-white svg[data-lucide="edit2"],
+button.bg-white svg[data-lucide="pencil"],
+button.bg-white svg[data-lucide="pen"] {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure all pencil icons in buttons are black */
+button svg[data-lucide="pencil"],
+button svg[data-lucide="pencil-line"],
+button svg[data-lucide="edit2"],
+button svg[data-lucide="pen"] {
+  color: black !important;
+  stroke: black !important;
+  fill: none !important;
+}
+
+/* Make sure all button text is visible regardless of state */
+button span, 
+button .button-text {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}

@@ -1,0 +1,12 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import all the category-specific styles */
+@import "./base.css";
+@import "./buttons.css";
+@import "./dialogs.css";
+@import "./animations.css";
+@import "./glass.css";
+@import "./backgrounds.css";
