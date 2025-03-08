@@ -3,6 +3,8 @@ import React from 'react';
 
 // Helper function to determine if an app is a document-based application
 export const isDocumentActivity = (appName: string): boolean => {
+  if (!appName || typeof appName !== 'string') return false;
+  
   const name = appName.toLowerCase();
   
   // Document applications

@@ -28,7 +28,7 @@ const CurrentActivitySection: React.FC<CurrentActivitySectionProps> = ({ current
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button className="ml-2 text-gray-500 hover:text-gray-700">
+              <button className="ml-2 text-black hover:text-gray-700">
                 <Info size={14} className="text-black" />
               </button>
             </TooltipTrigger>
@@ -47,7 +47,7 @@ const CurrentActivitySection: React.FC<CurrentActivitySectionProps> = ({ current
           </span>
         </div>
       ) : (
-        <div className="p-3 bg-black/10 rounded-md mt-2 text-gray-500">
+        <div className="p-3 bg-black/10 rounded-md mt-2 text-black">
           No active document tracking
         </div>
       )}

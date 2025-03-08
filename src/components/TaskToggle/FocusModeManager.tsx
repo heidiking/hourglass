@@ -26,13 +26,23 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
     // Load blocked sites from local storage
     const storedSites = localStorage.getItem('blockedSites');
     if (storedSites) {
-      setBlockedSites(JSON.parse(storedSites));
+      try {
+        setBlockedSites(JSON.parse(storedSites));
+      } catch (error) {
+        console.error('Error parsing blocked sites:', error);
+        setBlockedSites([]);
+      }
     }
 
     // Load time tracker settings
     const storedSettings = localStorage.getItem('timeTrackerSettings');
     if (storedSettings) {
-      setSettings(JSON.parse(storedSettings));
+      try {
+        setSettings(JSON.parse(storedSettings));
+      } catch (error) {
+        console.error('Error parsing time tracker settings:', error);
+        setSettings(defaultSettings);
+      }
     } else {
       // Initialize with default settings if not found
       localStorage.setItem('timeTrackerSettings', JSON.stringify(defaultSettings));
@@ -43,13 +53,21 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
     const startTimeStr = localStorage.getItem('focusStartTime');
     
     if (focusStatus === 'true' && startTimeStr) {
-      const startTime = new Date(startTimeStr);
-      setFocusStartTime(startTime);
-      setIsActive(true);
-      
-      // Get current document or app name
-      const documentTitle = document.title || window.location.href;
-      startActivity(documentTitle || 'Focus Mode');
+      try {
+        const startTime = new Date(startTimeStr);
+        setFocusStartTime(startTime);
+        setIsActive(true);
+        
+        // Get current document or app name
+        const documentTitle = document.title || 'Focus Mode';
+        startActivity(documentTitle);
+        console.log('Resumed focus session from localStorage');
+      } catch (error) {
+        console.error('Error resuming focus session:', error);
+        // Clear invalid focus state
+        localStorage.removeItem('focusActive');
+        localStorage.removeItem('focusStartTime');
+      }
     }
   }, []);
 
@@ -72,28 +90,40 @@ const FocusModeManager: React.FC<FocusModeManagerProps> = ({
 
   // Focus mode functions
   const startFocusMode = useCallback(() => {
-    const now = new Date();
-    setFocusStartTime(now);
-    setIsActive(true);
-    localStorage.setItem('focusActive', 'true');
-    localStorage.setItem('focusStartTime', now.toString());
-    
-    // Get current document or app name
-    const documentTitle = document.title || window.location.href;
-    startActivity(documentTitle || 'Focus Mode');
-    
-    toast.success("Focus mode activated!");
-    setFocusModeOpen(false);
+    try {
+      const now = new Date();
+      setFocusStartTime(now);
+      setIsActive(true);
+      localStorage.setItem('focusActive', 'true');
+      localStorage.setItem('focusStartTime', now.toString());
+      
+      // Get current document or app name
+      const documentTitle = document.title || 'Focus Mode';
+      startActivity(documentTitle);
+      console.log('Focus mode activated with activity:', documentTitle);
+      
+      toast.success("Focus mode activated!");
+      setFocusModeOpen(false);
+    } catch (error) {
+      console.error('Error starting focus mode:', error);
+      toast.error("Failed to start focus mode");
+    }
   }, [setFocusModeOpen]);
 
   const endFocusMode = useCallback(() => {
-    setIsActive(false);
-    setFocusStartTime(null);
-    setElapsedTime(0);
-    localStorage.removeItem('focusActive');
-    localStorage.removeItem('focusStartTime');
-    endActivity();
-    toast.success("Focus session ended!");
+    try {
+      setIsActive(false);
+      setFocusStartTime(null);
+      setElapsedTime(0);
+      localStorage.removeItem('focusActive');
+      localStorage.removeItem('focusStartTime');
+      endActivity();
+      console.log('Focus session ended');
+      toast.success("Focus session ended!");
+    } catch (error) {
+      console.error('Error ending focus mode:', error);
+      toast.error("Failed to end focus session");
+    }
   }, []);
 
   const openSettings = useCallback(() => {

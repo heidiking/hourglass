@@ -22,6 +22,7 @@ let activityHistory: ActivitySession[] = [];
  */
 export const initializeTimeTracking = (): void => {
   try {
+    console.log('Initializing time tracking system...');
     // Load previously saved activity data
     const { currentActivity: loadedActivity, activityHistory: loadedHistory } = loadActivityState();
     currentActivity = loadedActivity;
