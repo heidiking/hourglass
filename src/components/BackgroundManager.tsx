@@ -1,22 +1,32 @@
 
 import React, { useEffect, useState } from 'react';
 import { getBackgroundForToday, type Background } from '../utils/backgrounds';
+import { X } from 'lucide-react';
 
 const BackgroundManager = () => {
   const [bgImage, setBgImage] = useState<string | null>(null);
   const [backgroundData, setBackgroundData] = useState<Background | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const loadBackground = async () => {
       setIsLoading(true);
+      setHasError(false);
       try {
         const todayBackground = await getBackgroundForToday();
         console.log('Loaded background:', todayBackground);
+        
+        // Validate the URL before setting it
+        if (!todayBackground.url || typeof todayBackground.url !== 'string') {
+          throw new Error('Invalid background URL');
+        }
+        
         setBgImage(todayBackground.url);
         setBackgroundData(todayBackground);
       } catch (error) {
         console.error('Failed to load background:', error);
+        setHasError(true);
         // Fallback to a default landscape image
         const fallbackImage = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80';
         setBgImage(fallbackImage);
@@ -84,6 +94,16 @@ const BackgroundManager = () => {
     return 'bg-black/20';
   };
 
+  // Handle image load error
+  const handleImageError = () => {
+    console.error('Error loading background image:', bgImage);
+    setHasError(true);
+    // Set to default fallback if the current image fails
+    if (bgImage !== 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') {
+      setBgImage('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80');
+    }
+  };
+
   return (
     <>
       {isLoading && (
@@ -97,8 +117,24 @@ const BackgroundManager = () => {
             alt="Daily background"
             className="w-full h-full object-cover transition-opacity duration-500"
             onLoad={() => setIsLoading(false)}
+            onError={handleImageError}
             style={{ opacity: isLoading ? 0 : 1 }}
+            crossOrigin="anonymous" // Add this to handle CORS issues
           />
+        </div>
+      )}
+      
+      {/* Fallback display in case of loading error */}
+      {hasError && !isLoading && (
+        <div className="fixed top-4 right-4 bg-red-600 text-white px-3 py-2 rounded-md z-50 flex items-center">
+          <span>Background image failed to load</span>
+          <button 
+            onClick={() => setHasError(false)} 
+            className="ml-2 p-1 rounded-full hover:bg-red-700"
+            aria-label="Close error message"
+          >
+            <X size={16} className="text-white" />
+          </button>
         </div>
       )}
       

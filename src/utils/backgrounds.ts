@@ -124,7 +124,11 @@ const getCustomBackgrounds = (): Background[] => {
   try {
     const customBgs = localStorage.getItem('customBackgrounds');
     if (customBgs) {
-      return JSON.parse(customBgs);
+      const parsed = JSON.parse(customBgs);
+      // Validate that we have an array of backgrounds with valid URLs
+      if (Array.isArray(parsed)) {
+        return parsed.filter(bg => bg && typeof bg.url === 'string' && bg.url.trim() !== '');
+      }
     }
   } catch (e) {
     console.error('Error loading custom backgrounds:', e);
@@ -134,13 +138,56 @@ const getCustomBackgrounds = (): Background[] => {
 
 // Function to get a background based on the current date
 export const getBackgroundForToday = async (): Promise<Background> => {
-  return new Promise((resolve) => {
-    // First check if we have any custom backgrounds
-    const customBackgrounds = getCustomBackgrounds();
-    const allBackgrounds = [...backgrounds, ...customBackgrounds];
-    
-    if (allBackgrounds.length === 0) {
-      // Fallback if no backgrounds are available
+  return new Promise((resolve, reject) => {
+    try {
+      // First check if we have any custom backgrounds
+      const customBackgrounds = getCustomBackgrounds();
+      const allBackgrounds = [...backgrounds, ...customBackgrounds];
+      
+      if (allBackgrounds.length === 0) {
+        // Fallback if no backgrounds are available
+        resolve({
+          id: 999,
+          url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+          author: 'Bailey Zindel',
+          sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
+          location: 'Moraine Lake, Canada',
+          type: 'landscape'
+        });
+        return;
+      }
+      
+      // In a real app, this might fetch from an API
+      // For now, we'll use the day of the month to select a background
+      const today = new Date();
+      const dayOfMonth = today.getDate();
+      const backgroundIndex = dayOfMonth % allBackgrounds.length;
+      
+      // Validate the selected background before returning it
+      const selectedBackground = allBackgrounds[backgroundIndex];
+      
+      // Ensure the URL is valid
+      if (!selectedBackground || !selectedBackground.url || typeof selectedBackground.url !== 'string') {
+        // If invalid, fallback to the first default background
+        console.error('Invalid background selected, using fallback');
+        resolve(backgrounds[0] || {
+          id: 999,
+          url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+          author: 'Bailey Zindel',
+          sourceUrl: 'https://unsplash.com/photos/NRQV-hBF10M',
+          location: 'Moraine Lake, Canada',
+          type: 'landscape'
+        });
+        return;
+      }
+      
+      // Simulate network delay
+      setTimeout(() => {
+        resolve(selectedBackground);
+      }, 300);
+    } catch (error) {
+      console.error('Error in getBackgroundForToday:', error);
+      // Fallback on error
       resolve({
         id: 999,
         url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
@@ -149,19 +196,7 @@ export const getBackgroundForToday = async (): Promise<Background> => {
         location: 'Moraine Lake, Canada',
         type: 'landscape'
       });
-      return;
     }
-    
-    // In a real app, this might fetch from an API
-    // For now, we'll use the day of the month to select a background
-    const today = new Date();
-    const dayOfMonth = today.getDate();
-    const backgroundIndex = dayOfMonth % allBackgrounds.length;
-    
-    // Simulate network delay
-    setTimeout(() => {
-      resolve(allBackgrounds[backgroundIndex]);
-    }, 300);
   });
 };
 

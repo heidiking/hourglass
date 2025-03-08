@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Image, Archive } from "lucide-react";
@@ -24,6 +24,17 @@ const ImageSettings: React.FC<ImageSettingsProps> = ({
   onLocationChange,
   onViewArchive
 }) => {
+  const [previewError, setPreviewError] = useState(false);
+  
+  const handleImageUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPreviewError(false);
+    onImageUrlChange(e.target.value);
+  };
+  
+  const handleImageError = () => {
+    setPreviewError(true);
+  };
+  
   return (
     <div className="space-y-3 border-b pb-4">
       <div className="flex justify-between items-center">
@@ -48,7 +59,7 @@ const ImageSettings: React.FC<ImageSettingsProps> = ({
           id="custom-image" 
           type="text" 
           value={imageUrl}
-          onChange={(e) => onImageUrlChange(e.target.value)}
+          onChange={handleImageUrlChange}
           placeholder="Enter image URL"
           className="bg-white border-gray-300 text-black"
         />
@@ -75,10 +86,14 @@ const ImageSettings: React.FC<ImageSettingsProps> = ({
               src={imageUrl} 
               alt="Preview" 
               className="w-full h-32 object-cover"
-              onError={(e) => {
-                e.currentTarget.src = 'https://via.placeholder.com/300x150?text=Invalid+Image+URL';
-              }}
+              onError={handleImageError}
+              crossOrigin="anonymous"
             />
+            {previewError && (
+              <div className="bg-red-50 p-2 text-red-600 text-xs">
+                Unable to load image. Please check the URL and make sure it's accessible.
+              </div>
+            )}
           </div>
         )}
         
