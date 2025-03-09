@@ -83,3 +83,23 @@ button .button-text {
   visibility: visible !important;
   opacity: 1 !important;
 }
+
+/* Enhanced visibility for toggle switches */
+[data-state="checked"].peer {
+  background-color: #8B5CF6 !important; /* Vivid purple */
+  border-color: #7E69AB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-state="unchecked"].peer {
+  background-color: #E5E7EB !important;
+  border: 1px solid #D1D5DB !important;
+}
+
+/* Make toggle labels more prominent */
+label[for="track-dormant"],
+label[for="auto-track"],
+label[for="focus-notifications"] {
+  font-weight: 500 !important;
+  color: #000000 !important;
+}
