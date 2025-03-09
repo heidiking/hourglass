@@ -30,7 +30,7 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
       <DialogTrigger asChild>
         <button
           className={`p-2 bg-white 
-            ${isTracking ? 'ring-3 ring-green-500 shadow-lg shadow-green-100' : ''}
+            ${isTracking ? 'time-tracker-active' : ''}
             rounded-full hover:bg-white/90 transition-colors ${positionStyles[position]} 
             ${className} flex items-center justify-center gap-1 shadow-md relative`}
           aria-label={`Time Tracker ${isTracking ? '(Active)' : ''}`}

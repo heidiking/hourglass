@@ -3,7 +3,7 @@ import React from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell } from "lucide-react";
+import { Bell, Clock } from "lucide-react";
 
 interface FocusTimeSettingsProps {
   settings: {
@@ -23,6 +23,22 @@ const FocusTimeSettings: React.FC<FocusTimeSettingsProps> = ({
 }) => {
   return (
     <div className="space-y-3 border-b pb-4">
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center">
+          <Clock size={20} className="mr-2 text-[#8B5CF6]" />
+          <h3 className="text-black font-medium">Time Tracking Options</h3>
+        </div>
+        {settings.trackDormantActivity && (
+          <div className="flex items-center">
+            <span className="relative inline-flex">
+              <span className="h-3 w-3 rounded-full bg-green-500"></span>
+              <span className="animate-ping absolute h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+            </span>
+            <span className="ml-2 text-sm text-black font-medium">Tracking Active</span>
+          </div>
+        )}
+      </div>
+      
       <div className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-md transition-colors">
         <Switch 
           id="track-dormant" 

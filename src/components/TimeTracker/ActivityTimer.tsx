@@ -40,9 +40,15 @@ const ActivityTimer: React.FC = () => {
   }
 
   return (
-    <div className="fixed top-4 right-4 z-10 flex items-center gap-2 bg-white/90 text-black px-3 py-1.5 rounded-full shadow-md">
-      <Clock size={16} className="text-black" />
+    <div className="fixed top-4 right-4 z-10 flex items-center gap-2 bg-white/90 text-black px-3 py-1.5 rounded-full shadow-md border border-green-500">
+      <div className="relative">
+        <Clock size={16} className="text-black" />
+        <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
+      </div>
       <span className="text-black font-medium text-sm">
+        {currentActivity?.appName && (
+          <span className="mr-2 max-w-[150px] truncate inline-block">{currentActivity.appName}: </span>
+        )}
         {formatTimeDuration(duration)}
       </span>
     </div>
