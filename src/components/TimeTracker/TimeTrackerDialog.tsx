@@ -1,5 +1,5 @@
 
-import React, { memo, useCallback } from 'react';
+import React, { lazy, Suspense, memo, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DialogHeader,
@@ -10,9 +10,20 @@ import { CircleOff, Clock, FileText, BarChart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useTimeTracker } from './TimeTrackerContext';
 import CurrentActivitySection from './CurrentActivitySection';
-import RecentDocumentsSection from './RecentDocumentsSection';
-import TimeTrackingInsights from './TimeTrackingInsights';
-import TestingPlan from './TestingPlan';
+
+// Lazy load components for better code-splitting
+const RecentDocumentsSection = lazy(() => import('./RecentDocumentsSection'));
+const TimeTrackingInsights = lazy(() => import('./TimeTrackingInsights'));
+const TestingPlan = lazy(() => import('./TestingPlan'));
+
+// Loading fallback component
+const TabContentLoader = () => (
+  <div className="animate-pulse space-y-4">
+    <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+    <div className="h-24 bg-gray-200 rounded"></div>
+    <div className="h-12 bg-gray-200 rounded w-3/4"></div>
+  </div>
+);
 
 const TimeTrackerDialog = () => {
   const { 
@@ -73,15 +84,21 @@ const TimeTrackerDialog = () => {
           </TabsList>
           
           <TabsContent value="documents">
-            <RecentDocumentsSection documentActivities={documentActivities} />
+            <Suspense fallback={<TabContentLoader />}>
+              <RecentDocumentsSection documentActivities={documentActivities} />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="insights">
-            <TimeTrackingInsights documentActivities={documentActivities} />
+            <Suspense fallback={<TabContentLoader />}>
+              <TimeTrackingInsights documentActivities={documentActivities} />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="testing">
-            <TestingPlan />
+            <Suspense fallback={<TabContentLoader />}>
+              <TestingPlan />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

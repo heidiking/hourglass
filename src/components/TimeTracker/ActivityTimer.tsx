@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Clock } from 'lucide-react';
 import { useTimeTracker } from './TimeTrackerContext';
 import { formatTimeDuration } from './utils';
 
-const ActivityTimer: React.FC = () => {
+const ActivityTimer: React.FC = memo(() => {
   const { isTracking, currentActivity } = useTimeTracker();
   const [duration, setDuration] = useState<number>(0);
 
@@ -53,6 +53,8 @@ const ActivityTimer: React.FC = () => {
       </span>
     </div>
   );
-};
+});
+
+ActivityTimer.displayName = 'ActivityTimer';
 
 export default ActivityTimer;

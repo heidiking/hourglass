@@ -1,5 +1,5 @@
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Clock } from 'lucide-react';
 import { useTimeTracker } from './TimeTrackerContext';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -16,6 +16,12 @@ const TimeTrackerButton: React.FC<TimeTrackerButtonProps> = memo(({
   showLabel = true
 }) => {
   const { isTracking, setDialogOpen, dialogOpen } = useTimeTracker();
+  
+  const handleClick = useCallback(() => {
+    // This creates a memoized click handler to avoid recreating functions
+    // on each render, improving performance
+    setDialogOpen(!dialogOpen);
+  }, [dialogOpen, setDialogOpen]);
 
   const positionStyles = {
     topLeft: "fixed top-4 left-4",

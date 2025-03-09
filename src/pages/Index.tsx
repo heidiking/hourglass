@@ -1,13 +1,19 @@
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import Clock from '@/components/Clock';
 import { NavIcons } from '@/components/NavIcons';
 import QuoteDisplay from '@/components/QuoteDisplay';
 import FocusInput from '@/components/FocusInput';
-import TaskToggle from '@/components/TaskToggle';
 import BackgroundManager from '@/components/BackgroundManager';
 import { Toaster } from '@/components/ui/toaster';
 import { useTaskToggle } from '@/components/TaskToggle/TaskToggleContext';
+
+// Lazy-load TaskToggle component
+const TaskToggle = lazy(() => 
+  import('@/components/TaskToggle').then(module => ({
+    default: module.default
+  }))
+);
 
 const Index = () => {
   const { setProjectsOpen } = useTaskToggle();
@@ -23,7 +29,9 @@ const Index = () => {
         <QuoteDisplay />
       </div>
       
-      <TaskToggle />
+      <Suspense fallback={<div className="w-full h-16" />}>
+        <TaskToggle />
+      </Suspense>
       <Toaster />
     </div>
   );

@@ -10,6 +10,63 @@
 import { ActivitySession } from './types';
 import { TimeTrackerSettings, defaultSettings } from '@/components/FocusMode/types';
 
+// Store pending writes to batch them
+let pendingWrites: {
+  type: 'activity' | 'settings';
+  data: any;
+}[] = [];
+
+// Batch writes timer
+let writeTimer: NodeJS.Timeout | null = null;
+const BATCH_DELAY = 1000; // Batch writes every 1 second
+
+/**
+ * Processes all pending localStorage writes in a batch
+ */
+const processBatchedWrites = () => {
+  if (pendingWrites.length === 0) return;
+  
+  try {
+    // Group writes by type
+    const activityWrites = pendingWrites.filter(write => write.type === 'activity');
+    const settingsWrites = pendingWrites.filter(write => write.type === 'settings');
+    
+    // Process activity writes (take the most recent)
+    if (activityWrites.length > 0) {
+      const mostRecentActivityWrite = activityWrites[activityWrites.length - 1].data;
+      const { currentActivity, activityHistory } = mostRecentActivityWrite;
+      
+      localStorage.setItem('activityHistory', JSON.stringify(activityHistory));
+      localStorage.setItem('currentActivity', currentActivity ? JSON.stringify(currentActivity) : '');
+    }
+    
+    // Process settings writes (take the most recent)
+    if (settingsWrites.length > 0) {
+      const mostRecentSettingsWrite = settingsWrites[settingsWrites.length - 1].data;
+      localStorage.setItem('timeTrackerSettings', JSON.stringify(mostRecentSettingsWrite));
+    }
+    
+    // Clear pending writes after processing
+    pendingWrites = [];
+  } catch (error) {
+    console.error('Error processing batched writes:', error);
+  }
+};
+
+/**
+ * Schedules localStorage writes to be processed in batches
+ */
+const scheduleBatchedWrite = () => {
+  if (writeTimer) {
+    clearTimeout(writeTimer);
+  }
+  
+  writeTimer = setTimeout(() => {
+    processBatchedWrites();
+    writeTimer = null;
+  }, BATCH_DELAY);
+};
+
 /**
  * Retrieves user time tracker settings from localStorage
  * @returns {TimeTrackerSettings} User settings or default values if none found
@@ -38,7 +95,7 @@ export const getTrackerSettings = (): TimeTrackerSettings => {
 };
 
 /**
- * Saves current activity state and history to localStorage
+ * Saves current activity state and history to localStorage using batched writes
  * @param {ActivitySession | null} currentActivity - The currently active session or null
  * @param {ActivitySession[]} activityHistory - Array of completed activity sessions
  */
@@ -52,8 +109,14 @@ export const saveActivityState = (
       throw new Error('Activity history must be an array');
     }
     
-    localStorage.setItem('activityHistory', JSON.stringify(activityHistory));
-    localStorage.setItem('currentActivity', currentActivity ? JSON.stringify(currentActivity) : '');
+    // Queue the write operation
+    pendingWrites.push({
+      type: 'activity',
+      data: { currentActivity, activityHistory }
+    });
+    
+    // Schedule batch processing
+    scheduleBatchedWrite();
   } catch (error) {
     console.error('Error saving time tracking state:', error);
   }
@@ -139,3 +202,18 @@ export const loadActivityState = (): {
   
   return { currentActivity, activityHistory };
 };
+
+/**
+ * Forces immediate writing of any pending localStorage operations
+ * Useful when the app is about to unload
+ */
+export const flushPendingWrites = (): void => {
+  if (pendingWrites.length > 0) {
+    processBatchedWrites();
+  }
+};
+
+// Set up event listener to flush writes before page unload
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', flushPendingWrites);
+}
